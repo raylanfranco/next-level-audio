@@ -1,36 +1,91 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Next Level Audio - Website Redesign
+
+A modern, full-stack web application for Next Level Audio, featuring ecommerce capabilities, appointment booking, and admin management.
+
+## Tech Stack
+
+- **Framework**: Next.js 16 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Ecommerce**: Shopify Storefront API (Headless)
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: NextAuth.js (for admin panel)
+- **Form Handling**: React Hook Form + Zod
+
+## Features
+
+- 🛒 **Ecommerce**: Shopify-powered product catalog and checkout
+- 📅 **Appointment Booking**: Custom booking system with admin management
+- 🎨 **Modern Design**: Based on car wash template reference
+- 🔐 **Admin Panel**: Secure admin interface for managing bookings
+- 📱 **Responsive**: Mobile-first design
+- ⚡ **Performance**: Optimized with Next.js App Router
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ and npm
+- Shopify store with Storefront API access
+- Supabase account (or PostgreSQL database)
+
+### Installation
+
+1. Clone the repository and install dependencies:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Copy environment variables:
+```bash
+cp .env.local.example .env.local
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Configure your environment variables in `.env.local`:
+   - Shopify Storefront API credentials
+   - Supabase database credentials
+   - NextAuth secret (generate with: `openssl rand -base64 32`)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+4. Set up the database:
+   - Create a new Supabase project
+   - Run the SQL schema from `lib/supabase/schema.sql` in the SQL editor
 
-## Learn More
+5. Run the development server:
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Open [http://localhost:3000](http://localhost:3000) to see the application.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+├── app/                    # Next.js App Router pages
+│   ├── (admin)/           # Admin panel routes
+│   ├── api/               # API routes
+│   └── ...
+├── components/            # React components
+│   ├── ui/               # Reusable UI components
+│   ├── layout/           # Layout components
+│   └── ...
+├── lib/                  # Utility libraries
+│   ├── shopify/          # Shopify API client
+│   ├── supabase/         # Database client
+│   └── ...
+├── types/                # TypeScript type definitions
+└── public/               # Static assets
+```
 
-## Deploy on Vercel
+## Development Roadmap
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- [x] Project setup and architecture
+- [ ] Shopify integration
+- [ ] Booking system
+- [ ] Admin panel
+- [ ] Design implementation (car wash template)
+- [ ] AI Chatbot integration (future)
+- [ ] Quote calculator (future)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## License
+
+Private - Next Level Audio
