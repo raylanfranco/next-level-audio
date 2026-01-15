@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { useRef, useEffect } from 'react';
 
-// Default video from Next Level Audio's Google Business
-const DEFAULT_VIDEO_URL = 'https://lh3.googleusercontent.com/ggs/AF1QipNxK9Z0OOeU_CK7a727RMYE-uhImAa7EDd-ofDQ=m18';
+// Default video - local file in public folder for reliable playback
+const DEFAULT_VIDEO_URL = '/videos/hero-video.mp4';
 
 interface HeroSectionProps {
   videoSrc?: string;
@@ -41,9 +41,9 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
             <source src={videoSrc} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
-          {/* Video Overlay - Cyberpunk blue gradient for theme consistency */}
-          <div className="absolute inset-0 bg-gradient-to-b from-[#00A0E0]/30 via-black/60 to-black/90" />
-          <div className="absolute inset-0 bg-[#00A0E0]/10 mix-blend-overlay" />
+          {/* Video Overlay - Black at top for nav visibility, fading to blue */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/50 to-[#00A0E0]/30" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
         </>
       ) : (
         // Fallback gradient if no video

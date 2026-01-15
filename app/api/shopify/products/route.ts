@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { storefrontClient } from '@/lib/shopify/client';
+import { storefrontClient, isShopifyConfigured } from '@/lib/shopify/client';
 import { PRODUCTS_QUERY } from '@/lib/shopify/queries';
 
 export async function GET(request: NextRequest) {
+  // Return empty products if Shopify is not configured
+  // The frontend will fall back to mock data
+  if (!isShopifyConfigured || !storefrontClient) {
+    return NextResponse.json({ products: { edges: [] } });
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const first = parseInt(searchParams.get('first') || '20');

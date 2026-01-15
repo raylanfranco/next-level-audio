@@ -1,16 +1,17 @@
 import { createStorefrontApiClient } from '@shopify/storefront-api-client';
 
-if (!process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN) {
-  throw new Error('NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN is not set');
-}
+// Shopify client - only created if environment variables are set
+// This allows the app to build and run without Shopify configured (using mock data)
+const storeDomain = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
+const accessToken = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN;
 
-if (!process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN) {
-  throw new Error('NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN is not set');
-}
+export const storefrontClient = storeDomain && accessToken
+  ? createStorefrontApiClient({
+      storeDomain,
+      apiVersion: '2024-10',
+      publicAccessToken: accessToken,
+    })
+  : null;
 
-export const storefrontClient = createStorefrontApiClient({
-  storeDomain: process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN,
-  apiVersion: '2024-10',
-  publicAccessToken: process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN,
-});
+export const isShopifyConfigured = !!storefrontClient;
 
