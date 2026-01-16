@@ -92,8 +92,8 @@ export default function Header() {
                 href="/contact"
                 className={`px-4 py-2 border-2 transition-all duration-300 font-medium text-sm cyber-button ${
                   isScrolled
-                    ? 'bg-[#00A0E0]/20 text-[#00A0E0] border-[#00A0E0] hover:bg-[#00A0E0]/30 neon-border-soft'
-                    : 'bg-[#00A0E0]/10 text-[#00A0E0] border-[#00A0E0]/50 hover:bg-[#00A0E0]/20 neon-border-soft'
+                    ? 'bg-[#00A0E0]/20 text-white border-[#00A0E0] hover:bg-[#00A0E0]/30 neon-border-soft'
+                    : 'bg-[#00A0E0]/10 text-white border-[#00A0E0]/50 hover:bg-[#00A0E0]/20 neon-border-soft'
                 }`}
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >

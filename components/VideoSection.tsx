@@ -38,12 +38,13 @@ export default function VideoSection({
         </div>
 
         {displayVideos.length === 1 ? (
-          // Single video - larger display
-          <div className="max-w-4xl mx-auto">
+          // Single video - full width display
+          <div className="w-full">
             <VideoLightbox
               videoId={displayVideos[0].id}
               thumbnail={displayVideos[0].thumbnail}
               title={displayVideos[0].title}
+              className="w-full"
             />
           </div>
         ) : (

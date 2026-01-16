@@ -27,6 +27,11 @@ export default function Home() {
             {/* Service 1 */}
             <div className="bg-black border-2 border-[#00A0E0]/30 overflow-hidden hover:border-[#00A0E0] transition-all duration-300 transform hover:-translate-y-2 group neon-border-soft">
               <div className="h-64 bg-gradient-to-br from-[#00A0E0]/20 to-black relative overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=600&fit=crop"
+                  alt="Window Tinting"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
                 <div className="absolute inset-0 bg-[#00A0E0]/10 group-hover:bg-[#00A0E0]/20 transition-colors"></div>
                 <div className="absolute inset-0 border-b-2 border-[#00A0E0]/50"></div>
               </div>
@@ -50,6 +55,11 @@ export default function Home() {
             {/* Service 2 */}
             <div className="bg-black border-2 border-[#00A0E0]/30 overflow-hidden hover:border-[#00A0E0] transition-all duration-300 transform hover:-translate-y-2 group neon-border-soft">
               <div className="h-64 bg-gradient-to-br from-[#00A0E0]/20 to-black relative overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800&h=600&fit=crop"
+                  alt="Car Audio"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
                 <div className="absolute inset-0 bg-[#00A0E0]/10 group-hover:bg-[#00A0E0]/20 transition-colors"></div>
                 <div className="absolute inset-0 border-b-2 border-[#00A0E0]/50"></div>
               </div>
@@ -74,6 +84,11 @@ export default function Home() {
             {/* Service 3 */}
             <div className="bg-black border-2 border-[#00A0E0]/30 overflow-hidden hover:border-[#00A0E0] transition-all duration-300 transform hover:-translate-y-2 group neon-border-soft">
               <div className="h-64 bg-gradient-to-br from-black to-[#00A0E0]/20 relative overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=600&fit=crop"
+                  alt="Auto Accessories"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                />
                 <div className="absolute inset-0 bg-[#00A0E0]/10 group-hover:bg-[#00A0E0]/20 transition-colors"></div>
                 <div className="absolute inset-0 border-b-2 border-[#00A0E0]/50"></div>
               </div>

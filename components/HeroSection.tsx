@@ -62,25 +62,25 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 text-white leading-tight neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
             ELEVATE
             <span className="block text-[#00A0E0] neon-glow-soft">YOUR JOURNEY</span>
-            <span className="block text-sm md:text-lg text-[#00A0E0]/80 font-normal mt-2">
+            <span className="block text-sm md:text-lg text-white font-normal mt-2">
               WITH OUR EXPERT TOUCH
             </span>
           </h1>
-          <p className="text-lg md:text-xl text-[#00A0E0]/90 mb-10 max-w-2xl mx-auto leading-relaxed font-mono">
+          <p className="text-lg md:text-xl text-white mb-10 max-w-2xl mx-auto leading-relaxed font-mono">
             Indulge your vehicle with our meticulous car audio installation and window tinting services.<br />
             Experience premium quality that turns heads on every road adventure.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
               href="/book-appointment"
-              className="px-8 py-4 bg-[#00A0E0]/20 text-[#00A0E0] border-2 border-[#00A0E0] font-semibold text-lg hover:bg-[#00A0E0]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
+              className="px-8 py-4 bg-[#00A0E0]/20 text-white border-2 border-[#00A0E0] font-semibold text-lg hover:bg-[#00A0E0]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               BOOK APPOINTMENT
             </Link>
             <Link
               href="/services"
-              className="px-8 py-4 bg-black/40 backdrop-blur-sm text-[#00A0E0] border-2 border-[#00A0E0]/50 font-semibold text-lg hover:border-[#00A0E0] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button"
+              className="px-8 py-4 bg-black/40 backdrop-blur-sm text-white border-2 border-[#00A0E0]/50 font-semibold text-lg hover:border-[#00A0E0] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               OUR SERVICES

@@ -33,7 +33,8 @@ body {
 }
 
 .neon-glow-soft {
-  text-shadow: 
+  color: white;
+  text-shadow:
     0 0 1px var(--neon-blue),
     0 0 2px var(--neon-blue);
 }

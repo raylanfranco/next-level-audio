@@ -74,7 +74,7 @@ export const mockProducts: ShopifyProduct[] = [
       },
     },
     featuredImage: {
-      url: 'https://images.unsplash.com/photo-1606778303969-4a0c0c0c5c5c?w=800&h=600&fit=crop',
+      url: 'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800&h=600&fit=crop',
       altText: 'Car subwoofer',
       width: 800,
       height: 600,
@@ -83,7 +83,7 @@ export const mockProducts: ShopifyProduct[] = [
       edges: [
         {
           node: {
-            url: 'https://images.unsplash.com/photo-1606778303969-4a0c0c0c5c5c?w=800&h=600&fit=crop',
+            url: 'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800&h=600&fit=crop',
             altText: 'Car subwoofer',
             width: 800,
             height: 600,
@@ -104,7 +104,7 @@ export const mockProducts: ShopifyProduct[] = [
       },
     },
     featuredImage: {
-      url: 'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800&h=600&fit=crop',
+      url: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=600&fit=crop',
       altText: 'Car amplifier',
       width: 800,
       height: 600,
@@ -113,7 +113,7 @@ export const mockProducts: ShopifyProduct[] = [
       edges: [
         {
           node: {
-            url: 'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800&h=600&fit=crop',
+            url: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=600&fit=crop',
             altText: 'Car amplifier',
             width: 800,
             height: 600,

@@ -59,7 +59,7 @@ export default function VideoLightbox({
         aria-label={`Play video: ${title || 'Video'}`}
         style={{ borderRadius: 0 }}
       >
-        <div className="relative aspect-video bg-black">
+        <div className="relative h-96 w-full bg-black">
           <img
             src={thumbnailUrl}
             alt={title || 'Video thumbnail'}

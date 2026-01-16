@@ -7,24 +7,25 @@ export const metadata: Metadata = {
 };
 
 const services = [
-  {
-    id: 'window-tinting',
-    title: 'WINDOW TINTING',
-    description: 'Professional window tinting services to reduce glare, increase privacy, and enhance your vehicle\'s comfort and visual appeal. We use premium films that block harmful UV rays while maintaining crystal-clear visibility.',
-    features: [
-      'UV Protection up to 99%',
-      'Heat Rejection Technology',
-      'Glare Reduction',
-      'Enhanced Privacy',
-      'Lifetime Warranty Available',
-      'Multiple Shade Options',
-    ],
-    icon: (
-      <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
-      </svg>
-    ),
-  },
+   {
+     id: 'window-tinting',
+     title: 'WINDOW TINTING',
+     description: 'Professional window tinting services to reduce glare, increase privacy, and enhance your vehicle\'s comfort and visual appeal. We use premium films that block harmful UV rays while maintaining crystal-clear visibility.',
+     features: [
+       'UV Protection up to 99%',
+       'Heat Rejection Technology',
+       'Glare Reduction',
+       'Enhanced Privacy',
+       'Lifetime Warranty Available',
+       'Multiple Shade Options',
+     ],
+     image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=600&fit=crop',
+     icon: (
+       <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2" />
+       </svg>
+     ),
+   },
   {
     id: 'car-audio',
     title: 'CAR AUDIO',
@@ -37,6 +38,7 @@ const services = [
       'Bluetooth Integration',
       'Factory System Enhancement',
     ],
+    image: 'https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800&h=600&fit=crop',
     icon: (
       <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
@@ -109,6 +111,7 @@ const services = [
       'Vinyl Wraps',
       'Custom Wheels & Tires',
     ],
+    image: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=600&fit=crop',
     icon: (
       <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -149,6 +152,18 @@ export default function ServicesPage() {
                 key={service.id}
                 className="bg-black border-2 border-[#00A0E0]/30 overflow-hidden hover:border-[#00A0E0] transition-all duration-300 transform hover:-translate-y-2 group neon-border-soft"
               >
+                {/* Service Image */}
+                {service.image && (
+                  <div className="relative h-48 bg-gradient-to-br from-[#00A0E0]/20 to-black overflow-hidden">
+                    <img
+                      src={service.image}
+                      alt={service.title}
+                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-[#00A0E0]/10 group-hover:bg-[#00A0E0]/20 transition-colors"></div>
+                    <div className="absolute inset-0 border-b-2 border-[#00A0E0]/50"></div>
+                  </div>
+                )}
                 {/* Service Header */}
                 <div className="p-8 border-b-2 border-[#00A0E0]/30">
                   <div className="text-[#00A0E0] mb-4 neon-glow-soft">
