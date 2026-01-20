@@ -1,10 +1,8 @@
-import Link from 'next/link';
-import { Metadata } from 'next';
+'use client';
 
-export const metadata: Metadata = {
-  title: 'Our Services | Next Level Audio - Stroudsburg, PA',
-  description: 'Professional car audio installation, window tinting, and auto accessories services in Stroudsburg, PA. Quality craftsmanship at competitive prices.',
-};
+import Link from 'next/link';
+import { useBookingModal } from '@/components/BookingModalContext';
+import QuoteCalculator from '@/components/QuoteCalculator';
 
 const services = [
    {
@@ -122,6 +120,7 @@ const services = [
 ];
 
 export default function ServicesPage() {
+  const { openModal } = useBookingModal();
   return (
     <div className="w-full">
       {/* Hero Section */}
@@ -199,6 +198,9 @@ export default function ServicesPage() {
         </div>
       </section>
 
+      {/* Quote Calculator */}
+      <QuoteCalculator />
+
       {/* Why Choose Us Section */}
       <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
         <div className="absolute inset-0 cyber-grid opacity-10"></div>
@@ -246,13 +248,13 @@ export default function ServicesPage() {
             Contact us today for a free consultation and quote on your next project!
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <Link
-              href="/book-appointment"
+            <button
+              onClick={openModal}
               className="inline-block bg-[#00A0E0]/20 text-[#00A0E0] border-2 border-[#00A0E0] px-10 py-5 font-semibold text-lg hover:bg-[#00A0E0]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               BOOK APPOINTMENT
-            </Link>
+            </button>
             <Link
               href="/contact"
               className="inline-block border-2 border-[#00A0E0]/50 bg-black/40 backdrop-blur-sm text-[#00A0E0] px-10 py-5 font-semibold text-lg hover:border-[#00A0E0] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button"
@@ -263,6 +265,7 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
+
     </div>
   );
 }

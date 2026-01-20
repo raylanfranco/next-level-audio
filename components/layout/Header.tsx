@@ -3,10 +3,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { useBookingModal } from '@/components/BookingModalContext';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const { openModal } = useBookingModal();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -19,8 +21,8 @@ export default function Header() {
 
   const navLinkClass = `transition-all duration-300 font-medium text-sm ${
     isScrolled
-      ? 'text-[#00A0E0]/80 hover:text-[#00B8FF] neon-glow-soft'
-      : 'text-[#00A0E0] hover:text-[#00B8FF] neon-glow-soft'
+      ? 'text-[#00A0E0]/80 hover:text-[#00B8FF] neon-glow-soft cursor-pointer'
+      : 'text-[#00A0E0] hover:text-[#00B8FF] neon-glow-soft cursor-pointer'
   }`;
 
   return (
@@ -81,13 +83,13 @@ export default function Header() {
               >
                 GALLERY
               </Link>
-              <Link
-                href="/book-appointment"
+              <button
+                onClick={openModal}
                 className={navLinkClass}
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
                 BOOK
-              </Link>
+              </button>
               <Link
                 href="/contact"
                 className={`px-4 py-2 border-2 transition-all duration-300 font-medium text-sm cyber-button ${
@@ -170,14 +172,13 @@ export default function Header() {
               >
                 GALLERY
               </Link>
-              <Link
-                href="/book-appointment"
-                className="text-[#00A0E0] hover:text-[#00B8FF] transition-colors neon-glow-soft text-sm"
-                onClick={() => setIsMenuOpen(false)}
+              <button
+                onClick={() => { openModal(); setIsMenuOpen(false); }}
+                className="text-[#00A0E0] hover:text-[#00B8FF] transition-colors neon-glow-soft text-sm text-left"
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
                 BOOK APPOINTMENT
-              </Link>
+              </button>
               <Link
                 href="/contact"
                 className="text-[#00A0E0] hover:text-[#00B8FF] transition-colors neon-glow-soft text-sm"

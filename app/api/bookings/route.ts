@@ -68,9 +68,39 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET() {
-  return NextResponse.json(
-    { error: 'Booking management not yet implemented', bookings: [] },
-    { status: 501 }
-  );
+  // Mock bookings data for prototype
+  const mockBookings = [
+    {
+      id: 'booking-1',
+      customer_name: 'John Doe',
+      customer_email: 'john@example.com',
+      customer_phone: '555-0123',
+      service_type: 'car-audio',
+      vehicle_make: 'Toyota',
+      vehicle_model: 'Camry',
+      vehicle_year: 2020,
+      appointment_date: '2024-01-25',
+      appointment_time: '10:00',
+      notes: 'Looking forward to the upgrade',
+      status: 'confirmed',
+      created_at: '2024-01-20T10:00:00Z',
+      updated_at: '2024-01-20T10:00:00Z',
+    },
+    {
+      id: 'booking-2',
+      customer_name: 'Jane Smith',
+      customer_email: 'jane@example.com',
+      customer_phone: '555-0456',
+      service_type: 'window-tinting',
+      appointment_date: '2024-01-26',
+      appointment_time: '14:00',
+      notes: '',
+      status: 'pending',
+      created_at: '2024-01-21T14:30:00Z',
+      updated_at: '2024-01-21T14:30:00Z',
+    },
+  ];
+
+  return NextResponse.json({ bookings: mockBookings });
 }
 

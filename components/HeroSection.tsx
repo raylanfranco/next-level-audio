@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useRef, useEffect } from 'react';
+import { useBookingModal } from './BookingModalContext';
 
 // Default video - local file in public folder for reliable playback
 const DEFAULT_VIDEO_URL = '/videos/hero-video.mp4';
@@ -13,6 +14,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster }: HeroSectionProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { openModal } = useBookingModal();
 
   useEffect(() => {
     // Ensure video plays and loops
@@ -71,13 +73,13 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
             Experience premium quality that turns heads on every road adventure.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Link
-              href="/book-appointment"
+            <button
+              onClick={openModal}
               className="px-8 py-4 bg-[#00A0E0]/20 text-white border-2 border-[#00A0E0] font-semibold text-lg hover:bg-[#00A0E0]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               BOOK APPOINTMENT
-            </Link>
+            </button>
             <Link
               href="/services"
               className="px-8 py-4 bg-black/40 backdrop-blur-sm text-white border-2 border-[#00A0E0]/50 font-semibold text-lg hover:border-[#00A0E0] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button"
@@ -103,6 +105,7 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
           <path d="M19 14l-7 7m0 0l-7-7m7 7V3" />
         </svg>
       </div>
+
     </section>
   );
 }

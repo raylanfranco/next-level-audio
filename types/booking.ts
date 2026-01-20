@@ -11,6 +11,8 @@ export interface Booking {
   vehicle_year?: number;
   appointment_date: string; // ISO date string
   appointment_time: string; // HH:mm format
+  alternative_appointment_date?: string; // ISO date string
+  alternative_appointment_time?: string; // HH:mm format
   notes?: string;
   status: BookingStatus;
   created_at: string;
@@ -18,15 +20,29 @@ export interface Booking {
 }
 
 export interface BookingFormData {
-  customer_name: string;
-  customer_email: string;
-  customer_phone: string;
-  service_type: string;
-  vehicle_make?: string;
-  vehicle_model?: string;
-  vehicle_year?: number;
-  appointment_date: string;
-  appointment_time: string;
-  notes?: string;
-}
 
+  customer_name: string;
+
+  customer_email: string;
+
+  customer_phone: string;
+
+  service_type: string;
+
+  vehicle_make?: string;
+
+  vehicle_model?: string;
+
+  vehicle_year?: number;
+
+  appointment_date: string;
+
+  appointment_time: string;
+
+  alternative_appointment_date?: string;
+
+  alternative_appointment_time?: string;
+
+  notes?: string;
+
+}
