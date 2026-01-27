@@ -13,7 +13,7 @@ if (supabaseUrl && supabaseKey) {
 // GET single product
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     if (!supabase) {
@@ -23,10 +23,12 @@ export async function GET(
       );
     }
 
+    const { id } = await params;
+
     const { data, error } = await supabase
       .from('products')
       .select('*')
-      .eq('id', params.id)
+      .eq('id', id)
       .single();
 
     if (error || !data) {
@@ -49,7 +51,7 @@ export async function GET(
 // PUT/PATCH update product
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     if (!supabase) {
@@ -59,6 +61,7 @@ export async function PUT(
       );
     }
 
+    const { id } = await params;
     const body = await request.json();
 
     // Transform camelCase to snake_case for database
@@ -86,7 +89,7 @@ export async function PUT(
     const { data, error } = await supabase
       .from('products')
       .update(updateData)
-      .eq('id', params.id)
+      .eq('id', id)
       .select()
       .single();
 
@@ -111,7 +114,7 @@ export async function PUT(
 // DELETE product
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     if (!supabase) {
@@ -121,10 +124,12 @@ export async function DELETE(
       );
     }
 
+    const { id } = await params;
+
     const { error } = await supabase
       .from('products')
       .delete()
-      .eq('id', params.id);
+      .eq('id', id);
 
     if (error) {
       console.error('Supabase delete error:', error);
