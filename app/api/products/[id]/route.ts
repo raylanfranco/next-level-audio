@@ -111,7 +111,7 @@ export async function PUT(
 
     const { data, error } = await supabase
       .from('products')
-      .update(updateData)
+      .update(updateData as Record<string, unknown>)
       .eq('id', id)
       .select()
       .single();
