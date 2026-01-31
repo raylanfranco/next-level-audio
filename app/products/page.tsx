@@ -108,10 +108,27 @@ export default function ProductsPage() {
         .then((res) => res.ok ? res.json() : null)
         .then((data) => {
           if (data?.images) {
-            setProductImages((p) => ({ ...p, ...data.images }));
+            // Upgrade HTTP to HTTPS to avoid mixed content issues
+            const upgradedImages: Record<string, string | null> = {};
+            for (const [id, url] of Object.entries(data.images)) {
+              if (url && typeof url === 'string' && url.startsWith('http://')) {
+                // Try HTTPS version (may not work for all domains)
+                upgradedImages[id] = url.replace('http://', 'https://');
+              } else {
+                upgradedImages[id] = url as string | null;
+              }
+            }
+            // Debug: log how many images we got
+            const imageCount = Object.values(upgradedImages).filter(url => url !== null).length;
+            if (imageCount > 0) {
+              console.log(`Loaded ${imageCount} product images`);
+            }
+            setProductImages((p) => ({ ...p, ...upgradedImages }));
           }
         })
-        .catch(() => {});
+        .catch((err) => {
+          console.error('Error fetching product images:', err);
+        });
       return prev;
     });
   }, [items]);
@@ -325,6 +342,15 @@ export default function ProductsPage() {
                                 alt={item.name}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 loading="lazy"
+                                onError={(e) => {
+                                  console.error('Image failed to load:', productImages[item.id], 'for item:', item.id);
+                                  // Remove the broken image URL from state
+                                  setProductImages((prev) => {
+                                    const updated = { ...prev };
+                                    delete updated[item.id];
+                                    return updated;
+                                  });
+                                }}
                               />
                             ) : (
                               <div className="text-center px-4 bg-white w-full h-full flex flex-col items-center justify-center">
