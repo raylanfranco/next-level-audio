@@ -33,6 +33,9 @@ export default function ProductsPage() {
   const [offset, setOffset] = useState(0);
   const [hasMore, setHasMore] = useState(true);
 
+  // Product images
+  const [productImages, setProductImages] = useState<Record<string, string | null>>({});
+
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -94,6 +97,24 @@ export default function ProductsPage() {
     fetchCategories();
     fetchItems(null, 0, false);
   }, [fetchCategories, fetchItems]);
+
+  useEffect(() => {
+    if (items.length === 0) return;
+    const ids = items.map((i) => i.id);
+    setProductImages((prev) => {
+      const newIds = ids.filter((id) => !(id in prev));
+      if (newIds.length === 0) return prev;
+      fetch(`/api/product-image?ids=${newIds.join(',')}`)
+        .then((res) => res.ok ? res.json() : null)
+        .then((data) => {
+          if (data?.images) {
+            setProductImages((p) => ({ ...p, ...data.images }));
+          }
+        })
+        .catch(() => {});
+      return prev;
+    });
+  }, [items]);
 
   const handleCategorySelect = (categoryId: string | null) => {
     setSelectedCategory(categoryId);
@@ -296,14 +317,23 @@ export default function ProductsPage() {
                           key={item.id}
                           className="bg-black border border-[#00A0E0]/30 overflow-hidden hover:border-[#00A0E0] transition-all duration-300 group"
                         >
-                          {/* Top section with gradient */}
-                          <div className="relative h-36 bg-gradient-to-br from-[#00A0E0]/10 to-black flex items-center justify-center overflow-hidden">
-                            <div className="text-center px-4">
-                              <div className="text-[#00A0E0]/30 text-xs font-mono mb-1">{item.code || 'NO SKU'}</div>
-                              <div className="text-[#00A0E0]/15 text-4xl font-bold" style={{ fontFamily: 'var(--font-oxanium)' }}>
-                                {formatCents(item.price)}
+                          {/* Top section with image or gradient */}
+                          <div className="relative aspect-square bg-white flex items-center justify-center overflow-hidden">
+                            {productImages[item.id] ? (
+                              <img
+                                src={productImages[item.id]!}
+                                alt={item.name}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                loading="lazy"
+                              />
+                            ) : (
+                              <div className="text-center px-4 bg-white w-full h-full flex flex-col items-center justify-center">
+                                <div className="text-gray-400 text-xs font-mono mb-1">{item.code || 'NO SKU'}</div>
+                                <div className="text-gray-200 text-4xl font-bold" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                                  {formatCents(item.price)}
+                                </div>
                               </div>
-                            </div>
+                            )}
 
                             {/* Stock badge */}
                             <div className={`absolute top-3 left-3 px-2.5 py-1 text-xs font-mono font-semibold border ${badge.classes}`}>

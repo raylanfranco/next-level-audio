@@ -9,12 +9,25 @@ import type {
   CloverPayment,
   CloverCategory,
 } from '@/types/clover';
+import { AdminThemeProvider, useAdminTheme } from './AdminThemeProvider';
 
-const statusColors = {
-  pending: 'text-yellow-400 bg-yellow-400/10 border-yellow-400/30',
-  confirmed: 'text-green-400 bg-green-400/10 border-green-400/30',
-  completed: 'text-blue-400 bg-blue-400/10 border-blue-400/30',
-  cancelled: 'text-red-400 bg-red-400/10 border-red-400/30',
+const statusColors: Record<string, { dark: string; light: string }> = {
+  pending: {
+    dark: 'text-amber-400 bg-amber-400/10 border-amber-400/30',
+    light: 'text-amber-600 bg-amber-50 border-amber-200',
+  },
+  confirmed: {
+    dark: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/30',
+    light: 'text-emerald-600 bg-emerald-50 border-emerald-200',
+  },
+  completed: {
+    dark: 'text-blue-400 bg-blue-400/10 border-blue-400/30',
+    light: 'text-blue-600 bg-blue-50 border-blue-200',
+  },
+  cancelled: {
+    dark: 'text-red-400 bg-red-400/10 border-red-400/30',
+    light: 'text-red-600 bg-red-50 border-red-200',
+  },
 };
 
 const serviceNames: Record<string, string> = {
@@ -43,21 +56,28 @@ function formatDate(timestamp: number) {
 }
 
 export default function AdminPage() {
+  return (
+    <AdminThemeProvider>
+      <AdminDashboard />
+    </AdminThemeProvider>
+  );
+}
+
+function AdminDashboard() {
+  const { theme, toggleTheme } = useAdminTheme();
+  const isDark = theme === 'dark';
+
   const [activeNav, setActiveNav] = useState<NavItem>('overview');
   const [loading, setLoading] = useState(true);
 
-  // Clover data
   const [inventory, setInventory] = useState<CloverItem[]>([]);
   const [inventoryCount, setInventoryCount] = useState(0);
   const [categories, setCategories] = useState<CloverCategory[]>([]);
   const [orders, setOrders] = useState<CloverOrder[]>([]);
   const [payments, setPayments] = useState<CloverPayment[]>([]);
   const [customers, setCustomers] = useState<CloverCustomer[]>([]);
-
-  // Bookings (from Supabase)
   const [bookings, setBookings] = useState<Booking[]>([]);
 
-  // Pagination & filters
   const [inventoryOffset, setInventoryOffset] = useState(0);
   const [inventorySearch, setInventorySearch] = useState('');
   const [ordersOffset, setOrdersOffset] = useState(0);
@@ -114,7 +134,6 @@ export default function AdminPage() {
     fetchOverviewData();
   }, [fetchOverviewData]);
 
-  // Tab-specific data loaders
   const fetchInventoryPage = async (offset: number) => {
     try {
       const res = await fetch(`/api/clover/inventory?limit=${PAGE_SIZE}&offset=${offset}`);
@@ -178,7 +197,6 @@ export default function AdminPage() {
     );
   };
 
-  // Filtered inventory for search
   const filteredInventory = inventorySearch
     ? inventory.filter(item =>
         item.name.toLowerCase().includes(inventorySearch.toLowerCase()) ||
@@ -187,16 +205,27 @@ export default function AdminPage() {
       )
     : inventory;
 
-  // Payment stats
   const totalPaymentsAmount = payments.reduce((sum, p) => sum + p.amount, 0);
   const pendingBookings = bookings.filter(b => b.status === 'pending').length;
 
+  // Theme-aware class helpers
+  const bg = isDark ? 'bg-slate-900' : 'bg-slate-100';
+  const bgSidebar = isDark ? 'bg-slate-950' : 'bg-white';
+  const bgCard = isDark ? 'bg-slate-800' : 'bg-white';
+  const bgInput = isDark ? 'bg-slate-900' : 'bg-slate-50';
+  const bgHover = isDark ? 'hover:bg-slate-700/50' : 'hover:bg-slate-50';
+  const borderColor = isDark ? 'border-slate-700' : 'border-slate-200';
+  const textPrimary = isDark ? 'text-slate-100' : 'text-slate-900';
+  const textSecondary = isDark ? 'text-slate-400' : 'text-slate-500';
+  const textMuted = isDark ? 'text-slate-500' : 'text-slate-400';
+  const textAccent = isDark ? 'text-blue-400' : 'text-blue-600';
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-[#0a0a0a] flex items-center justify-center">
+      <div className={`min-h-screen ${bg} flex items-center justify-center`}>
         <div className="text-center">
-          <div className="text-[#00A0E0] text-lg font-mono mb-2">Loading dashboard...</div>
-          <div className="text-[#00A0E0]/40 text-sm font-mono">Connecting to Clover POS</div>
+          <div className={`${textAccent} text-lg mb-2`}>Loading dashboard...</div>
+          <div className={`${textMuted} text-sm`}>Connecting to Clover POS</div>
         </div>
       </div>
     );
@@ -211,35 +240,45 @@ export default function AdminPage() {
     { key: 'bookings', label: 'Bookings', badge: pendingBookings || undefined },
   ];
 
+  const getStatusClasses = (status: string) => {
+    const colors = statusColors[status];
+    return colors ? (isDark ? colors.dark : colors.light) : '';
+  };
+
+  // Pagination button classes
+  const paginationBtn = `px-4 py-2 border ${borderColor} ${textAccent} text-sm ${bgHover} transition-colors disabled:opacity-30 disabled:cursor-not-allowed`;
+
   return (
-    <div className="min-h-screen bg-[#0a0a0a] flex">
-      {/* Sidebar Navigation */}
-      <aside className="w-64 bg-black border-r border-[#00A0E0]/20 flex flex-col min-h-screen sticky top-0">
-        <div className="p-6 border-b border-[#00A0E0]/20">
+    <div className={`min-h-screen ${bg} flex`}>
+      {/* Sidebar */}
+      <aside className={`w-64 ${bgSidebar} border-r ${borderColor} flex flex-col min-h-screen sticky top-0`}>
+        <div className={`p-6 border-b ${borderColor}`}>
           <h1
-            className="text-2xl font-bold text-[#00A0E0]"
+            className={`text-2xl font-bold ${textAccent}`}
             style={{ fontFamily: 'var(--font-oxanium)' }}
           >
             NEXT LEVEL
           </h1>
-          <p className="text-[#00A0E0]/60 text-sm mt-1 font-mono">Admin Dashboard</p>
+          <p className={`${textMuted} text-sm mt-1`}>Admin Dashboard</p>
         </div>
 
         <nav className="flex-1 p-4">
-          <ul className="space-y-2">
+          <ul className="space-y-1">
             {navItems.map((item) => (
               <li key={item.key}>
                 <button
                   onClick={() => setActiveNav(item.key)}
-                  className={`w-full text-left px-4 py-3 transition-colors font-mono text-sm ${
+                  className={`w-full text-left px-4 py-2.5 rounded-md transition-colors text-sm font-medium ${
                     activeNav === item.key
-                      ? 'bg-[#00A0E0]/10 text-[#00A0E0] border-l-2 border-[#00A0E0]'
-                      : 'text-[#00A0E0]/60 hover:text-[#00A0E0] hover:bg-[#00A0E0]/5'
+                      ? `${isDark ? 'bg-blue-500/10 text-blue-400' : 'bg-blue-50 text-blue-600'} border-l-2 border-blue-500`
+                      : `${textSecondary} ${bgHover}`
                   }`}
                 >
                   {item.label}
                   {item.badge && (
-                    <span className="ml-2 px-2 py-0.5 bg-yellow-400/20 text-yellow-400 text-xs border border-yellow-400/30">
+                    <span className={`ml-2 px-2 py-0.5 text-xs rounded-full ${
+                      isDark ? 'bg-amber-400/10 text-amber-400' : 'bg-amber-50 text-amber-600'
+                    }`}>
                       {item.badge}
                     </span>
                   )}
@@ -249,16 +288,31 @@ export default function AdminPage() {
           </ul>
         </nav>
 
-        <div className="p-4 border-t border-[#00A0E0]/20 space-y-2">
+        <div className={`p-4 border-t ${borderColor} space-y-2`}>
+          <button
+            onClick={toggleTheme}
+            className={`flex items-center gap-2 w-full px-4 py-2 ${textSecondary} ${bgHover} rounded-md transition-colors text-sm`}
+          >
+            {isDark ? (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            ) : (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+            )}
+            {isDark ? 'Light Mode' : 'Dark Mode'}
+          </button>
           <button
             onClick={() => fetchOverviewData()}
-            className="block w-full px-4 py-2 text-[#00A0E0]/60 hover:text-[#00A0E0] transition-colors font-mono text-sm text-left border border-[#00A0E0]/20 hover:border-[#00A0E0]/40"
+            className={`block w-full text-left px-4 py-2 ${textSecondary} ${bgHover} rounded-md transition-colors text-sm`}
           >
             Refresh Data
           </button>
           <a
             href="/"
-            className="block px-4 py-2 text-[#00A0E0]/60 hover:text-[#00A0E0] transition-colors font-mono text-sm"
+            className={`block px-4 py-2 ${textSecondary} ${bgHover} rounded-md transition-colors text-sm`}
           >
             &larr; Back to Site
           </a>
@@ -273,147 +327,111 @@ export default function AdminPage() {
           {activeNav === 'overview' && (
             <div>
               <div className="mb-8">
-                <h2 className="text-3xl font-bold text-white mb-2" style={{ fontFamily: 'var(--font-oxanium)' }}>
-                  Dashboard Overview
-                </h2>
-                <p className="text-[#00A0E0]/60 font-mono">Live data from Clover POS</p>
+                <h2 className={`text-3xl font-bold ${textPrimary} mb-1`}>Dashboard Overview</h2>
+                <p className={textSecondary}>Live data from Clover POS</p>
               </div>
 
               {/* Stats Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
-                <div className="bg-black border border-[#00A0E0]/30 p-5">
-                  <div className="text-[#00A0E0]/60 text-xs font-mono mb-2">INVENTORY ITEMS</div>
-                  <div className="text-3xl font-bold text-white" style={{ fontFamily: 'var(--font-oxanium)' }}>
-                    1,321
-                  </div>
-                  <div className="text-[#00A0E0]/40 text-xs font-mono mt-1">from Clover POS</div>
+                <div className={`${bgCard} border ${borderColor} rounded-lg p-5`}>
+                  <div className={`${textSecondary} text-xs uppercase tracking-wide mb-2`}>Inventory Items</div>
+                  <div className={`text-3xl font-bold ${textPrimary}`}>1,321</div>
+                  <div className={`${textMuted} text-xs mt-1`}>from Clover POS</div>
                 </div>
 
-                <div className="bg-black border border-purple-400/30 p-5">
-                  <div className="text-purple-400/80 text-xs font-mono mb-2">CATEGORIES</div>
-                  <div className="text-3xl font-bold text-purple-400" style={{ fontFamily: 'var(--font-oxanium)' }}>
-                    {categories.length}
-                  </div>
-                  <div className="text-purple-400/40 text-xs font-mono mt-1">product categories</div>
+                <div className={`${bgCard} border ${borderColor} rounded-lg p-5`}>
+                  <div className={`${isDark ? 'text-purple-400' : 'text-purple-600'} text-xs uppercase tracking-wide mb-2`}>Categories</div>
+                  <div className={`text-3xl font-bold ${isDark ? 'text-purple-400' : 'text-purple-600'}`}>{categories.length}</div>
+                  <div className={`${textMuted} text-xs mt-1`}>product categories</div>
                 </div>
 
-                <div className="bg-black border border-green-400/30 p-5">
-                  <div className="text-green-400/80 text-xs font-mono mb-2">RECENT PAYMENTS</div>
-                  <div className="text-3xl font-bold text-green-400" style={{ fontFamily: 'var(--font-oxanium)' }}>
-                    {formatCents(totalPaymentsAmount)}
-                  </div>
-                  <div className="text-green-400/40 text-xs font-mono mt-1">{payments.length} transactions</div>
+                <div className={`${bgCard} border ${borderColor} rounded-lg p-5`}>
+                  <div className={`${isDark ? 'text-emerald-400' : 'text-emerald-600'} text-xs uppercase tracking-wide mb-2`}>Recent Payments</div>
+                  <div className={`text-3xl font-bold ${isDark ? 'text-emerald-400' : 'text-emerald-600'}`}>{formatCents(totalPaymentsAmount)}</div>
+                  <div className={`${textMuted} text-xs mt-1`}>{payments.length} transactions</div>
                 </div>
 
-                <div className="bg-black border border-[#00A0E0]/30 p-5">
-                  <div className="text-[#00A0E0]/60 text-xs font-mono mb-2">CUSTOMERS</div>
-                  <div className="text-3xl font-bold text-white" style={{ fontFamily: 'var(--font-oxanium)' }}>
-                    {customers.length}
-                  </div>
-                  <div className="text-[#00A0E0]/40 text-xs font-mono mt-1">on record</div>
+                <div className={`${bgCard} border ${borderColor} rounded-lg p-5`}>
+                  <div className={`${textSecondary} text-xs uppercase tracking-wide mb-2`}>Customers</div>
+                  <div className={`text-3xl font-bold ${textPrimary}`}>{customers.length}</div>
+                  <div className={`${textMuted} text-xs mt-1`}>on record</div>
                 </div>
 
-                <div className="bg-black border border-yellow-400/30 p-5">
-                  <div className="text-yellow-400/80 text-xs font-mono mb-2">PENDING BOOKINGS</div>
-                  <div className="text-3xl font-bold text-yellow-400" style={{ fontFamily: 'var(--font-oxanium)' }}>
-                    {pendingBookings}
-                  </div>
-                  <div className="text-yellow-400/40 text-xs font-mono mt-1">awaiting confirmation</div>
+                <div className={`${bgCard} border ${borderColor} rounded-lg p-5`}>
+                  <div className={`${isDark ? 'text-amber-400' : 'text-amber-600'} text-xs uppercase tracking-wide mb-2`}>Pending Bookings</div>
+                  <div className={`text-3xl font-bold ${isDark ? 'text-amber-400' : 'text-amber-600'}`}>{pendingBookings}</div>
+                  <div className={`${textMuted} text-xs mt-1`}>awaiting confirmation</div>
                 </div>
               </div>
 
-              {/* Two-column: Recent Orders + Recent Payments */}
+              {/* Two-column: Orders + Payments */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                {/* Recent Orders */}
-                <div className="bg-black border border-[#00A0E0]/30 p-6">
-                  <h3 className="text-lg font-bold text-[#00A0E0] mb-4 font-mono">Recent Orders</h3>
+                <div className={`${bgCard} border ${borderColor} rounded-lg p-6`}>
+                  <h3 className={`text-lg font-semibold ${textPrimary} mb-4`}>Recent Orders</h3>
                   {orders.length === 0 ? (
-                    <p className="text-[#00A0E0]/40 font-mono text-sm">No orders found</p>
+                    <p className={`${textMuted} text-sm`}>No orders found</p>
                   ) : (
                     <div className="space-y-3">
                       {orders.slice(0, 5).map((order) => (
-                        <div key={order.id} className="p-3 bg-[#0a0a0a] border border-[#00A0E0]/20">
+                        <div key={order.id} className={`p-3 rounded-md ${isDark ? 'bg-slate-900' : 'bg-slate-50'} border ${borderColor}`}>
                           <div className="flex justify-between items-start mb-1">
-                            <span className="text-white font-mono text-sm font-semibold">
-                              {formatCents(order.total)}
-                            </span>
-                            <span className={`px-2 py-0.5 text-xs font-mono border ${
+                            <span className={`${textPrimary} text-sm font-semibold`}>{formatCents(order.total)}</span>
+                            <span className={`px-2 py-0.5 text-xs rounded-full border ${
                               order.paymentState === 'PAID'
-                                ? 'text-green-400 border-green-400/30 bg-green-400/10'
-                                : 'text-yellow-400 border-yellow-400/30 bg-yellow-400/10'
+                                ? isDark ? 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10' : 'text-emerald-600 border-emerald-200 bg-emerald-50'
+                                : isDark ? 'text-amber-400 border-amber-400/30 bg-amber-400/10' : 'text-amber-600 border-amber-200 bg-amber-50'
                             }`}>
                               {order.paymentState || 'OPEN'}
                             </span>
                           </div>
-                          {order.note && (
-                            <div className="text-[#00A0E0]/60 text-xs font-mono">{order.note.split('\n')[0]}</div>
-                          )}
+                          {order.note && <div className={`${textSecondary} text-xs`}>{order.note.split('\n')[0]}</div>}
                           {order.lineItems?.elements && (
-                            <div className="text-[#00A0E0]/40 text-xs font-mono mt-1">
+                            <div className={`${textMuted} text-xs mt-1`}>
                               {order.lineItems.elements.map(li => li.name).join(', ')}
                             </div>
                           )}
-                          {order.createdTime && (
-                            <div className="text-[#00A0E0]/30 text-xs font-mono mt-1">
-                              {formatDate(order.createdTime)}
-                            </div>
-                          )}
+                          {order.createdTime && <div className={`${textMuted} text-xs mt-1`}>{formatDate(order.createdTime)}</div>}
                         </div>
                       ))}
-                      <button
-                        onClick={() => setActiveNav('orders')}
-                        className="w-full py-2 text-[#00A0E0] border border-[#00A0E0]/30 hover:border-[#00A0E0] transition-colors font-mono text-sm"
-                      >
+                      <button onClick={() => setActiveNav('orders')} className={`w-full py-2 ${textAccent} border ${borderColor} rounded-md ${bgHover} transition-colors text-sm`}>
                         View All Orders
                       </button>
                     </div>
                   )}
                 </div>
 
-                {/* Recent Payments */}
-                <div className="bg-black border border-green-400/30 p-6">
-                  <h3 className="text-lg font-bold text-green-400 mb-4 font-mono">Recent Payments</h3>
+                <div className={`${bgCard} border ${borderColor} rounded-lg p-6`}>
+                  <h3 className={`text-lg font-semibold ${isDark ? 'text-emerald-400' : 'text-emerald-600'} mb-4`}>Recent Payments</h3>
                   {payments.length === 0 ? (
-                    <p className="text-[#00A0E0]/40 font-mono text-sm">No payments found</p>
+                    <p className={`${textMuted} text-sm`}>No payments found</p>
                   ) : (
                     <div className="space-y-3">
                       {payments.slice(0, 5).map((payment) => (
-                        <div key={payment.id} className="p-3 bg-[#0a0a0a] border border-green-400/20">
+                        <div key={payment.id} className={`p-3 rounded-md ${isDark ? 'bg-slate-900' : 'bg-slate-50'} border ${borderColor}`}>
                           <div className="flex justify-between items-center">
                             <div>
-                              <span className="text-white font-mono text-sm font-semibold">
-                                {formatCents(payment.amount)}
-                              </span>
+                              <span className={`${textPrimary} text-sm font-semibold`}>{formatCents(payment.amount)}</span>
                               {(payment.tipAmount ?? 0) > 0 && (
-                                <span className="text-green-400/60 text-xs font-mono ml-2">
+                                <span className={`${isDark ? 'text-emerald-400/60' : 'text-emerald-600'} text-xs ml-2`}>
                                   +{formatCents(payment.tipAmount!)} tip
                                 </span>
                               )}
                             </div>
-                            <span className={`px-2 py-0.5 text-xs font-mono border ${
+                            <span className={`px-2 py-0.5 text-xs rounded-full border ${
                               payment.result === 'SUCCESS'
-                                ? 'text-green-400 border-green-400/30 bg-green-400/10'
-                                : 'text-red-400 border-red-400/30 bg-red-400/10'
+                                ? isDark ? 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10' : 'text-emerald-600 border-emerald-200 bg-emerald-50'
+                                : isDark ? 'text-red-400 border-red-400/30 bg-red-400/10' : 'text-red-600 border-red-200 bg-red-50'
                             }`}>
                               {payment.result}
                             </span>
                           </div>
                           <div className="flex justify-between mt-1">
-                            <span className="text-[#00A0E0]/50 text-xs font-mono">
-                              {payment.tender?.label || 'Unknown'}
-                            </span>
-                            {payment.createdTime && (
-                              <span className="text-[#00A0E0]/30 text-xs font-mono">
-                                {formatDate(payment.createdTime)}
-                              </span>
-                            )}
+                            <span className={`${textMuted} text-xs`}>{payment.tender?.label || 'Unknown'}</span>
+                            {payment.createdTime && <span className={`${textMuted} text-xs`}>{formatDate(payment.createdTime)}</span>}
                           </div>
                         </div>
                       ))}
-                      <button
-                        onClick={() => setActiveNav('payments')}
-                        className="w-full py-2 text-green-400 border border-green-400/30 hover:border-green-400 transition-colors font-mono text-sm"
-                      >
+                      <button onClick={() => setActiveNav('payments')} className={`w-full py-2 ${isDark ? 'text-emerald-400' : 'text-emerald-600'} border ${borderColor} rounded-md ${bgHover} transition-colors text-sm`}>
                         View All Payments
                       </button>
                     </div>
@@ -421,15 +439,14 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              {/* Categories Overview */}
-              <div className="bg-black border border-purple-400/30 p-6">
-                <h3 className="text-lg font-bold text-purple-400 mb-4 font-mono">Product Categories</h3>
+              {/* Categories */}
+              <div className={`${bgCard} border ${borderColor} rounded-lg p-6`}>
+                <h3 className={`text-lg font-semibold ${isDark ? 'text-purple-400' : 'text-purple-600'} mb-4`}>Product Categories</h3>
                 <div className="flex flex-wrap gap-2">
                   {categories.map((cat) => (
-                    <span
-                      key={cat.id}
-                      className="px-3 py-1.5 bg-purple-400/10 text-purple-400 border border-purple-400/30 font-mono text-xs"
-                    >
+                    <span key={cat.id} className={`px-3 py-1.5 rounded-full text-xs ${
+                      isDark ? 'bg-purple-400/10 text-purple-400 border border-purple-400/20' : 'bg-purple-50 text-purple-600 border border-purple-200'
+                    }`}>
                       {cat.name}
                     </span>
                   ))}
@@ -443,78 +460,67 @@ export default function AdminPage() {
             <div>
               <div className="mb-6 flex items-center justify-between">
                 <div>
-                  <h2 className="text-3xl font-bold text-white mb-2" style={{ fontFamily: 'var(--font-oxanium)' }}>
-                    Clover Inventory
-                  </h2>
-                  <p className="text-[#00A0E0]/60 font-mono">Live inventory from your Clover POS system</p>
+                  <h2 className={`text-3xl font-bold ${textPrimary} mb-1`}>Clover Inventory</h2>
+                  <p className={textSecondary}>Live inventory from your Clover POS system</p>
                 </div>
-                <a
-                  href="/products"
-                  target="_blank"
-                  className="px-6 py-3 border border-[#00A0E0]/30 text-[#00A0E0] font-mono hover:border-[#00A0E0] transition-colors"
-                >
+                <a href="/products" target="_blank" className={`px-5 py-2.5 border ${borderColor} ${textAccent} rounded-md ${bgHover} transition-colors text-sm`}>
                   View Store &rarr;
                 </a>
               </div>
 
-              {/* Search */}
               <div className="mb-4">
                 <input
                   type="text"
                   value={inventorySearch}
                   onChange={(e) => setInventorySearch(e.target.value)}
                   placeholder="Search inventory by name, description, or barcode..."
-                  className="w-full md:w-96 bg-black border border-[#00A0E0]/30 text-white px-4 py-2 font-mono text-sm placeholder:text-[#00A0E0]/30 focus:border-[#00A0E0] focus:outline-none"
+                  className={`w-full md:w-96 ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm placeholder:${textMuted} focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500 transition-colors`}
                 />
               </div>
 
-              <div className="bg-black border border-[#00A0E0]/30">
+              <div className={`${bgCard} border ${borderColor} rounded-lg overflow-hidden`}>
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className="border-b border-[#00A0E0]/30">
-                        <th className="px-6 py-4 text-left text-[#00A0E0] font-mono font-semibold text-sm">ITEM</th>
-                        <th className="px-6 py-4 text-left text-[#00A0E0] font-mono font-semibold text-sm">BARCODE</th>
-                        <th className="px-6 py-4 text-left text-[#00A0E0] font-mono font-semibold text-sm">PRICE</th>
-                        <th className="px-6 py-4 text-left text-[#00A0E0] font-mono font-semibold text-sm">COST</th>
-                        <th className="px-6 py-4 text-left text-[#00A0E0] font-mono font-semibold text-sm">STOCK</th>
-                        <th className="px-6 py-4 text-left text-[#00A0E0] font-mono font-semibold text-sm">CATEGORY</th>
+                      <tr className={`border-b ${borderColor} ${isDark ? 'bg-slate-800/50' : 'bg-slate-50'}`}>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Item</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Barcode</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Price</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Cost</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Stock</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Category</th>
                       </tr>
                     </thead>
                     <tbody>
                       {filteredInventory.map((item) => (
-                        <tr key={item.id} className="border-b border-[#00A0E0]/10 hover:bg-[#00A0E0]/5 transition-colors">
-                          <td className="px-6 py-4">
-                            <div className="font-mono">
-                              <div className="text-white font-semibold">{item.name}</div>
-                              {item.description && (
-                                <div className="text-[#00A0E0]/50 text-xs mt-0.5 max-w-xs truncate">{item.description}</div>
-                              )}
-                            </div>
+                        <tr key={item.id} className={`border-b ${borderColor} ${bgHover} transition-colors`}>
+                          <td className="px-6 py-3">
+                            <div className={`${textPrimary} text-sm font-medium`}>{item.name}</div>
+                            {item.description && <div className={`${textMuted} text-xs mt-0.5 max-w-xs truncate`}>{item.description}</div>}
                           </td>
-                          <td className="px-6 py-4 text-[#00A0E0]/60 font-mono text-sm">{item.code || '—'}</td>
-                          <td className="px-6 py-4 text-white font-mono font-semibold">{formatCents(item.price)}</td>
-                          <td className="px-6 py-4 text-[#00A0E0]/60 font-mono text-sm">
-                            {item.cost ? formatCents(item.cost) : '—'}
-                          </td>
-                          <td className="px-6 py-4">
-                            <span className={`px-2 py-0.5 text-xs font-mono border ${
+                          <td className={`px-6 py-3 ${textSecondary} text-sm`}>{item.code || '—'}</td>
+                          <td className={`px-6 py-3 ${textPrimary} text-sm font-medium`}>{formatCents(item.price)}</td>
+                          <td className={`px-6 py-3 ${textSecondary} text-sm`}>{item.cost ? formatCents(item.cost) : '—'}</td>
+                          <td className="px-6 py-3">
+                            <span className={`px-2 py-0.5 text-xs rounded-full border ${
                               (item.stockCount ?? 0) > 5
-                                ? 'text-green-400 border-green-400/30 bg-green-400/10'
+                                ? isDark ? 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10' : 'text-emerald-600 border-emerald-200 bg-emerald-50'
                                 : (item.stockCount ?? 0) > 0
-                                ? 'text-yellow-400 border-yellow-400/30 bg-yellow-400/10'
-                                : 'text-red-400/60 border-red-400/20 bg-red-400/5'
+                                ? isDark ? 'text-amber-400 border-amber-400/30 bg-amber-400/10' : 'text-amber-600 border-amber-200 bg-amber-50'
+                                : isDark ? 'text-red-400/60 border-red-400/20 bg-red-400/5' : 'text-red-500 border-red-200 bg-red-50'
                             }`}>
                               {item.stockCount ?? 0}
                             </span>
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-6 py-3">
                             {item.categories?.elements && item.categories.elements.length > 0 ? (
-                              <span className="px-2 py-0.5 text-xs font-mono border text-purple-400 border-purple-400/30 bg-purple-400/10">
+                              <span className={`px-2 py-0.5 text-xs rounded-full border ${
+                                isDark ? 'text-purple-400 border-purple-400/20 bg-purple-400/10' : 'text-purple-600 border-purple-200 bg-purple-50'
+                              }`}>
                                 {item.categories.elements[0].name}
                               </span>
                             ) : (
-                              <span className="text-[#00A0E0]/30 text-xs font-mono">—</span>
+                              <span className={`${textMuted} text-xs`}>—</span>
                             )}
                           </td>
                         </tr>
@@ -523,33 +529,18 @@ export default function AdminPage() {
                   </table>
                 </div>
                 {filteredInventory.length === 0 && (
-                  <div className="text-center text-[#00A0E0]/60 font-mono py-12">
+                  <div className={`text-center ${textMuted} py-12 text-sm`}>
                     {inventorySearch ? 'No items match your search.' : 'No inventory items found.'}
                   </div>
                 )}
               </div>
 
-              {/* Pagination */}
               {!inventorySearch && (
                 <div className="flex justify-between items-center mt-4">
-                  <span className="text-[#00A0E0]/40 font-mono text-sm">
-                    Showing {inventoryOffset + 1}–{inventoryOffset + inventoryCount} items
-                  </span>
+                  <span className={`${textMuted} text-sm`}>Showing {inventoryOffset + 1}–{inventoryOffset + inventoryCount} items</span>
                   <div className="flex gap-2">
-                    <button
-                      onClick={() => fetchInventoryPage(Math.max(0, inventoryOffset - PAGE_SIZE))}
-                      disabled={inventoryOffset === 0}
-                      className="px-4 py-2 border border-[#00A0E0]/30 text-[#00A0E0] font-mono text-sm hover:border-[#00A0E0] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                    >
-                      &larr; Previous
-                    </button>
-                    <button
-                      onClick={() => fetchInventoryPage(inventoryOffset + PAGE_SIZE)}
-                      disabled={inventoryCount < PAGE_SIZE}
-                      className="px-4 py-2 border border-[#00A0E0]/30 text-[#00A0E0] font-mono text-sm hover:border-[#00A0E0] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                    >
-                      Next &rarr;
-                    </button>
+                    <button onClick={() => fetchInventoryPage(Math.max(0, inventoryOffset - PAGE_SIZE))} disabled={inventoryOffset === 0} className={paginationBtn}>&larr; Previous</button>
+                    <button onClick={() => fetchInventoryPage(inventoryOffset + PAGE_SIZE)} disabled={inventoryCount < PAGE_SIZE} className={paginationBtn}>Next &rarr;</button>
                   </div>
                 </div>
               )}
@@ -560,88 +551,62 @@ export default function AdminPage() {
           {activeNav === 'orders' && (
             <div>
               <div className="mb-6">
-                <h2 className="text-3xl font-bold text-white mb-2" style={{ fontFamily: 'var(--font-oxanium)' }}>
-                  Orders
-                </h2>
-                <p className="text-[#00A0E0]/60 font-mono">Recent orders from Clover POS</p>
+                <h2 className={`text-3xl font-bold ${textPrimary} mb-1`}>Orders</h2>
+                <p className={textSecondary}>Recent orders from Clover POS</p>
               </div>
 
-              <div className="bg-black border border-[#00A0E0]/30">
+              <div className={`${bgCard} border ${borderColor} rounded-lg overflow-hidden`}>
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className="border-b border-[#00A0E0]/30">
-                        <th className="px-6 py-4 text-left text-[#00A0E0] font-mono font-semibold text-sm">ORDER</th>
-                        <th className="px-6 py-4 text-left text-[#00A0E0] font-mono font-semibold text-sm">LINE ITEMS</th>
-                        <th className="px-6 py-4 text-left text-[#00A0E0] font-mono font-semibold text-sm">TOTAL</th>
-                        <th className="px-6 py-4 text-left text-[#00A0E0] font-mono font-semibold text-sm">STATUS</th>
-                        <th className="px-6 py-4 text-left text-[#00A0E0] font-mono font-semibold text-sm">DATE</th>
+                      <tr className={`border-b ${borderColor} ${isDark ? 'bg-slate-800/50' : 'bg-slate-50'}`}>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Order</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Line Items</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Total</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Status</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Date</th>
                       </tr>
                     </thead>
                     <tbody>
                       {orders.map((order) => (
-                        <tr key={order.id} className="border-b border-[#00A0E0]/10 hover:bg-[#00A0E0]/5 transition-colors">
-                          <td className="px-6 py-4">
-                            <div className="font-mono">
-                              <div className="text-white text-sm">{order.id.slice(0, 8)}...</div>
-                              {order.note && (
-                                <div className="text-[#00A0E0]/50 text-xs mt-0.5">{order.note.split('\n')[0]}</div>
-                              )}
-                            </div>
+                        <tr key={order.id} className={`border-b ${borderColor} ${bgHover} transition-colors`}>
+                          <td className="px-6 py-3">
+                            <div className={`${textPrimary} text-sm`}>{order.id.slice(0, 8)}...</div>
+                            {order.note && <div className={`${textMuted} text-xs mt-0.5`}>{order.note.split('\n')[0]}</div>}
                           </td>
-                          <td className="px-6 py-4">
-                            <div className="font-mono text-sm">
+                          <td className="px-6 py-3">
+                            <div className="text-sm">
                               {order.lineItems?.elements?.map((li, i) => (
-                                <div key={li.id || i} className="text-white">
-                                  {li.name}
-                                  <span className="text-[#00A0E0]/40 ml-2">{formatCents(li.price)}</span>
+                                <div key={li.id || i} className={textPrimary}>
+                                  {li.name} <span className={textMuted}>{formatCents(li.price)}</span>
                                 </div>
-                              )) || <span className="text-[#00A0E0]/30">—</span>}
+                              )) || <span className={textMuted}>—</span>}
                             </div>
                           </td>
-                          <td className="px-6 py-4 text-white font-mono font-semibold">{formatCents(order.total)}</td>
-                          <td className="px-6 py-4">
-                            <span className={`px-2 py-0.5 text-xs font-mono border ${
+                          <td className={`px-6 py-3 ${textPrimary} text-sm font-medium`}>{formatCents(order.total)}</td>
+                          <td className="px-6 py-3">
+                            <span className={`px-2 py-0.5 text-xs rounded-full border ${
                               order.paymentState === 'PAID'
-                                ? 'text-green-400 border-green-400/30 bg-green-400/10'
-                                : 'text-yellow-400 border-yellow-400/30 bg-yellow-400/10'
+                                ? isDark ? 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10' : 'text-emerald-600 border-emerald-200 bg-emerald-50'
+                                : isDark ? 'text-amber-400 border-amber-400/30 bg-amber-400/10' : 'text-amber-600 border-amber-200 bg-amber-50'
                             }`}>
                               {order.paymentState || 'OPEN'}
                             </span>
                           </td>
-                          <td className="px-6 py-4 text-[#00A0E0]/60 font-mono text-sm">
-                            {order.createdTime ? formatDate(order.createdTime) : '—'}
-                          </td>
+                          <td className={`px-6 py-3 ${textSecondary} text-sm`}>{order.createdTime ? formatDate(order.createdTime) : '—'}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
-                {orders.length === 0 && (
-                  <div className="text-center text-[#00A0E0]/60 font-mono py-12">No orders found.</div>
-                )}
+                {orders.length === 0 && <div className={`text-center ${textMuted} py-12 text-sm`}>No orders found.</div>}
               </div>
 
-              {/* Pagination */}
               <div className="flex justify-between items-center mt-4">
-                <span className="text-[#00A0E0]/40 font-mono text-sm">
-                  Page {Math.floor(ordersOffset / PAGE_SIZE) + 1}
-                </span>
+                <span className={`${textMuted} text-sm`}>Page {Math.floor(ordersOffset / PAGE_SIZE) + 1}</span>
                 <div className="flex gap-2">
-                  <button
-                    onClick={() => fetchOrdersPage(Math.max(0, ordersOffset - PAGE_SIZE))}
-                    disabled={ordersOffset === 0}
-                    className="px-4 py-2 border border-[#00A0E0]/30 text-[#00A0E0] font-mono text-sm hover:border-[#00A0E0] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    &larr; Previous
-                  </button>
-                  <button
-                    onClick={() => fetchOrdersPage(ordersOffset + PAGE_SIZE)}
-                    disabled={orders.length < PAGE_SIZE}
-                    className="px-4 py-2 border border-[#00A0E0]/30 text-[#00A0E0] font-mono text-sm hover:border-[#00A0E0] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    Next &rarr;
-                  </button>
+                  <button onClick={() => fetchOrdersPage(Math.max(0, ordersOffset - PAGE_SIZE))} disabled={ordersOffset === 0} className={paginationBtn}>&larr; Previous</button>
+                  <button onClick={() => fetchOrdersPage(ordersOffset + PAGE_SIZE)} disabled={orders.length < PAGE_SIZE} className={paginationBtn}>Next &rarr;</button>
                 </div>
               </div>
             </div>
@@ -651,82 +616,59 @@ export default function AdminPage() {
           {activeNav === 'payments' && (
             <div>
               <div className="mb-6">
-                <h2 className="text-3xl font-bold text-white mb-2" style={{ fontFamily: 'var(--font-oxanium)' }}>
-                  Payments
-                </h2>
-                <p className="text-[#00A0E0]/60 font-mono">Payment history from Clover POS</p>
+                <h2 className={`text-3xl font-bold ${textPrimary} mb-1`}>Payments</h2>
+                <p className={textSecondary}>Payment history from Clover POS</p>
               </div>
 
-              <div className="bg-black border border-green-400/30">
+              <div className={`${bgCard} border ${borderColor} rounded-lg overflow-hidden`}>
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className="border-b border-green-400/30">
-                        <th className="px-6 py-4 text-left text-green-400 font-mono font-semibold text-sm">AMOUNT</th>
-                        <th className="px-6 py-4 text-left text-green-400 font-mono font-semibold text-sm">TIP</th>
-                        <th className="px-6 py-4 text-left text-green-400 font-mono font-semibold text-sm">TAX</th>
-                        <th className="px-6 py-4 text-left text-green-400 font-mono font-semibold text-sm">TENDER</th>
-                        <th className="px-6 py-4 text-left text-green-400 font-mono font-semibold text-sm">RESULT</th>
-                        <th className="px-6 py-4 text-left text-green-400 font-mono font-semibold text-sm">DATE</th>
+                      <tr className={`border-b ${borderColor} ${isDark ? 'bg-slate-800/50' : 'bg-slate-50'}`}>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Amount</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Tip</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Tax</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Tender</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Result</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Date</th>
                       </tr>
                     </thead>
                     <tbody>
                       {payments.map((payment) => (
-                        <tr key={payment.id} className="border-b border-green-400/10 hover:bg-green-400/5 transition-colors">
-                          <td className="px-6 py-4 text-white font-mono font-semibold">{formatCents(payment.amount)}</td>
-                          <td className="px-6 py-4 text-[#00A0E0]/60 font-mono text-sm">
-                            {(payment.tipAmount ?? 0) > 0 ? formatCents(payment.tipAmount!) : '—'}
-                          </td>
-                          <td className="px-6 py-4 text-[#00A0E0]/60 font-mono text-sm">
-                            {(payment.taxAmount ?? 0) > 0 ? formatCents(payment.taxAmount!) : '—'}
-                          </td>
-                          <td className="px-6 py-4">
-                            <span className="px-2 py-0.5 text-xs font-mono border text-[#00A0E0] border-[#00A0E0]/30 bg-[#00A0E0]/10">
+                        <tr key={payment.id} className={`border-b ${borderColor} ${bgHover} transition-colors`}>
+                          <td className={`px-6 py-3 ${textPrimary} text-sm font-medium`}>{formatCents(payment.amount)}</td>
+                          <td className={`px-6 py-3 ${textSecondary} text-sm`}>{(payment.tipAmount ?? 0) > 0 ? formatCents(payment.tipAmount!) : '—'}</td>
+                          <td className={`px-6 py-3 ${textSecondary} text-sm`}>{(payment.taxAmount ?? 0) > 0 ? formatCents(payment.taxAmount!) : '—'}</td>
+                          <td className="px-6 py-3">
+                            <span className={`px-2 py-0.5 text-xs rounded-full border ${
+                              isDark ? 'text-blue-400 border-blue-400/20 bg-blue-400/10' : 'text-blue-600 border-blue-200 bg-blue-50'
+                            }`}>
                               {payment.tender?.label || 'Unknown'}
                             </span>
                           </td>
-                          <td className="px-6 py-4">
-                            <span className={`px-2 py-0.5 text-xs font-mono border ${
+                          <td className="px-6 py-3">
+                            <span className={`px-2 py-0.5 text-xs rounded-full border ${
                               payment.result === 'SUCCESS'
-                                ? 'text-green-400 border-green-400/30 bg-green-400/10'
-                                : 'text-red-400 border-red-400/30 bg-red-400/10'
+                                ? isDark ? 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10' : 'text-emerald-600 border-emerald-200 bg-emerald-50'
+                                : isDark ? 'text-red-400 border-red-400/30 bg-red-400/10' : 'text-red-600 border-red-200 bg-red-50'
                             }`}>
                               {payment.result}
                             </span>
                           </td>
-                          <td className="px-6 py-4 text-[#00A0E0]/60 font-mono text-sm">
-                            {payment.createdTime ? formatDate(payment.createdTime) : '—'}
-                          </td>
+                          <td className={`px-6 py-3 ${textSecondary} text-sm`}>{payment.createdTime ? formatDate(payment.createdTime) : '—'}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
-                {payments.length === 0 && (
-                  <div className="text-center text-[#00A0E0]/60 font-mono py-12">No payments found.</div>
-                )}
+                {payments.length === 0 && <div className={`text-center ${textMuted} py-12 text-sm`}>No payments found.</div>}
               </div>
 
-              {/* Pagination */}
               <div className="flex justify-between items-center mt-4">
-                <span className="text-[#00A0E0]/40 font-mono text-sm">
-                  Page {Math.floor(paymentsOffset / PAGE_SIZE) + 1}
-                </span>
+                <span className={`${textMuted} text-sm`}>Page {Math.floor(paymentsOffset / PAGE_SIZE) + 1}</span>
                 <div className="flex gap-2">
-                  <button
-                    onClick={() => fetchPaymentsPage(Math.max(0, paymentsOffset - PAGE_SIZE))}
-                    disabled={paymentsOffset === 0}
-                    className="px-4 py-2 border border-green-400/30 text-green-400 font-mono text-sm hover:border-green-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    &larr; Previous
-                  </button>
-                  <button
-                    onClick={() => fetchPaymentsPage(paymentsOffset + PAGE_SIZE)}
-                    disabled={payments.length < PAGE_SIZE}
-                    className="px-4 py-2 border border-green-400/30 text-green-400 font-mono text-sm hover:border-green-400 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    Next &rarr;
-                  </button>
+                  <button onClick={() => fetchPaymentsPage(Math.max(0, paymentsOffset - PAGE_SIZE))} disabled={paymentsOffset === 0} className={paginationBtn}>&larr; Previous</button>
+                  <button onClick={() => fetchPaymentsPage(paymentsOffset + PAGE_SIZE)} disabled={payments.length < PAGE_SIZE} className={paginationBtn}>Next &rarr;</button>
                 </div>
               </div>
             </div>
@@ -736,73 +678,52 @@ export default function AdminPage() {
           {activeNav === 'customers' && (
             <div>
               <div className="mb-6">
-                <h2 className="text-3xl font-bold text-white mb-2" style={{ fontFamily: 'var(--font-oxanium)' }}>
-                  Customers
-                </h2>
-                <p className="text-[#00A0E0]/60 font-mono">Customer records from Clover POS</p>
+                <h2 className={`text-3xl font-bold ${textPrimary} mb-1`}>Customers</h2>
+                <p className={textSecondary}>Customer records from Clover POS</p>
               </div>
 
-              <div className="bg-black border border-[#00A0E0]/30">
+              <div className={`${bgCard} border ${borderColor} rounded-lg overflow-hidden`}>
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className="border-b border-[#00A0E0]/30">
-                        <th className="px-6 py-4 text-left text-[#00A0E0] font-mono font-semibold text-sm">NAME</th>
-                        <th className="px-6 py-4 text-left text-[#00A0E0] font-mono font-semibold text-sm">MARKETING OPT-IN</th>
-                        <th className="px-6 py-4 text-left text-[#00A0E0] font-mono font-semibold text-sm">CUSTOMER SINCE</th>
+                      <tr className={`border-b ${borderColor} ${isDark ? 'bg-slate-800/50' : 'bg-slate-50'}`}>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Name</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Marketing Opt-in</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Customer Since</th>
                       </tr>
                     </thead>
                     <tbody>
                       {customers.map((customer) => (
-                        <tr key={customer.id} className="border-b border-[#00A0E0]/10 hover:bg-[#00A0E0]/5 transition-colors">
-                          <td className="px-6 py-4 text-white font-mono">
+                        <tr key={customer.id} className={`border-b ${borderColor} ${bgHover} transition-colors`}>
+                          <td className={`px-6 py-3 ${textPrimary} text-sm`}>
                             {customer.firstName || customer.lastName
                               ? `${customer.firstName || ''} ${customer.lastName || ''}`.trim()
-                              : <span className="text-[#00A0E0]/30">Unknown</span>
+                              : <span className={textMuted}>Unknown</span>
                             }
                           </td>
-                          <td className="px-6 py-4">
-                            <span className={`px-2 py-0.5 text-xs font-mono border ${
+                          <td className="px-6 py-3">
+                            <span className={`px-2 py-0.5 text-xs rounded-full border ${
                               customer.marketingAllowed
-                                ? 'text-green-400 border-green-400/30 bg-green-400/10'
-                                : 'text-red-400/60 border-red-400/20 bg-red-400/5'
+                                ? isDark ? 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10' : 'text-emerald-600 border-emerald-200 bg-emerald-50'
+                                : isDark ? 'text-red-400/60 border-red-400/20 bg-red-400/5' : 'text-red-500 border-red-200 bg-red-50'
                             }`}>
                               {customer.marketingAllowed ? 'YES' : 'NO'}
                             </span>
                           </td>
-                          <td className="px-6 py-4 text-[#00A0E0]/60 font-mono text-sm">
-                            {customer.customerSince ? formatDate(customer.customerSince) : '—'}
-                          </td>
+                          <td className={`px-6 py-3 ${textSecondary} text-sm`}>{customer.customerSince ? formatDate(customer.customerSince) : '—'}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
-                {customers.length === 0 && (
-                  <div className="text-center text-[#00A0E0]/60 font-mono py-12">No customers found.</div>
-                )}
+                {customers.length === 0 && <div className={`text-center ${textMuted} py-12 text-sm`}>No customers found.</div>}
               </div>
 
-              {/* Pagination */}
               <div className="flex justify-between items-center mt-4">
-                <span className="text-[#00A0E0]/40 font-mono text-sm">
-                  Page {Math.floor(customersOffset / PAGE_SIZE) + 1}
-                </span>
+                <span className={`${textMuted} text-sm`}>Page {Math.floor(customersOffset / PAGE_SIZE) + 1}</span>
                 <div className="flex gap-2">
-                  <button
-                    onClick={() => fetchCustomersPage(Math.max(0, customersOffset - PAGE_SIZE))}
-                    disabled={customersOffset === 0}
-                    className="px-4 py-2 border border-[#00A0E0]/30 text-[#00A0E0] font-mono text-sm hover:border-[#00A0E0] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    &larr; Previous
-                  </button>
-                  <button
-                    onClick={() => fetchCustomersPage(customersOffset + PAGE_SIZE)}
-                    disabled={customers.length < PAGE_SIZE}
-                    className="px-4 py-2 border border-[#00A0E0]/30 text-[#00A0E0] font-mono text-sm hover:border-[#00A0E0] transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    Next &rarr;
-                  </button>
+                  <button onClick={() => fetchCustomersPage(Math.max(0, customersOffset - PAGE_SIZE))} disabled={customersOffset === 0} className={paginationBtn}>&larr; Previous</button>
+                  <button onClick={() => fetchCustomersPage(customersOffset + PAGE_SIZE)} disabled={customers.length < PAGE_SIZE} className={paginationBtn}>Next &rarr;</button>
                 </div>
               </div>
             </div>
@@ -813,64 +734,56 @@ export default function AdminPage() {
             <div>
               <div className="mb-8 flex items-center justify-between">
                 <div>
-                  <h2 className="text-3xl font-bold text-white mb-2" style={{ fontFamily: 'var(--font-oxanium)' }}>
-                    Bookings
-                  </h2>
-                  <p className="text-[#00A0E0]/60 font-mono">Manage customer appointments and reservations</p>
+                  <h2 className={`text-3xl font-bold ${textPrimary} mb-1`}>Bookings</h2>
+                  <p className={textSecondary}>Manage customer appointments and reservations</p>
                 </div>
-                <button className="px-6 py-3 bg-[#00A0E0] text-black font-mono font-semibold hover:bg-[#00B8FF] transition-colors">
+                <button className={`px-5 py-2.5 bg-blue-500 text-white font-medium rounded-md hover:bg-blue-600 transition-colors text-sm`}>
                   + New Booking
                 </button>
               </div>
 
-              <div className="bg-black border border-[#00A0E0]/30">
+              <div className={`${bgCard} border ${borderColor} rounded-lg overflow-hidden`}>
                 <div className="overflow-x-auto">
                   <table className="w-full">
                     <thead>
-                      <tr className="border-b border-[#00A0E0]/30">
-                        <th className="px-6 py-4 text-left text-[#00A0E0] font-mono font-semibold text-sm">CUSTOMER</th>
-                        <th className="px-6 py-4 text-left text-[#00A0E0] font-mono font-semibold text-sm">SERVICE</th>
-                        <th className="px-6 py-4 text-left text-[#00A0E0] font-mono font-semibold text-sm">DATE & TIME</th>
-                        <th className="px-6 py-4 text-left text-[#00A0E0] font-mono font-semibold text-sm">STATUS</th>
-                        <th className="px-6 py-4 text-left text-[#00A0E0] font-mono font-semibold text-sm">ACTIONS</th>
+                      <tr className={`border-b ${borderColor} ${isDark ? 'bg-slate-800/50' : 'bg-slate-50'}`}>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Customer</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Service</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Date & Time</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Status</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {bookings.map((booking) => (
-                        <tr key={booking.id} className="border-b border-[#00A0E0]/10 hover:bg-[#00A0E0]/5 transition-colors">
-                          <td className="px-6 py-4">
-                            <div className="font-mono">
-                              <div className="text-white font-semibold">{booking.customer_name}</div>
-                              <div className="text-[#00A0E0]/60 text-sm">{booking.customer_email}</div>
-                              <div className="text-[#00A0E0]/60 text-sm">{booking.customer_phone}</div>
-                            </div>
+                        <tr key={booking.id} className={`border-b ${borderColor} ${bgHover} transition-colors`}>
+                          <td className="px-6 py-3">
+                            <div className={`${textPrimary} text-sm font-medium`}>{booking.customer_name}</div>
+                            <div className={`${textSecondary} text-xs`}>{booking.customer_email}</div>
+                            <div className={`${textSecondary} text-xs`}>{booking.customer_phone}</div>
                           </td>
-                          <td className="px-6 py-4">
-                            <div className="font-mono">
-                              <div className="text-white">{serviceNames[booking.service_type] || booking.service_type}</div>
-                              {booking.vehicle_make && (
-                                <div className="text-[#00A0E0]/60 text-sm">
-                                  {booking.vehicle_year} {booking.vehicle_make} {booking.vehicle_model}
-                                </div>
-                              )}
-                            </div>
+                          <td className="px-6 py-3">
+                            <div className={`${textPrimary} text-sm`}>{serviceNames[booking.service_type] || booking.service_type}</div>
+                            {booking.vehicle_make && (
+                              <div className={`${textSecondary} text-xs`}>
+                                {booking.vehicle_year} {booking.vehicle_make} {booking.vehicle_model}
+                              </div>
+                            )}
                           </td>
-                          <td className="px-6 py-4">
-                            <div className="font-mono text-white">
-                              <div>{new Date(booking.appointment_date).toLocaleDateString()}</div>
-                              <div className="text-[#00A0E0]/60 text-sm">{booking.appointment_time}</div>
-                            </div>
+                          <td className="px-6 py-3">
+                            <div className={`${textPrimary} text-sm`}>{new Date(booking.appointment_date).toLocaleDateString()}</div>
+                            <div className={`${textSecondary} text-xs`}>{booking.appointment_time}</div>
                           </td>
-                          <td className="px-6 py-4">
-                            <span className={`px-3 py-1 text-xs font-mono border ${statusColors[booking.status]}`}>
+                          <td className="px-6 py-3">
+                            <span className={`px-2.5 py-1 text-xs rounded-full border ${getStatusClasses(booking.status)}`}>
                               {booking.status.toUpperCase()}
                             </span>
                           </td>
-                          <td className="px-6 py-4">
+                          <td className="px-6 py-3">
                             <select
                               value={booking.status}
                               onChange={(e) => updateBookingStatus(booking.id, e.target.value as BookingStatus)}
-                              className="bg-[#0a0a0a] border border-[#00A0E0]/30 text-[#00A0E0] px-3 py-2 font-mono text-sm hover:border-[#00A0E0] focus:border-[#00A0E0] focus:outline-none transition-colors"
+                              className={`${bgInput} border ${borderColor} ${textPrimary} px-3 py-1.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors`}
                             >
                               <option value="pending">Pending</option>
                               <option value="confirmed">Confirmed</option>
@@ -884,7 +797,7 @@ export default function AdminPage() {
                   </table>
                 </div>
                 {bookings.length === 0 && (
-                  <div className="text-center text-[#00A0E0]/60 font-mono py-12">
+                  <div className={`text-center ${textMuted} py-12 text-sm`}>
                     No bookings found. New appointments will appear here.
                   </div>
                 )}

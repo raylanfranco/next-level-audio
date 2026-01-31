@@ -28,13 +28,15 @@ export async function GET(request: NextRequest) {
     });
 
     // Filter out hidden/deleted/offline items for the storefront
-    const items = (data.elements || []).filter(
+    const rawElements = data.elements || [];
+    const items = rawElements.filter(
       (item) => !item.hidden && !item.deleted
     );
 
     return NextResponse.json({
       items,
       count: items.length,
+      rawCount: rawElements.length,
       href: data.href,
     });
   } catch (error) {

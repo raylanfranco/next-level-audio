@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev:*)",
+      "Bash(timeout:*)",
+      "Bash(curl:*)",
+      "Bash(powershell -Command \"Start-Sleep -Seconds 10; Invoke-RestMethod -Uri ''http://localhost:3000/api/clover/inventory?limit=5'' -Method GET | ConvertTo-Json -Depth 10\")",
+      "Bash(powershell:*)",
+      "Bash(del \"c:\\\\Users\\\\rogui\\\\OneDrive\\\\Desktop\\\\next-level-audio\\\\app\\\\api\\\\clover\\\\explore\\\\route.ts\")",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(npx tsx:*)",
+      "Bash(python3:*)",
+      "Bash(node -e:*)"
+    ]
+  }
+}

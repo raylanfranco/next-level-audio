@@ -28,7 +28,7 @@ export default function Home() {
             <div className="bg-black border-2 border-[#00A0E0]/30 overflow-hidden hover:border-[#00A0E0] transition-all duration-300 transform hover:-translate-y-2 group neon-border-soft">
               <div className="h-64 bg-gradient-to-br from-[#00A0E0]/20 to-black relative overflow-hidden">
                 <img
-                  src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=600&fit=crop"
+                  src="/images/services/window-tints.png"
                   alt="Window Tinting"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
@@ -56,7 +56,7 @@ export default function Home() {
             <div className="bg-black border-2 border-[#00A0E0]/30 overflow-hidden hover:border-[#00A0E0] transition-all duration-300 transform hover:-translate-y-2 group neon-border-soft">
               <div className="h-64 bg-gradient-to-br from-[#00A0E0]/20 to-black relative overflow-hidden">
                 <img
-                  src="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?w=800&h=600&fit=crop"
+                  src="/images/services/car-audio.png"
                   alt="Car Audio"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
@@ -85,7 +85,7 @@ export default function Home() {
             <div className="bg-black border-2 border-[#00A0E0]/30 overflow-hidden hover:border-[#00A0E0] transition-all duration-300 transform hover:-translate-y-2 group neon-border-soft">
               <div className="h-64 bg-gradient-to-br from-black to-[#00A0E0]/20 relative overflow-hidden">
                 <img
-                  src="https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=800&h=600&fit=crop"
+                  src="/images/services/auto-parts.png"
                   alt="Auto Accessories"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
@@ -151,8 +151,12 @@ export default function Home() {
                 because your satisfaction is our top priority!
               </p>
             </div>
-            <div className="bg-gradient-to-br from-[#00A0E0]/20 to-black border-2 border-[#00A0E0]/30 h-96 flex items-center justify-center shadow-2xl overflow-hidden neon-border-soft">
-              <div className="text-[#00A0E0]/30 text-4xl font-bold font-mono">IMAGE PLACEHOLDER</div>
+            <div className="border-2 border-[#00A0E0]/30 h-96 shadow-2xl overflow-hidden neon-border-soft">
+              <img
+                src="/images/about-short.png"
+                alt="About Next Level Audio"
+                className="w-full h-full object-cover"
+              />
             </div>
           </div>
         </div>
