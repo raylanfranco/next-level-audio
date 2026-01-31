@@ -109,9 +109,9 @@ export async function PUT(
     if (body.handle !== undefined) updateData.handle = body.handle;
     if (body.images !== undefined) updateData.images = body.images;
 
-    const { data, error } = await supabase
-      .from('products')
-      .update(updateData as Record<string, unknown>)
+    const query = supabase.from('products') as any;
+    const { data, error } = await query
+      .update(updateData)
       .eq('id', id)
       .select()
       .single();

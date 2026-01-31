@@ -10,7 +10,7 @@ function formatCents(cents: number) {
   return `$${(cents / 100).toFixed(2)}`;
 }
 
-function getStockStatus(item: CloverItem): StockFilter {
+function getStockStatus(item: CloverItem): Exclude<StockFilter, 'all'> {
   const count = item.stockCount ?? 0;
   if (count === 0) return 'out-of-stock';
   if (count < 5) return 'low-stock';
