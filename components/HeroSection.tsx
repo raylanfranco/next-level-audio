@@ -75,7 +75,7 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button
               onClick={openModal}
-              className="px-8 py-4 bg-[#00A0E0]/20 text-white border-2 border-[#00A0E0] font-semibold text-lg hover:bg-[#00A0E0]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
+              className="px-8 py-4 bg-[#00A0E0]/20 text-white border-2 border-[#00A0E0] font-semibold text-lg hover:bg-[#00A0E0]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button cursor-pointer"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               BOOK APPOINTMENT

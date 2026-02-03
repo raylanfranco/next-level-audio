@@ -14,24 +14,36 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const limit = searchParams.get("limit") || "100";
     const offset = searchParams.get("offset") || "0";
-    const expand = searchParams.get("expand") || "categories,tags";
+    const expand = searchParams.get("expand") || "categories,tags,itemStock";
 
     const categoryId = searchParams.get("category");
+    const search = searchParams.get("search");
 
     // If filtering by category, use the category-items endpoint
     const endpoint = categoryId
       ? `/categories/${categoryId}/items`
       : "/items";
 
+    const params: Record<string, string> = { limit, offset, expand };
+
+    // Clover supports server-side filtering with the `filter` param
+    if (search) {
+      params.filter = `name LIKE %${search}%`;
+    }
+
     const data = await cloverFetch<CloverItemsResponse>(endpoint, {
-      params: { limit, offset, expand },
+      params,
     });
 
     // Filter out hidden/deleted/offline items for the storefront
     const rawElements = data.elements || [];
-    const items = rawElements.filter(
-      (item) => !item.hidden && !item.deleted
-    );
+    const items = rawElements
+      .filter((item) => !item.hidden && !item.deleted)
+      .map((item) => ({
+        ...item,
+        // Use expanded itemStock quantity when available
+        stockCount: item.itemStock?.quantity ?? item.stockCount ?? 0,
+      }));
 
     return NextResponse.json({
       items,

@@ -1,29 +1,6 @@
 'use client';
 
-import VideoLightbox from './VideoLightbox';
-
-interface Video {
-  id: string;
-  title: string;
-  thumbnail?: string;
-}
-
-interface VideoSectionProps {
-  videos?: Video[];
-  defaultVideoId?: string;
-  defaultVideoTitle?: string;
-}
-
-export default function VideoSection({
-  videos,
-  defaultVideoId = 'dQw4w9WgXcQ', // Classic rickroll fallback 😄
-  defaultVideoTitle = 'Watch Our Work',
-}: VideoSectionProps) {
-  // Use provided videos or default single video
-  const displayVideos = videos && videos.length > 0 
-    ? videos 
-    : [{ id: defaultVideoId, title: defaultVideoTitle || 'Watch Our Work' }];
-
+export default function VideoSection() {
   return (
     <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
       <div className="absolute inset-0 cyber-grid opacity-20"></div>
@@ -37,31 +14,18 @@ export default function VideoSection({
           </p>
         </div>
 
-        {displayVideos.length === 1 ? (
-          // Single video - full width display
-          <div className="w-full">
-            <VideoLightbox
-              videoId={displayVideos[0].id}
-              thumbnail={displayVideos[0].thumbnail}
-              title={displayVideos[0].title}
-              className="w-full"
-            />
-          </div>
-        ) : (
-          // Multiple videos - grid layout
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {displayVideos.map((video) => (
-              <VideoLightbox
-                key={video.id}
-                videoId={video.id}
-                thumbnail={video.thumbnail}
-                title={video.title}
-              />
-            ))}
-          </div>
-        )}
+        <div className="max-w-4xl mx-auto border-2 border-[#00A0E0]/30 neon-border-soft overflow-hidden">
+          <video
+            controls
+            preload="metadata"
+            className="w-full"
+            poster=""
+          >
+            <source src="/videos/about.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        </div>
       </div>
     </section>
   );
 }
-

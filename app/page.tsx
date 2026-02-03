@@ -117,17 +117,7 @@ export default function Home() {
       <ProductsSection />
 
       {/* Video Section */}
-      <VideoSection 
-        // Replace with actual YouTube video ID from your channel
-        // Get the ID from your YouTube video URL: https://www.youtube.com/watch?v=VIDEO_ID_HERE
-        defaultVideoId="dQw4w9WgXcQ" // Classic rickroll - replace with your video ID! 😄
-        defaultVideoTitle="Next Level Audio - Our Work"
-        // Or pass multiple videos:
-        // videos={[
-        //   { id: 'video-id-1', title: 'Car Audio Installation' },
-        //   { id: 'video-id-2', title: 'Window Tinting Process' },
-        // ]}
-      />
+      <VideoSection />
 
       {/* About Section */}
       <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">

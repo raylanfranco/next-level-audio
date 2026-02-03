@@ -134,9 +134,14 @@ function AdminDashboard() {
     fetchOverviewData();
   }, [fetchOverviewData]);
 
-  const fetchInventoryPage = async (offset: number) => {
+  const fetchInventoryPage = async (offset: number, search?: string) => {
     try {
-      const res = await fetch(`/api/clover/inventory?limit=${PAGE_SIZE}&offset=${offset}`);
+      const params = new URLSearchParams({
+        limit: String(PAGE_SIZE),
+        offset: String(offset),
+      });
+      if (search) params.set('search', search);
+      const res = await fetch(`/api/clover/inventory?${params}`);
       if (res.ok) {
         const d = await res.json();
         setInventory(d.items || []);
@@ -197,13 +202,20 @@ function AdminDashboard() {
     );
   };
 
-  const filteredInventory = inventorySearch
-    ? inventory.filter(item =>
-        item.name.toLowerCase().includes(inventorySearch.toLowerCase()) ||
-        (item.description || '').toLowerCase().includes(inventorySearch.toLowerCase()) ||
-        (item.code || '').includes(inventorySearch)
-      )
-    : inventory;
+  // Debounced server-side search
+  useEffect(() => {
+    if (!inventorySearch) {
+      fetchInventoryPage(0);
+      return;
+    }
+    const timer = setTimeout(() => {
+      fetchInventoryPage(0, inventorySearch);
+    }, 400);
+    return () => clearTimeout(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [inventorySearch]);
+
+  const filteredInventory = inventory;
 
   const totalPaymentsAmount = payments.reduce((sum, p) => sum + p.amount, 0);
   const pendingBookings = bookings.filter(b => b.status === 'pending').length;
@@ -535,15 +547,13 @@ function AdminDashboard() {
                 )}
               </div>
 
-              {!inventorySearch && (
-                <div className="flex justify-between items-center mt-4">
-                  <span className={`${textMuted} text-sm`}>Showing {inventoryOffset + 1}–{inventoryOffset + inventoryCount} items</span>
-                  <div className="flex gap-2">
-                    <button onClick={() => fetchInventoryPage(Math.max(0, inventoryOffset - PAGE_SIZE))} disabled={inventoryOffset === 0} className={paginationBtn}>&larr; Previous</button>
-                    <button onClick={() => fetchInventoryPage(inventoryOffset + PAGE_SIZE)} disabled={inventoryCount < PAGE_SIZE} className={paginationBtn}>Next &rarr;</button>
-                  </div>
+              <div className="flex justify-between items-center mt-4">
+                <span className={`${textMuted} text-sm`}>Showing {inventoryOffset + 1}–{inventoryOffset + inventoryCount} items{inventorySearch ? ` matching "${inventorySearch}"` : ''}</span>
+                <div className="flex gap-2">
+                  <button onClick={() => fetchInventoryPage(Math.max(0, inventoryOffset - PAGE_SIZE), inventorySearch || undefined)} disabled={inventoryOffset === 0} className={paginationBtn}>&larr; Previous</button>
+                  <button onClick={() => fetchInventoryPage(inventoryOffset + PAGE_SIZE, inventorySearch || undefined)} disabled={inventoryCount < PAGE_SIZE} className={paginationBtn}>Next &rarr;</button>
                 </div>
-              )}
+              </div>
             </div>
           )}
 

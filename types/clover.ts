@@ -9,6 +9,7 @@ export interface CloverItem {
   cost?: number;
   isRevenue?: boolean;
   stockCount?: number;
+  itemStock?: { quantity: number; stockCount?: number };
   sku?: string;
   code?: string;
   hidden?: boolean;
