@@ -10,7 +10,7 @@ function formatCents(cents: number) {
   return `$${(cents / 100).toFixed(2)}`;
 }
 
-function getStockStatus(item: CloverItem): Exclude<StockFilter, 'all'> {
+function getStockStatus(item: CloverItem): StockFilter {
   const count = item.stockCount ?? 0;
   if (count === 0) return 'out-of-stock';
   if (count < 5) return 'low-stock';
@@ -24,44 +24,6 @@ const stockBadges: Record<Exclude<StockFilter, 'all'>, { label: string; classes:
 };
 
 const PAGE_SIZE = 24;
-
-const CATEGORY_GROUPS: Record<string, string[]> = {
-  'Car Audio': ['Head Unit', 'Amps', 'Coaxial Speakers', 'Component Speakers', 'Sub Woofer', 'Tweeters', 'Equalizers', 'Sirius XM'],
-  'Speakers': ['Coaxial Speakers', 'Component Speakers', 'Sub Woofer', 'Tweeters'],
-  'Installation': ['Radio Installation Kit', 'Radio Wire Harness', 'Interface Modules', 'Maestro', 'Antenna Adapters', 'Labor'],
-  'Wiring & Power': ['Amp Wiring Kits', 'Cables', 'Batteries', 'Batteries And Fuses'],
-  'Remote Start': ['Remote Starts', 'Remote Start Harnesses', 'Idatastart', 'Compustar Gift Cards'],
-  'Safety & Cameras': ['Back Up Cameras', 'Back Up Retainers'],
-  'Lighting & Tint': ['LED bulbs And Lights', 'Tint Service'],
-  'Other': ['Intoxalock'],
-};
-
-function groupCategories(cats: CloverCategory[]) {
-  const catByName = new Map(cats.map((c) => [c.name, c]));
-  const assigned = new Set<string>();
-  const groups: { label: string; items: CloverCategory[] }[] = [];
-
-  for (const [label, names] of Object.entries(CATEGORY_GROUPS)) {
-    const items = names.map((n) => catByName.get(n)).filter(Boolean) as CloverCategory[];
-    if (items.length > 0) {
-      groups.push({ label, items });
-      items.forEach((i) => assigned.add(i.name));
-    }
-  }
-
-  // Any categories not in a group go into "Other"
-  const ungrouped = cats.filter((c) => !assigned.has(c.name));
-  if (ungrouped.length > 0) {
-    const existing = groups.find((g) => g.label === 'Other');
-    if (existing) {
-      existing.items.push(...ungrouped);
-    } else {
-      groups.push({ label: 'Other', items: ungrouped });
-    }
-  }
-
-  return groups;
-}
 
 export default function ProductsPage() {
   const [items, setItems] = useState<CloverItem[]>([]);
@@ -79,7 +41,6 @@ export default function ProductsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [stockFilter, setStockFilter] = useState<StockFilter>('all');
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
-  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
 
   const fetchItems = useCallback(async (categoryId: string | null, newOffset: number, append: boolean) => {
     if (append) {
@@ -110,7 +71,7 @@ export default function ProductsPage() {
         }
 
         setOffset(newOffset);
-        setHasMore((data.rawCount ?? newItems.length) >= PAGE_SIZE);
+        setHasMore(newItems.length >= PAGE_SIZE);
       }
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -147,27 +108,10 @@ export default function ProductsPage() {
         .then((res) => res.ok ? res.json() : null)
         .then((data) => {
           if (data?.images) {
-            // Upgrade HTTP to HTTPS to avoid mixed content issues
-            const upgradedImages: Record<string, string | null> = {};
-            for (const [id, url] of Object.entries(data.images)) {
-              if (url && typeof url === 'string' && url.startsWith('http://')) {
-                // Try HTTPS version (may not work for all domains)
-                upgradedImages[id] = url.replace('http://', 'https://');
-              } else {
-                upgradedImages[id] = url as string | null;
-              }
-            }
-            // Debug: log how many images we got
-            const imageCount = Object.values(upgradedImages).filter(url => url !== null).length;
-            if (imageCount > 0) {
-              console.log(`Loaded ${imageCount} product images`);
-            }
-            setProductImages((p) => ({ ...p, ...upgradedImages }));
+            setProductImages((p) => ({ ...p, ...data.images }));
           }
         })
-        .catch((err) => {
-          console.error('Error fetching product images:', err);
-        });
+        .catch(() => {});
       return prev;
     });
   }, [items]);
@@ -240,7 +184,6 @@ export default function ProductsPage() {
               ${mobileSidebarOpen ? 'fixed inset-0 z-40 bg-black/95 overflow-y-auto p-6 pt-20' : 'hidden'}
               lg:block lg:static lg:bg-transparent lg:p-0
               w-full lg:w-72 lg:min-w-[18rem] flex-shrink-0
-              lg:sticky lg:top-24 lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto
             `}>
               {/* Search */}
               <div className="mb-6">
@@ -257,63 +200,34 @@ export default function ProductsPage() {
               {/* Categories */}
               <div className="mb-6">
                 <h3 className="text-[#00A0E0] text-xs uppercase font-semibold mb-3 font-mono tracking-wider">Categories</h3>
-                <button
-                  onClick={() => handleCategorySelect(null)}
-                  className={`w-full text-left px-3 py-2 font-mono text-sm transition-colors mb-1 ${
-                    selectedCategory === null
-                      ? 'bg-[#00A0E0]/10 text-[#00A0E0] border-l-2 border-[#00A0E0]'
-                      : 'text-[#00A0E0]/60 hover:text-[#00A0E0] hover:bg-[#00A0E0]/5'
-                  }`}
-                >
-                  All Products
-                </button>
-                {groupCategories(categories).map((group) => {
-                  const isExpanded = expandedGroups.has(group.label);
-                  const hasSelected = group.items.some((c) => c.id === selectedCategory);
-                  return (
-                    <div key={group.label} className="mb-1">
+                <ul className="space-y-1">
+                  <li>
+                    <button
+                      onClick={() => handleCategorySelect(null)}
+                      className={`w-full text-left px-3 py-2 font-mono text-sm transition-colors ${
+                        selectedCategory === null
+                          ? 'bg-[#00A0E0]/10 text-[#00A0E0] border-l-2 border-[#00A0E0]'
+                          : 'text-[#00A0E0]/60 hover:text-[#00A0E0] hover:bg-[#00A0E0]/5'
+                      }`}
+                    >
+                      All Products
+                    </button>
+                  </li>
+                  {categories.map((cat) => (
+                    <li key={cat.id}>
                       <button
-                        onClick={() => setExpandedGroups((prev) => {
-                          const next = new Set(prev);
-                          if (next.has(group.label)) next.delete(group.label);
-                          else next.add(group.label);
-                          return next;
-                        })}
-                        className={`w-full flex items-center justify-between px-3 py-2 font-mono text-sm transition-colors ${
-                          hasSelected
-                            ? 'text-[#00A0E0]'
-                            : 'text-[#00A0E0]/70 hover:text-[#00A0E0]'
+                        onClick={() => handleCategorySelect(cat.id)}
+                        className={`w-full text-left px-3 py-2 font-mono text-sm transition-colors ${
+                          selectedCategory === cat.id
+                            ? 'bg-[#00A0E0]/10 text-[#00A0E0] border-l-2 border-[#00A0E0]'
+                            : 'text-[#00A0E0]/60 hover:text-[#00A0E0] hover:bg-[#00A0E0]/5'
                         }`}
                       >
-                        <span className="font-semibold">{group.label}</span>
-                        <svg
-                          className={`w-3.5 h-3.5 transition-transform ${isExpanded || hasSelected ? 'rotate-180' : ''}`}
-                          fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                        </svg>
+                        {cat.name}
                       </button>
-                      {(isExpanded || hasSelected) && (
-                        <ul className="ml-2 border-l border-[#00A0E0]/20">
-                          {group.items.map((cat) => (
-                            <li key={cat.id}>
-                              <button
-                                onClick={() => handleCategorySelect(cat.id)}
-                                className={`w-full text-left pl-4 pr-3 py-1.5 font-mono text-xs transition-colors ${
-                                  selectedCategory === cat.id
-                                    ? 'bg-[#00A0E0]/10 text-[#00A0E0] border-l-2 border-[#00A0E0]'
-                                    : 'text-[#00A0E0]/50 hover:text-[#00A0E0] hover:bg-[#00A0E0]/5'
-                                }`}
-                              >
-                                {cat.name}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  );
-                })}
+                    </li>
+                  ))}
+                </ul>
               </div>
 
               {/* Availability Filter */}
@@ -411,15 +325,6 @@ export default function ProductsPage() {
                                 alt={item.name}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 loading="lazy"
-                                onError={(e) => {
-                                  console.error('Image failed to load:', productImages[item.id], 'for item:', item.id);
-                                  // Remove the broken image URL from state
-                                  setProductImages((prev) => {
-                                    const updated = { ...prev };
-                                    delete updated[item.id];
-                                    return updated;
-                                  });
-                                }}
                               />
                             ) : (
                               <div className="text-center px-4 bg-white w-full h-full flex flex-col items-center justify-center">

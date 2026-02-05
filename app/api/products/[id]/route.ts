@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { ProductImage } from '@/types/product';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -10,28 +9,6 @@ let supabase: ReturnType<typeof createClient> | null = null;
 if (supabaseUrl && supabaseKey) {
   supabase = createClient(supabaseUrl, supabaseKey);
 }
-
-// Database update type matching the products table schema (snake_case)
-type ProductUpdate = {
-  title?: string;
-  description?: string;
-  price?: number;
-  currency?: string;
-  source?: 'clover' | 'affiliate' | 'shopify';
-  availability?: 'in-stock' | 'special-order' | 'low-stock' | 'out-of-stock';
-  clover_item_id?: string;
-  stock_quantity?: number;
-  affiliate_url?: string;
-  affiliate_brand?: string;
-  affiliate_commission?: number;
-  estimated_delivery?: string;
-  category?: string;
-  brand?: string;
-  sku?: string;
-  featured?: boolean;
-  handle?: string;
-  images?: ProductImage[];
-};
 
 // GET single product
 export async function GET(
@@ -88,7 +65,7 @@ export async function PUT(
     const body = await request.json();
 
     // Transform camelCase to snake_case for database
-    const updateData: ProductUpdate = {};
+    const updateData: any = {};
 
     if (body.title !== undefined) updateData.title = body.title;
     if (body.description !== undefined) updateData.description = body.description;
@@ -109,8 +86,8 @@ export async function PUT(
     if (body.handle !== undefined) updateData.handle = body.handle;
     if (body.images !== undefined) updateData.images = body.images;
 
-    const query = supabase.from('products') as any;
-    const { data, error } = await query
+    const { data, error } = await supabase
+      .from('products')
       .update(updateData)
       .eq('id', id)
       .select()

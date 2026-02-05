@@ -164,8 +164,8 @@ export async function POST(request: NextRequest) {
       images: body.images || [],
     };
 
-    const query = supabase.from('products') as any;
-    const { data, error } = await query
+    const { data, error } = await supabase
+      .from('products')
       .insert([productData])
       .select()
       .single();
