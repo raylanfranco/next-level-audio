@@ -36,8 +36,9 @@ yarn-error.log*
 # vercel
 .vercel
 
-# product image cache
-/data
+# product image cache (allow product-images.json for Vercel deployment)
+/data/*
+!/data/product-images.json
 
 # typescript
 *.tsbuildinfo
