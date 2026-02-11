@@ -4,11 +4,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
 import { useBookingModal } from '@/components/BookingModalContext';
+import { useCart } from '@/components/CartContext';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { openModal } = useBookingModal();
+  const { itemCount, openCheckout } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,7 +36,7 @@ export default function Header() {
       }`}
     >
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-center h-24">
+        <div className="flex items-center justify-center h-28">
           {/* Centered Navigation Group */}
           <div className="hidden lg:flex items-center">
             {/* Left Navigation - Adjacent to Logo */}
@@ -63,13 +65,13 @@ export default function Header() {
             </nav>
 
             {/* Center Logo - Prominent */}
-            <Link href="/" className="flex items-center justify-center flex-shrink-0 mx-8 mt-6">
+            <Link href="/" className="flex items-center justify-center flex-shrink-0 mx-8 mt-8">
               <Image
                 src="/images/logo.png"
                 alt="Next Level Audio"
-                width={280}
-                height={80}
-                className="h-20 lg:h-24 w-auto transition-all duration-300 hover:scale-105"
+                width={360}
+                height={100}
+                className="h-24 lg:h-32 w-auto transition-all duration-300 hover:scale-105"
                 priority
               />
             </Link>
@@ -89,6 +91,21 @@ export default function Header() {
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
                 BOOK
+              </button>
+              <button
+                onClick={openCheckout}
+                className={`${navLinkClass} relative`}
+                style={{ fontFamily: 'var(--font-oxanium)' }}
+                aria-label="Shopping cart"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                </svg>
+                {itemCount > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-[#00A0E0] text-black text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                    {itemCount > 9 ? '9+' : itemCount}
+                  </span>
+                )}
               </button>
               <Link
                 href="/contact"
@@ -178,6 +195,18 @@ export default function Header() {
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
                 BOOK APPOINTMENT
+              </button>
+              <button
+                onClick={() => { openCheckout(); setIsMenuOpen(false); }}
+                className="text-[#00A0E0] hover:text-[#00B8FF] transition-colors neon-glow-soft text-sm text-left flex items-center gap-2"
+                style={{ fontFamily: 'var(--font-oxanium)' }}
+              >
+                CART
+                {itemCount > 0 && (
+                  <span className="bg-[#00A0E0] text-black text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                    {itemCount > 9 ? '9+' : itemCount}
+                  </span>
+                )}
               </button>
               <Link
                 href="/contact"

@@ -3,6 +3,8 @@
 import Link from 'next/link';
 import { useEffect, useState, useCallback } from 'react';
 import type { CloverItem, CloverCategory } from '@/types/clover';
+import { useCart } from '@/components/CartContext';
+import InquiryModal from '@/components/InquiryModal';
 
 type StockFilter = 'all' | 'in-stock' | 'low-stock' | 'out-of-stock';
 
@@ -35,6 +37,14 @@ export default function ProductsPage() {
 
   // Product images
   const [productImages, setProductImages] = useState<Record<string, string | null>>({});
+
+  // Cart
+  const { addItem } = useCart();
+  const [addedItemId, setAddedItemId] = useState<string | null>(null);
+
+  // Inquiry modal
+  const [inquiryProduct, setInquiryProduct] = useState<{ id: string; name: string; price: number; imageUrl?: string } | null>(null);
+  const [inquiryOpen, setInquiryOpen] = useState(false);
 
   // Filters
   const [searchQuery, setSearchQuery] = useState('');
@@ -363,16 +373,42 @@ export default function ProductsPage() {
                               <span className="text-xl font-bold text-[#00A0E0] font-mono">
                                 {formatCents(item.price)}
                               </span>
-                              <button
-                                disabled={status === 'out-of-stock'}
-                                className={`px-4 py-2 border font-semibold font-mono text-xs transition-colors ${
-                                  status === 'out-of-stock'
-                                    ? 'bg-red-400/10 text-red-400/50 border-red-400/30 cursor-not-allowed'
-                                    : 'bg-[#00A0E0]/20 text-[#00A0E0] border-[#00A0E0] hover:bg-[#00A0E0]/30'
-                                }`}
-                              >
-                                {status === 'out-of-stock' ? 'OUT OF STOCK' : 'INQUIRE'}
-                              </button>
+                              {status === 'out-of-stock' ? (
+                                <button
+                                  onClick={() => {
+                                    setInquiryProduct({
+                                      id: item.id,
+                                      name: item.onlineName || item.name,
+                                      price: item.price,
+                                      imageUrl: productImages[item.id] || undefined,
+                                    });
+                                    setInquiryOpen(true);
+                                  }}
+                                  className="px-4 py-2 border font-semibold font-mono text-xs transition-colors bg-[#F59E0B]/20 text-[#F59E0B] border-[#F59E0B] hover:bg-[#F59E0B]/30 cursor-pointer"
+                                >
+                                  REQUEST ITEM
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => {
+                                    addItem({
+                                      id: item.id,
+                                      name: item.onlineName || item.name,
+                                      price: item.price,
+                                      imageUrl: productImages[item.id] || undefined,
+                                    });
+                                    setAddedItemId(item.id);
+                                    setTimeout(() => setAddedItemId(null), 1500);
+                                  }}
+                                  className={`px-4 py-2 border font-semibold font-mono text-xs transition-colors cursor-pointer ${
+                                    addedItemId === item.id
+                                      ? 'bg-green-400/20 text-green-400 border-green-400'
+                                      : 'bg-[#00A0E0]/20 text-[#00A0E0] border-[#00A0E0] hover:bg-[#00A0E0]/30'
+                                  }`}
+                                >
+                                  {addedItemId === item.id ? 'ADDED!' : 'ADD TO CART'}
+                                </button>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -398,6 +434,13 @@ export default function ProductsPage() {
           </div>
         </div>
       </section>
+
+      {/* Inquiry Modal */}
+      <InquiryModal
+        product={inquiryProduct}
+        isOpen={inquiryOpen}
+        onClose={() => { setInquiryOpen(false); setInquiryProduct(null); }}
+      />
 
       {/* CTA Section */}
       <section className="py-20 md:py-32 bg-black text-white relative overflow-hidden border-t-2 border-[#00A0E0]/30">

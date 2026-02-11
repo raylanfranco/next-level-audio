@@ -4,6 +4,8 @@ import { ReactNode } from 'react';
 import { BookingModalProvider } from './BookingModalContext';
 import BookingWizardModal from './BookingWizardModal';
 import { useBookingModal } from './BookingModalContext';
+import { CartProvider } from './CartContext';
+import CheckoutModal from './CheckoutModal';
 
 function ModalRenderer() {
   const { isOpen, closeModal } = useBookingModal();
@@ -12,9 +14,12 @@ function ModalRenderer() {
 
 export default function ClientLayout({ children }: { children: ReactNode }) {
   return (
-    <BookingModalProvider>
-      {children}
-      <ModalRenderer />
-    </BookingModalProvider>
+    <CartProvider>
+      <BookingModalProvider>
+        {children}
+        <ModalRenderer />
+        <CheckoutModal />
+      </BookingModalProvider>
+    </CartProvider>
   );
 }

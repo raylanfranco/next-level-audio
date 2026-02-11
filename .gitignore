@@ -45,3 +45,11 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+
+# BayReady (separate repo, lives here during development)
+/bayready/
+
+# Misc dev artifacts
+dashboard.png
+nul
+context.md

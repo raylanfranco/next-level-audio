@@ -12,7 +12,31 @@
       "Bash(npx tsx:*)",
       "Bash(python3:*)",
       "Bash(node -e:*)",
-      "Bash(ping:*)"
+      "Bash(ping:*)",
+      "Bash(npm install:*)",
+      "Bash(npx playwright install:*)",
+      "Bash(git checkout:*)",
+      "Bash(git push:*)",
+      "WebFetch(domain:next-level-audio.vercel.app)",
+      "WebFetch(domain:docs.clover.com)",
+      "Bash(npx next build)",
+      "Bash(npx tsc:*)",
+      "WebFetch(domain:www.cojilio.com)",
+      "WebFetch(domain:cojilio.zendesk.com)",
+      "Bash(npx @nestjs/cli@latest new:*)",
+      "Bash(npm create:*)",
+      "Bash(move:*)",
+      "Bash(npx prisma init:*)",
+      "Bash(git init:*)",
+      "Bash(npx prisma migrate:*)",
+      "Bash(npx prisma generate:*)",
+      "Bash(npx nest start:*)",
+      "Bash(npx prisma version:*)",
+      "Bash(netstat:*)",
+      "Bash(taskkill:*)",
+      "Bash(npx ts-node-dev:*)",
+      "Bash(python -m json.tool:*)",
+      "Bash(git status:*)"
     ]
   }
 }

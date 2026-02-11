@@ -9,6 +9,7 @@ import type {
   CloverPayment,
   CloverCategory,
 } from '@/types/clover';
+import type { Inquiry, InquiryStatus } from '@/types/inquiry';
 import { AdminThemeProvider, useAdminTheme } from './AdminThemeProvider';
 
 const statusColors: Record<string, { dark: string; light: string }> = {
@@ -39,7 +40,7 @@ const serviceNames: Record<string, string> = {
   'accessories': 'Auto Accessories',
 };
 
-type NavItem = 'overview' | 'inventory' | 'orders' | 'payments' | 'customers' | 'bookings';
+type NavItem = 'overview' | 'inventory' | 'orders' | 'payments' | 'customers' | 'bookings' | 'requests';
 
 function formatCents(cents: number) {
   return `$${(cents / 100).toFixed(2)}`;
@@ -77,6 +78,7 @@ function AdminDashboard() {
   const [payments, setPayments] = useState<CloverPayment[]>([]);
   const [customers, setCustomers] = useState<CloverCustomer[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [inquiries, setInquiries] = useState<Inquiry[]>([]);
 
   const [inventoryOffset, setInventoryOffset] = useState(0);
   const [inventorySearch, setInventorySearch] = useState('');
@@ -89,13 +91,14 @@ function AdminDashboard() {
   const fetchOverviewData = useCallback(async () => {
     setLoading(true);
     try {
-      const [invRes, catRes, ordRes, payRes, custRes, bookRes] = await Promise.allSettled([
+      const [invRes, catRes, ordRes, payRes, custRes, bookRes, inqRes] = await Promise.allSettled([
         fetch(`/api/clover/inventory?limit=${PAGE_SIZE}&offset=0`),
         fetch('/api/clover/categories'),
         fetch('/api/clover/orders?limit=10'),
         fetch('/api/clover/payments?limit=10'),
         fetch('/api/clover/customers?limit=100'),
         fetch('/api/bookings'),
+        fetch('/api/inquiries'),
       ]);
 
       if (invRes.status === 'fulfilled' && invRes.value.ok) {
@@ -122,6 +125,10 @@ function AdminDashboard() {
       if (bookRes.status === 'fulfilled' && bookRes.value.ok) {
         const d = await bookRes.value.json();
         setBookings(d.bookings || []);
+      }
+      if (inqRes.status === 'fulfilled' && inqRes.value.ok) {
+        const d = await inqRes.value.json();
+        setInquiries(d.inquiries || []);
       }
     } catch (error) {
       console.error('Error loading dashboard data:', error);
@@ -202,6 +209,27 @@ function AdminDashboard() {
     );
   };
 
+  const updateInquiryStatus = async (inquiryId: string, newStatus: InquiryStatus) => {
+    try {
+      const res = await fetch(`/api/inquiries/${inquiryId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (res.ok) {
+        setInquiries(prev =>
+          prev.map(inq =>
+            inq.id === inquiryId
+              ? { ...inq, status: newStatus, updated_at: new Date().toISOString() }
+              : inq
+          )
+        );
+      }
+    } catch (error) {
+      console.error('Error updating inquiry status:', error);
+    }
+  };
+
   // Debounced server-side search
   useEffect(() => {
     if (!inventorySearch) {
@@ -219,6 +247,7 @@ function AdminDashboard() {
 
   const totalPaymentsAmount = payments.reduce((sum, p) => sum + p.amount, 0);
   const pendingBookings = bookings.filter(b => b.status === 'pending').length;
+  const pendingInquiries = inquiries.filter(i => i.status === 'pending').length;
 
   // Theme-aware class helpers
   const bg = isDark ? 'bg-slate-900' : 'bg-slate-100';
@@ -250,6 +279,7 @@ function AdminDashboard() {
     { key: 'payments', label: 'Payments' },
     { key: 'customers', label: 'Customers' },
     { key: 'bookings', label: 'Bookings', badge: pendingBookings || undefined },
+    { key: 'requests', label: 'Requests', badge: pendingInquiries || undefined },
   ];
 
   const getStatusClasses = (status: string) => {
@@ -344,7 +374,7 @@ function AdminDashboard() {
               </div>
 
               {/* Stats Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
                 <div className={`${bgCard} border ${borderColor} rounded-lg p-5`}>
                   <div className={`${textSecondary} text-xs uppercase tracking-wide mb-2`}>Inventory Items</div>
                   <div className={`text-3xl font-bold ${textPrimary}`}>1,321</div>
@@ -373,6 +403,12 @@ function AdminDashboard() {
                   <div className={`${isDark ? 'text-amber-400' : 'text-amber-600'} text-xs uppercase tracking-wide mb-2`}>Pending Bookings</div>
                   <div className={`text-3xl font-bold ${isDark ? 'text-amber-400' : 'text-amber-600'}`}>{pendingBookings}</div>
                   <div className={`${textMuted} text-xs mt-1`}>awaiting confirmation</div>
+                </div>
+
+                <div className={`${bgCard} border ${borderColor} rounded-lg p-5 cursor-pointer`} onClick={() => setActiveNav('requests')}>
+                  <div className={`${isDark ? 'text-orange-400' : 'text-orange-600'} text-xs uppercase tracking-wide mb-2`}>Pending Requests</div>
+                  <div className={`text-3xl font-bold ${isDark ? 'text-orange-400' : 'text-orange-600'}`}>{pendingInquiries}</div>
+                  <div className={`${textMuted} text-xs mt-1`}>backorder requests</div>
                 </div>
               </div>
 
@@ -809,6 +845,91 @@ function AdminDashboard() {
                 {bookings.length === 0 && (
                   <div className={`text-center ${textMuted} py-12 text-sm`}>
                     No bookings found. New appointments will appear here.
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ==================== REQUESTS ==================== */}
+          {activeNav === 'requests' && (
+            <div>
+              <div className="mb-8">
+                <h2 className={`text-3xl font-bold ${textPrimary} mb-1`}>Item Requests</h2>
+                <p className={textSecondary}>Backorder and inquiry requests from customers</p>
+              </div>
+
+              <div className={`${bgCard} border ${borderColor} rounded-lg overflow-hidden`}>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className={`border-b ${borderColor} ${isDark ? 'bg-slate-800/50' : 'bg-slate-50'}`}>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Date</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Customer</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Product</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Type</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Status</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {inquiries.map((inq) => (
+                        <tr key={inq.id} className={`border-b ${borderColor} ${bgHover} transition-colors`}>
+                          <td className={`px-6 py-3 ${textSecondary} text-sm`}>
+                            {new Date(inq.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                          </td>
+                          <td className="px-6 py-3">
+                            <div className={`${textPrimary} text-sm font-medium`}>{inq.customer_name}</div>
+                            <div className={`${textSecondary} text-xs`}>{inq.customer_email}</div>
+                            {inq.customer_phone && <div className={`${textMuted} text-xs`}>{inq.customer_phone}</div>}
+                          </td>
+                          <td className="px-6 py-3">
+                            <div className={`${textPrimary} text-sm`}>{inq.product_name}</div>
+                            <div className={`${textMuted} text-xs`}>{formatCents(inq.product_price)}</div>
+                            {inq.message && <div className={`${textMuted} text-xs mt-1 max-w-xs truncate italic`}>&ldquo;{inq.message}&rdquo;</div>}
+                          </td>
+                          <td className="px-6 py-3">
+                            <span className={`px-2 py-0.5 text-xs rounded-full border ${
+                              inq.request_type === 'backorder'
+                                ? isDark ? 'text-orange-400 border-orange-400/30 bg-orange-400/10' : 'text-orange-600 border-orange-200 bg-orange-50'
+                                : isDark ? 'text-blue-400 border-blue-400/30 bg-blue-400/10' : 'text-blue-600 border-blue-200 bg-blue-50'
+                            }`}>
+                              {inq.request_type === 'backorder' ? 'Backorder' : 'Inquiry'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-3">
+                            <span className={`px-2.5 py-1 text-xs rounded-full border ${
+                              inq.status === 'pending'
+                                ? isDark ? 'text-amber-400 border-amber-400/30 bg-amber-400/10' : 'text-amber-600 border-amber-200 bg-amber-50'
+                                : inq.status === 'contacted'
+                                ? isDark ? 'text-blue-400 border-blue-400/30 bg-blue-400/10' : 'text-blue-600 border-blue-200 bg-blue-50'
+                                : inq.status === 'fulfilled'
+                                ? isDark ? 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10' : 'text-emerald-600 border-emerald-200 bg-emerald-50'
+                                : isDark ? 'text-slate-400 border-slate-400/30 bg-slate-400/10' : 'text-slate-600 border-slate-200 bg-slate-50'
+                            }`}>
+                              {inq.status.toUpperCase()}
+                            </span>
+                          </td>
+                          <td className="px-6 py-3">
+                            <select
+                              value={inq.status}
+                              onChange={(e) => updateInquiryStatus(inq.id, e.target.value as InquiryStatus)}
+                              className={`${bgInput} border ${borderColor} ${textPrimary} px-3 py-1.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors`}
+                            >
+                              <option value="pending">Pending</option>
+                              <option value="contacted">Contacted</option>
+                              <option value="fulfilled">Fulfilled</option>
+                              <option value="closed">Closed</option>
+                            </select>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {inquiries.length === 0 && (
+                  <div className={`text-center ${textMuted} py-12 text-sm`}>
+                    No requests yet. Backorder requests from customers will appear here.
                   </div>
                 )}
               </div>
