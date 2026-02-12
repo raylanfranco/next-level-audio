@@ -21,6 +21,10 @@ const statusColors: Record<string, { dark: string; light: string }> = {
     dark: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/30',
     light: 'text-emerald-600 bg-emerald-50 border-emerald-200',
   },
+  in_progress: {
+    dark: 'text-cyan-400 bg-cyan-400/10 border-cyan-400/30',
+    light: 'text-cyan-600 bg-cyan-50 border-cyan-200',
+  },
   completed: {
     dark: 'text-blue-400 bg-blue-400/10 border-blue-400/30',
     light: 'text-blue-600 bg-blue-50 border-blue-200',
@@ -28,6 +32,10 @@ const statusColors: Record<string, { dark: string; light: string }> = {
   cancelled: {
     dark: 'text-red-400 bg-red-400/10 border-red-400/30',
     light: 'text-red-600 bg-red-50 border-red-200',
+  },
+  no_show: {
+    dark: 'text-slate-400 bg-slate-400/10 border-slate-400/30',
+    light: 'text-slate-600 bg-slate-50 border-slate-200',
   },
 };
 
@@ -200,13 +208,24 @@ function AdminDashboard() {
   };
 
   const updateBookingStatus = async (bookingId: string, newStatus: BookingStatus) => {
-    setBookings(prev =>
-      prev.map(booking =>
-        booking.id === bookingId
-          ? { ...booking, status: newStatus, updated_at: new Date().toISOString() }
-          : booking
-      )
-    );
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (res.ok) {
+        setBookings(prev =>
+          prev.map(booking =>
+            booking.id === bookingId
+              ? { ...booking, status: newStatus, updated_at: new Date().toISOString() }
+              : booking
+          )
+        );
+      }
+    } catch (error) {
+      console.error('Error updating booking status:', error);
+    }
   };
 
   const updateInquiryStatus = async (inquiryId: string, newStatus: InquiryStatus) => {
@@ -781,11 +800,16 @@ function AdminDashboard() {
               <div className="mb-8 flex items-center justify-between">
                 <div>
                   <h2 className={`text-3xl font-bold ${textPrimary} mb-1`}>Bookings</h2>
-                  <p className={textSecondary}>Manage customer appointments and reservations</p>
+                  <p className={textSecondary}>Live appointments from BayReady</p>
                 </div>
-                <button className={`px-5 py-2.5 bg-blue-500 text-white font-medium rounded-md hover:bg-blue-600 transition-colors text-sm`}>
-                  + New Booking
-                </button>
+                <a
+                  href="https://bayready.vercel.app"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`px-5 py-2.5 border ${borderColor} ${textAccent} rounded-md ${bgHover} transition-colors text-sm`}
+                >
+                  Open BayReady &rarr;
+                </a>
               </div>
 
               <div className={`${bgCard} border ${borderColor} rounded-lg overflow-hidden`}>
@@ -795,7 +819,9 @@ function AdminDashboard() {
                       <tr className={`border-b ${borderColor} ${isDark ? 'bg-slate-800/50' : 'bg-slate-50'}`}>
                         <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Customer</th>
                         <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Service</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Vehicle</th>
                         <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Date & Time</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Deposit</th>
                         <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Status</th>
                         <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Actions</th>
                       </tr>
@@ -805,36 +831,57 @@ function AdminDashboard() {
                         <tr key={booking.id} className={`border-b ${borderColor} ${bgHover} transition-colors`}>
                           <td className="px-6 py-3">
                             <div className={`${textPrimary} text-sm font-medium`}>{booking.customer_name}</div>
-                            <div className={`${textSecondary} text-xs`}>{booking.customer_email}</div>
-                            <div className={`${textSecondary} text-xs`}>{booking.customer_phone}</div>
+                            {booking.customer_email && <div className={`${textSecondary} text-xs`}>{booking.customer_email}</div>}
+                            {booking.customer_phone && <div className={`${textSecondary} text-xs`}>{booking.customer_phone}</div>}
                           </td>
                           <td className="px-6 py-3">
-                            <div className={`${textPrimary} text-sm`}>{serviceNames[booking.service_type] || booking.service_type}</div>
-                            {booking.vehicle_make && (
-                              <div className={`${textSecondary} text-xs`}>
-                                {booking.vehicle_year} {booking.vehicle_make} {booking.vehicle_model}
-                              </div>
+                            <div className={`${textPrimary} text-sm`}>{booking.service_type}</div>
+                            {booking.service_price_cents != null && (
+                              <div className={`${textMuted} text-xs`}>{formatCents(booking.service_price_cents)}</div>
                             )}
                           </td>
                           <td className="px-6 py-3">
-                            <div className={`${textPrimary} text-sm`}>{new Date(booking.appointment_date).toLocaleDateString()}</div>
+                            {booking.vehicle_make ? (
+                              <div className={`${textSecondary} text-sm`}>
+                                {booking.vehicle_year} {booking.vehicle_make} {booking.vehicle_model}
+                                {booking.vehicle_trim && <span className={textMuted}> {booking.vehicle_trim}</span>}
+                              </div>
+                            ) : (
+                              <span className={`${textMuted} text-xs`}>&mdash;</span>
+                            )}
+                          </td>
+                          <td className="px-6 py-3">
+                            <div className={`${textPrimary} text-sm`}>{new Date(booking.appointment_date + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
                             <div className={`${textSecondary} text-xs`}>{booking.appointment_time}</div>
                           </td>
                           <td className="px-6 py-3">
+                            {booking.deposit_paid_at ? (
+                              <span className={`px-2 py-0.5 text-xs rounded-full border ${
+                                isDark ? 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10' : 'text-emerald-600 border-emerald-200 bg-emerald-50'
+                              }`}>
+                                {booking.deposit_amount_cents != null ? formatCents(booking.deposit_amount_cents) : 'Paid'}
+                              </span>
+                            ) : (
+                              <span className={`${textMuted} text-xs`}>&mdash;</span>
+                            )}
+                          </td>
+                          <td className="px-6 py-3">
                             <span className={`px-2.5 py-1 text-xs rounded-full border ${getStatusClasses(booking.status)}`}>
-                              {booking.status.toUpperCase()}
+                              {booking.status.replace('_', ' ').toUpperCase()}
                             </span>
                           </td>
                           <td className="px-6 py-3">
                             <select
                               value={booking.status}
                               onChange={(e) => updateBookingStatus(booking.id, e.target.value as BookingStatus)}
-                              className={`${bgInput} border ${borderColor} ${textPrimary} px-3 py-1.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors`}
+                              className={`${bgInput} border ${borderColor} ${textPrimary} px-3 py-1.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors cursor-pointer`}
                             >
                               <option value="pending">Pending</option>
                               <option value="confirmed">Confirmed</option>
+                              <option value="in_progress">In Progress</option>
                               <option value="completed">Completed</option>
                               <option value="cancelled">Cancelled</option>
+                              <option value="no_show">No Show</option>
                             </select>
                           </td>
                         </tr>
@@ -844,7 +891,7 @@ function AdminDashboard() {
                 </div>
                 {bookings.length === 0 && (
                   <div className={`text-center ${textMuted} py-12 text-sm`}>
-                    No bookings found. New appointments will appear here.
+                    No bookings found. Appointments from BayReady will appear here.
                   </div>
                 )}
               </div>

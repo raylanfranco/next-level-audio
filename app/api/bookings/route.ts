@@ -1,106 +1,107 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { BookingFormData } from '@/types/booking';
-import { z } from 'zod';
 
-const bookingSchema = z.object({
-  customer_name: z.string().min(1, 'Name is required'),
-  customer_email: z.string().email('Invalid email address'),
-  customer_phone: z.string().min(10, 'Phone number is required'),
-  service_type: z.string().min(1, 'Service type is required'),
-  vehicle_make: z.string().optional(),
-  vehicle_model: z.string().optional(),
-  vehicle_year: z.number().int().min(1900).max(new Date().getFullYear() + 1).optional(),
-  appointment_date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date format'),
-  appointment_time: z.string().regex(/^\d{2}:\d{2}$/, 'Invalid time format'),
-  notes: z.string().optional(),
-});
+const BAYREADY_API = process.env.BAYREADY_API_URL || 'https://bayready-production.up.railway.app';
+const BAYREADY_MERCHANT_ID = process.env.BAYREADY_MERCHANT_ID || 'cmlh31wyn000068j37couyy08';
 
-export async function POST(request: NextRequest) {
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const status = searchParams.get('status');
+  const from = searchParams.get('from');
+  const to = searchParams.get('to');
+
   try {
-    const body: BookingFormData = await request.json();
+    const params = new URLSearchParams({ merchantId: BAYREADY_MERCHANT_ID });
+    if (status) params.set('status', status);
+    if (from) params.set('from', from);
+    if (to) params.set('to', to);
 
-    // Validate input
-    const validated = bookingSchema.parse(body);
+    const res = await fetch(`${BAYREADY_API}/bookings?${params}`, {
+      headers: { 'Content-Type': 'application/json' },
+      cache: 'no-store',
+    });
 
-    // For demo purposes, return success without database operations
-    // In production, this would check availability and create bookings
-    const mockBooking = {
-      id: 'demo-booking-' + Date.now(),
-      customer_name: validated.customer_name,
-      customer_email: validated.customer_email,
-      customer_phone: validated.customer_phone,
-      service_type: validated.service_type,
-      vehicle_make: validated.vehicle_make,
-      vehicle_model: validated.vehicle_model,
-      vehicle_year: validated.vehicle_year,
-      appointment_date: validated.appointment_date,
-      appointment_time: validated.appointment_time,
-      notes: validated.notes,
-      status: 'pending',
-      created_at: new Date().toISOString(),
-    };
-
-    // TODO: Send confirmation email
-    // TODO: Send notification to admin
-
-    return NextResponse.json(
-      {
-        success: true,
-        booking: mockBooking,
-        message: 'Booking request submitted successfully. We will confirm your appointment soon.'
-      },
-      { status: 201 }
-    );
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Validation failed', details: error.issues },
-        { status: 400 }
-      );
+    if (!res.ok) {
+      const text = await res.text();
+      console.error('BayReady bookings fetch error:', res.status, text);
+      return NextResponse.json({ bookings: [] });
     }
-    
-    console.error('Unexpected error:', error);
-    return NextResponse.json(
-      { error: 'An unexpected error occurred' },
-      { status: 500 }
-    );
+
+    const bayreadyBookings = await res.json();
+
+    // Map BayReady booking shape to NLA admin shape
+    const bookings = (Array.isArray(bayreadyBookings) ? bayreadyBookings : []).map((b: {
+      id: string;
+      startsAt: string;
+      status: string;
+      notes?: string;
+      depositAmountCents?: number;
+      depositPaidAt?: string;
+      cloverChargeId?: string;
+      createdAt: string;
+      updatedAt: string;
+      service?: { name?: string; priceCents?: number; durationMins?: number };
+      customer?: { name?: string; email?: string; phone?: string };
+      vehicle?: { year?: number; make?: string; model?: string; trim?: string } | null;
+    }) => {
+      const startsAt = new Date(b.startsAt);
+      return {
+        id: b.id,
+        customer_name: b.customer?.name || 'Unknown',
+        customer_email: b.customer?.email || '',
+        customer_phone: b.customer?.phone || '',
+        service_type: b.service?.name || 'Unknown Service',
+        service_price_cents: b.service?.priceCents,
+        service_duration_mins: b.service?.durationMins,
+        vehicle_make: b.vehicle?.make,
+        vehicle_model: b.vehicle?.model,
+        vehicle_year: b.vehicle?.year,
+        vehicle_trim: b.vehicle?.trim,
+        appointment_date: startsAt.toISOString().split('T')[0],
+        appointment_time: startsAt.toLocaleTimeString('en-US', {
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: false,
+          timeZone: 'America/New_York',
+        }),
+        notes: b.notes,
+        status: b.status.toLowerCase(),
+        deposit_amount_cents: b.depositAmountCents,
+        deposit_paid_at: b.depositPaidAt,
+        clover_charge_id: b.cloverChargeId,
+        created_at: b.createdAt,
+        updated_at: b.updatedAt,
+      };
+    });
+
+    return NextResponse.json({ bookings });
+  } catch (error) {
+    console.error('Error fetching bookings from BayReady:', error);
+    return NextResponse.json({ bookings: [] });
   }
 }
 
-export async function GET() {
-  // Mock bookings data for prototype
-  const mockBookings = [
-    {
-      id: 'booking-1',
-      customer_name: 'John Doe',
-      customer_email: 'john@example.com',
-      customer_phone: '555-0123',
-      service_type: 'car-audio',
-      vehicle_make: 'Toyota',
-      vehicle_model: 'Camry',
-      vehicle_year: 2020,
-      appointment_date: '2024-01-25',
-      appointment_time: '10:00',
-      notes: 'Looking forward to the upgrade',
-      status: 'confirmed',
-      created_at: '2024-01-20T10:00:00Z',
-      updated_at: '2024-01-20T10:00:00Z',
-    },
-    {
-      id: 'booking-2',
-      customer_name: 'Jane Smith',
-      customer_email: 'jane@example.com',
-      customer_phone: '555-0456',
-      service_type: 'window-tinting',
-      appointment_date: '2024-01-26',
-      appointment_time: '14:00',
-      notes: '',
-      status: 'pending',
-      created_at: '2024-01-21T14:30:00Z',
-      updated_at: '2024-01-21T14:30:00Z',
-    },
-  ];
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
 
-  return NextResponse.json({ bookings: mockBookings });
+    const res = await fetch(`${BAYREADY_API}/bookings`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        merchantId: BAYREADY_MERCHANT_ID,
+        ...body,
+      }),
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      return NextResponse.json({ error: text }, { status: res.status });
+    }
+
+    const booking = await res.json();
+    return NextResponse.json({ success: true, booking }, { status: 201 });
+  } catch (error) {
+    console.error('Error creating booking:', error);
+    return NextResponse.json({ error: 'Failed to create booking' }, { status: 500 });
+  }
 }
-

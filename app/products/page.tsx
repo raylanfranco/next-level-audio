@@ -156,6 +156,15 @@ export default function ProductsPage() {
     return true;
   });
 
+  // When showing "All", separate in-stock from out-of-stock
+  const showSplit = stockFilter === 'all' && !searchQuery;
+  const inStockItems = showSplit
+    ? filteredItems.filter(item => getStockStatus(item) !== 'out-of-stock')
+    : filteredItems;
+  const outOfStockItems = showSplit
+    ? filteredItems.filter(item => getStockStatus(item) === 'out-of-stock')
+    : [];
+
   return (
     <div className="w-full">
       {/* Hero Section */}
@@ -286,7 +295,7 @@ export default function ProductsPage() {
               {/* Results count */}
               <div className="mb-6 flex items-center justify-between">
                 <p className="text-[#00A0E0]/60 font-mono text-sm">
-                  {loading ? 'Loading...' : `${filteredItems.length} products`}
+                  {loading ? 'Loading...' : `${inStockItems.length} products${outOfStockItems.length > 0 ? ` (${outOfStockItems.length} out of stock)` : ''}`}
                   {selectedCategory && categories.length > 0 && (
                     <span className="text-[#00A0E0]">
                       {' '}in {categories.find(c => c.id === selectedCategory)?.name}
@@ -316,8 +325,9 @@ export default function ProductsPage() {
                 </div>
               ) : (
                 <>
+                  {/* In-stock products grid */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {filteredItems.map((item) => {
+                    {inStockItems.map((item) => {
                       const status = getStockStatus(item);
                       const badge = stockBadges[status];
                       const categoryName = item.categories?.elements?.[0]?.name;
@@ -327,7 +337,6 @@ export default function ProductsPage() {
                           key={item.id}
                           className="bg-black border border-[#00A0E0]/30 overflow-hidden hover:border-[#00A0E0] transition-all duration-300 group"
                         >
-                          {/* Top section with image or gradient */}
                           <div className="relative aspect-square bg-white flex items-center justify-center overflow-hidden">
                             {productImages[item.id] ? (
                               <img
@@ -345,12 +354,10 @@ export default function ProductsPage() {
                               </div>
                             )}
 
-                            {/* Stock badge */}
                             <div className={`absolute top-3 left-3 px-2.5 py-1 text-xs font-mono font-semibold border ${badge.classes}`}>
                               {badge.label}
                             </div>
 
-                            {/* Category badge */}
                             {categoryName && (
                               <div className="absolute top-3 right-3 px-2.5 py-1 text-xs font-mono border bg-purple-400/10 text-purple-400 border-purple-400/30">
                                 {categoryName}
@@ -358,7 +365,6 @@ export default function ProductsPage() {
                             )}
                           </div>
 
-                          {/* Product info */}
                           <div className="p-5">
                             <h3 className="text-base font-bold text-white mb-1 line-clamp-2" style={{ fontFamily: 'var(--font-oxanium)' }}>
                               {item.onlineName || item.name}
@@ -426,6 +432,94 @@ export default function ProductsPage() {
                       >
                         {loadingMore ? 'Loading...' : 'Load More Products'}
                       </button>
+                    </div>
+                  )}
+
+                  {/* Out of Stock section */}
+                  {outOfStockItems.length > 0 && (
+                    <div className="mt-16">
+                      <div className="flex items-center gap-4 mb-6">
+                        <div className="h-px flex-1 bg-red-400/20"></div>
+                        <h2 className="text-lg font-bold text-red-400/80 uppercase tracking-wider font-mono">
+                          Out of Stock ({outOfStockItems.length})
+                        </h2>
+                        <div className="h-px flex-1 bg-red-400/20"></div>
+                      </div>
+                      <p className="text-center text-red-400/50 text-xs font-mono mb-6">
+                        These items are currently unavailable. Request an item and we&apos;ll notify you when it&apos;s back.
+                      </p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 opacity-70">
+                        {outOfStockItems.map((item) => {
+                          const badge = stockBadges['out-of-stock'];
+                          const categoryName = item.categories?.elements?.[0]?.name;
+
+                          return (
+                            <div
+                              key={item.id}
+                              className="bg-black border border-red-400/20 overflow-hidden hover:border-red-400/40 transition-all duration-300 group"
+                            >
+                              <div className="relative aspect-square bg-white flex items-center justify-center overflow-hidden">
+                                {productImages[item.id] ? (
+                                  <img
+                                    src={productImages[item.id]!}
+                                    alt={item.name}
+                                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 grayscale"
+                                    loading="lazy"
+                                  />
+                                ) : (
+                                  <div className="text-center px-4 bg-white w-full h-full flex flex-col items-center justify-center">
+                                    <div className="text-gray-400 text-xs font-mono mb-1">{item.code || 'NO SKU'}</div>
+                                    <div className="text-gray-200 text-4xl font-bold" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                                      {formatCents(item.price)}
+                                    </div>
+                                  </div>
+                                )}
+
+                                <div className={`absolute top-3 left-3 px-2.5 py-1 text-xs font-mono font-semibold border ${badge.classes}`}>
+                                  {badge.label}
+                                </div>
+
+                                {categoryName && (
+                                  <div className="absolute top-3 right-3 px-2.5 py-1 text-xs font-mono border bg-purple-400/10 text-purple-400 border-purple-400/30">
+                                    {categoryName}
+                                  </div>
+                                )}
+                              </div>
+
+                              <div className="p-5">
+                                <h3 className="text-base font-bold text-white/70 mb-1 line-clamp-2" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                                  {item.onlineName || item.name}
+                                </h3>
+                                {item.description && (
+                                  <p className="text-[#00A0E0]/40 text-xs font-mono mb-4 line-clamp-2">
+                                    {item.description}
+                                  </p>
+                                )}
+
+                                <div className="flex items-center justify-between">
+                                  <span className="text-xl font-bold text-[#00A0E0]/50 font-mono">
+                                    {formatCents(item.price)}
+                                  </span>
+                                  <button
+                                    onClick={() => {
+                                      setInquiryProduct({
+                                        id: item.id,
+                                        name: item.onlineName || item.name,
+                                        price: item.price,
+                                        imageUrl: productImages[item.id] || undefined,
+                                      });
+                                      setInquiryOpen(true);
+                                    }}
+                                    className="px-4 py-2 border font-semibold font-mono text-xs transition-colors bg-[#F59E0B]/20 text-[#F59E0B] border-[#F59E0B] hover:bg-[#F59E0B]/30 cursor-pointer"
+                                  >
+                                    REQUEST ITEM
+                                  </button>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   )}
                 </>
