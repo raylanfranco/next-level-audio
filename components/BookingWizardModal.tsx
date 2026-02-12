@@ -7,7 +7,7 @@ interface BookingWizardModalProps {
   onClose: () => void;
 }
 
-const BOOKING_URL = 'https://www.7-spaces.com/booking/5C5J719BX6571/services';
+const BOOKING_URL = 'https://bayready.vercel.app/book/cmlh31wyn000068j37couyy08';
 
 export default function BookingWizardModal({ isOpen, onClose }: BookingWizardModalProps) {
   const [iframeLoaded, setIframeLoaded] = useState(false);

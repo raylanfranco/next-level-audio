@@ -36,7 +36,8 @@
       "Bash(taskkill:*)",
       "Bash(npx ts-node-dev:*)",
       "Bash(python -m json.tool:*)",
-      "Bash(git status:*)"
+      "Bash(git status:*)",
+      "Bash(npx nest build:*)"
     ]
   }
 }
