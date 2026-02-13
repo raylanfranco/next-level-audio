@@ -20,10 +20,9 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Derive charge URL from base URL (supports sandbox and production)
-  const baseUrl = process.env.CLOVER_API_BASE_URL || '';
-  const isSandbox = baseUrl.includes('sandbox');
-  const chargeUrl = isSandbox
+  // Determine charge environment: CLOVER_CHARGE_ENV overrides, otherwise derive from CLOVER_API_BASE_URL
+  const chargeEnv = process.env.CLOVER_CHARGE_ENV || (process.env.CLOVER_API_BASE_URL?.includes('sandbox') ? 'sandbox' : 'production');
+  const chargeUrl = chargeEnv === 'sandbox'
     ? 'https://scl-sandbox.dev.clover.com/v1/charges'
     : 'https://scl.clover.com/v1/charges';
 
