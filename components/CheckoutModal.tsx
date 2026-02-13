@@ -43,13 +43,14 @@ export default function CheckoutModal() {
   // Load Clover SDK script
   useEffect(() => {
     if (!isCheckoutOpen || step !== 'payment') return;
-    if (document.querySelector('script[src*="checkout.clover.com"]')) {
+    if (document.querySelector('script[src*="checkout"][src*="clover.com"]')) {
       setSdkLoaded(true);
       return;
     }
 
     const script = document.createElement('script');
-    script.src = 'https://checkout.clover.com/sdk.js';
+    // PRODUCTION: script.src = 'https://checkout.clover.com/sdk.js';
+    script.src = 'https://checkout.sandbox.dev.clover.com/sdk.js'; // SANDBOX
     script.async = true;
     script.onload = () => setSdkLoaded(true);
     script.onerror = () => setSdkError(true);

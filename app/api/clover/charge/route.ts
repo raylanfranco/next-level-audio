@@ -10,7 +10,8 @@ const chargeSchema = z.object({
 });
 
 export async function POST(request: NextRequest) {
-  const token = process.env.CLOVER_API_TOKEN;
+  // Prefer ecomm private key; fall back to merchant API token
+  const token = process.env.CLOVER_ECOMM_PRIVATE_KEY || process.env.CLOVER_API_TOKEN;
 
   if (!token) {
     return NextResponse.json(
@@ -18,6 +19,13 @@ export async function POST(request: NextRequest) {
       { status: 503 }
     );
   }
+
+  // Derive charge URL from base URL (supports sandbox and production)
+  const baseUrl = process.env.CLOVER_API_BASE_URL || '';
+  const isSandbox = baseUrl.includes('sandbox');
+  const chargeUrl = isSandbox
+    ? 'https://scl-sandbox.dev.clover.com/v1/charges'
+    : 'https://scl.clover.com/v1/charges';
 
   try {
     const body = await request.json();
@@ -29,7 +37,7 @@ export async function POST(request: NextRequest) {
       request.headers.get('x-real-ip') ||
       '127.0.0.1';
 
-    const chargeRes = await fetch('https://scl.clover.com/v1/charges', {
+    const chargeRes = await fetch(chargeUrl, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
