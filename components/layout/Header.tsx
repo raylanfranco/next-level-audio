@@ -85,6 +85,13 @@ export default function Header() {
               >
                 GALLERY
               </Link>
+              <Link
+                href="/careers"
+                className={navLinkClass}
+                style={{ fontFamily: 'var(--font-oxanium)' }}
+              >
+                CAREERS
+              </Link>
               <button
                 onClick={openModal}
                 className={navLinkClass}
@@ -188,6 +195,14 @@ export default function Header() {
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
                 GALLERY
+              </Link>
+              <Link
+                href="/careers"
+                className="text-[#00A0E0] hover:text-[#00B8FF] transition-colors neon-glow-soft text-sm"
+                onClick={() => setIsMenuOpen(false)}
+                style={{ fontFamily: 'var(--font-oxanium)' }}
+              >
+                CAREERS
               </Link>
               <button
                 onClick={() => { openModal(); setIsMenuOpen(false); }}

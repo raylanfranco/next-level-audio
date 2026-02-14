@@ -37,7 +37,17 @@
       "Bash(npx ts-node-dev:*)",
       "Bash(python -m json.tool:*)",
       "Bash(git status:*)",
-      "Bash(npx nest build:*)"
+      "Bash(npx nest build:*)",
+      "WebFetch(domain:community.clover.com)",
+      "WebFetch(domain:www.ryanpaul.dev)",
+      "WebFetch(domain:jacobnarayan.com)",
+      "Bash(gh api:*)",
+      "Bash(python -m base64:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(findstr:*)",
+      "Bash(ls:*)",
+      "Bash(tsconfig)",
+      "Bash(vercel \")"
     ]
   }
 }

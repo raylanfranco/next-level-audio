@@ -98,3 +98,51 @@ export async function sendContactNotification(data: ContactEmailData) {
 
   return { success: true };
 }
+
+export interface CareerApplicationEmailData {
+  applicantName: string;
+  applicantEmail: string;
+  applicantPhone: string;
+  positionTitle: string;
+  department: string;
+  coverLetter: string;
+  resumeUrl: string | null;
+}
+
+export async function sendCareerApplicationNotification(data: CareerApplicationEmailData) {
+  if (!resend) {
+    console.warn('Resend not configured, skipping email');
+    return { success: false, error: 'Email not configured' };
+  }
+
+  const { error } = await resend.emails.send({
+    from: FROM_EMAIL,
+    to: [ADMIN_EMAIL],
+    replyTo: data.applicantEmail,
+    subject: `[Career Application] ${data.positionTitle} - ${data.applicantName}`,
+    html: `
+      <div style="font-family: monospace; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #00A0E0;">New Career Application</h2>
+        <hr style="border-color: #00A0E0;" />
+        <h3>Position</h3>
+        <p><strong>${data.positionTitle}</strong> — ${data.department}</p>
+        <h3>Applicant</h3>
+        <p>Name: ${data.applicantName}</p>
+        <p>Email: <a href="mailto:${data.applicantEmail}">${data.applicantEmail}</a></p>
+        <p>Phone: <a href="tel:${data.applicantPhone}">${data.applicantPhone}</a></p>
+        ${data.resumeUrl ? `<p>Resume: <a href="${data.resumeUrl}">Download Resume</a></p>` : '<p>Resume: Not provided</p>'}
+        <h3>Cover Letter</h3>
+        <p>${data.coverLetter || 'No cover letter provided'}</p>
+        <hr style="border-color: #00A0E0;" />
+        <p style="color: #888;">Sent from Next Level Audio website</p>
+      </div>
+    `,
+  });
+
+  if (error) {
+    console.error('Failed to send career application email:', error);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
+}

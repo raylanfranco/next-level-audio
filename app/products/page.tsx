@@ -63,7 +63,7 @@ export default function ProductsPage() {
       const params = new URLSearchParams({
         limit: String(PAGE_SIZE),
         offset: String(newOffset),
-        expand: 'categories',
+        expand: 'categories,itemStock',
       });
       if (categoryId) {
         params.set('category', categoryId);
@@ -158,11 +158,20 @@ export default function ProductsPage() {
 
   // When showing "All", separate in-stock from out-of-stock
   const showSplit = stockFilter === 'all' && !searchQuery;
-  const inStockItems = showSplit
+
+  // Sort helper: items with product images first
+  const imageFirst = (a: CloverItem, b: CloverItem) => {
+    const aHas = productImages[a.id] ? 0 : 1;
+    const bHas = productImages[b.id] ? 0 : 1;
+    return aHas - bHas;
+  };
+
+  const inStockItems = (showSplit
     ? filteredItems.filter(item => getStockStatus(item) !== 'out-of-stock')
-    : filteredItems;
+    : filteredItems
+  ).sort(imageFirst);
   const outOfStockItems = showSplit
-    ? filteredItems.filter(item => getStockStatus(item) === 'out-of-stock')
+    ? filteredItems.filter(item => getStockStatus(item) === 'out-of-stock').sort(imageFirst)
     : [];
 
   return (

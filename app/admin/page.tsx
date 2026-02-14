@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
 import { Booking, BookingStatus } from '@/types/booking';
 import type {
   CloverItem,
@@ -10,6 +12,7 @@ import type {
   CloverCategory,
 } from '@/types/clover';
 import type { Inquiry, InquiryStatus } from '@/types/inquiry';
+import type { JobListing, CareerApplication, ApplicationStatus, JobListingFormData } from '@/types/career';
 import { AdminThemeProvider, useAdminTheme } from './AdminThemeProvider';
 
 const statusColors: Record<string, { dark: string; light: string }> = {
@@ -37,6 +40,22 @@ const statusColors: Record<string, { dark: string; light: string }> = {
     dark: 'text-slate-400 bg-slate-400/10 border-slate-400/30',
     light: 'text-slate-600 bg-slate-50 border-slate-200',
   },
+  reviewed: {
+    dark: 'text-blue-400 bg-blue-400/10 border-blue-400/30',
+    light: 'text-blue-600 bg-blue-50 border-blue-200',
+  },
+  interviewed: {
+    dark: 'text-violet-400 bg-violet-400/10 border-violet-400/30',
+    light: 'text-violet-600 bg-violet-50 border-violet-200',
+  },
+  hired: {
+    dark: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/30',
+    light: 'text-emerald-600 bg-emerald-50 border-emerald-200',
+  },
+  rejected: {
+    dark: 'text-red-400 bg-red-400/10 border-red-400/30',
+    light: 'text-red-600 bg-red-50 border-red-200',
+  },
 };
 
 const serviceNames: Record<string, string> = {
@@ -48,7 +67,7 @@ const serviceNames: Record<string, string> = {
   'accessories': 'Auto Accessories',
 };
 
-type NavItem = 'overview' | 'inventory' | 'orders' | 'payments' | 'customers' | 'bookings' | 'requests';
+type NavItem = 'overview' | 'inventory' | 'orders' | 'payments' | 'customers' | 'bookings' | 'requests' | 'jobs' | 'applications';
 
 function formatCents(cents: number) {
   return `$${(cents / 100).toFixed(2)}`;
@@ -75,6 +94,14 @@ export default function AdminPage() {
 function AdminDashboard() {
   const { theme, toggleTheme } = useAdminTheme();
   const isDark = theme === 'dark';
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    const supabase = createSupabaseBrowserClient();
+    await supabase.auth.signOut();
+    router.push('/admin/login');
+    router.refresh();
+  };
 
   const [activeNav, setActiveNav] = useState<NavItem>('overview');
   const [loading, setLoading] = useState(true);
@@ -87,6 +114,16 @@ function AdminDashboard() {
   const [customers, setCustomers] = useState<CloverCustomer[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
+  const [jobListings, setJobListings] = useState<JobListing[]>([]);
+  const [applications, setApplications] = useState<CareerApplication[]>([]);
+
+  // Job form state
+  const [showJobForm, setShowJobForm] = useState(false);
+  const [editingJob, setEditingJob] = useState<JobListing | null>(null);
+  const [jobFormData, setJobFormData] = useState<JobListingFormData>({
+    title: '', department: '', location: 'Stroudsburg, PA',
+    type: 'full-time', description: '', requirements: '', salary_range: '',
+  });
 
   const [inventoryOffset, setInventoryOffset] = useState(0);
   const [inventorySearch, setInventorySearch] = useState('');
@@ -99,7 +136,7 @@ function AdminDashboard() {
   const fetchOverviewData = useCallback(async () => {
     setLoading(true);
     try {
-      const [invRes, catRes, ordRes, payRes, custRes, bookRes, inqRes] = await Promise.allSettled([
+      const [invRes, catRes, ordRes, payRes, custRes, bookRes, inqRes, jobsRes, appsRes] = await Promise.allSettled([
         fetch(`/api/clover/inventory?limit=${PAGE_SIZE}&offset=0`),
         fetch('/api/clover/categories'),
         fetch('/api/clover/orders?limit=10'),
@@ -107,6 +144,8 @@ function AdminDashboard() {
         fetch('/api/clover/customers?limit=100'),
         fetch('/api/bookings'),
         fetch('/api/inquiries'),
+        fetch('/api/careers/jobs?active=false'),
+        fetch('/api/careers/applications'),
       ]);
 
       if (invRes.status === 'fulfilled' && invRes.value.ok) {
@@ -137,6 +176,14 @@ function AdminDashboard() {
       if (inqRes.status === 'fulfilled' && inqRes.value.ok) {
         const d = await inqRes.value.json();
         setInquiries(d.inquiries || []);
+      }
+      if (jobsRes.status === 'fulfilled' && jobsRes.value.ok) {
+        const d = await jobsRes.value.json();
+        setJobListings(d.jobs || []);
+      }
+      if (appsRes.status === 'fulfilled' && appsRes.value.ok) {
+        const d = await appsRes.value.json();
+        setApplications(d.applications || []);
       }
     } catch (error) {
       console.error('Error loading dashboard data:', error);
@@ -228,6 +275,18 @@ function AdminDashboard() {
     }
   };
 
+  const deleteBooking = async (bookingId: string) => {
+    if (!confirm('Delete this booking? This cannot be undone.')) return;
+    try {
+      const res = await fetch(`/api/bookings/${bookingId}`, { method: 'DELETE' });
+      if (res.ok) {
+        setBookings(prev => prev.filter(b => b.id !== bookingId));
+      }
+    } catch (error) {
+      console.error('Error deleting booking:', error);
+    }
+  };
+
   const updateInquiryStatus = async (inquiryId: string, newStatus: InquiryStatus) => {
     try {
       const res = await fetch(`/api/inquiries/${inquiryId}`, {
@@ -249,6 +308,75 @@ function AdminDashboard() {
     }
   };
 
+  const resetJobForm = () => {
+    setJobFormData({ title: '', department: '', location: 'Stroudsburg, PA', type: 'full-time', description: '', requirements: '', salary_range: '' });
+    setEditingJob(null);
+    setShowJobForm(false);
+  };
+
+  const createOrUpdateJob = async () => {
+    try {
+      const url = editingJob ? `/api/careers/jobs/${editingJob.id}` : '/api/careers/jobs';
+      const method = editingJob ? 'PATCH' : 'POST';
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(jobFormData),
+      });
+      if (res.ok) {
+        resetJobForm();
+        fetchOverviewData();
+      }
+    } catch (error) {
+      console.error('Error saving job:', error);
+    }
+  };
+
+  const toggleJobActive = async (job: JobListing) => {
+    try {
+      const res = await fetch(`/api/careers/jobs/${job.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ is_active: !job.is_active }),
+      });
+      if (res.ok) {
+        setJobListings(prev => prev.map(j => j.id === job.id ? { ...j, is_active: !j.is_active } : j));
+      }
+    } catch (error) {
+      console.error('Error toggling job:', error);
+    }
+  };
+
+  const deleteJob = async (jobId: string) => {
+    if (!confirm('Delete this job listing? All associated applications will also be deleted.')) return;
+    try {
+      const res = await fetch(`/api/careers/jobs/${jobId}`, { method: 'DELETE' });
+      if (res.ok) {
+        setJobListings(prev => prev.filter(j => j.id !== jobId));
+        setApplications(prev => prev.filter(a => a.job_listing_id !== jobId));
+      }
+    } catch (error) {
+      console.error('Error deleting job:', error);
+    }
+  };
+
+  const updateApplicationStatus = async (appId: string, newStatus: ApplicationStatus) => {
+    try {
+      const res = await fetch(`/api/careers/applications/${appId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      });
+      if (res.ok) {
+        setApplications(prev =>
+          prev.map(a => a.id === appId ? { ...a, status: newStatus, updated_at: new Date().toISOString() } : a)
+        );
+      }
+    } catch (error) {
+      console.error('Error updating application status:', error);
+    }
+  };
+
   // Debounced server-side search
   useEffect(() => {
     if (!inventorySearch) {
@@ -267,6 +395,7 @@ function AdminDashboard() {
   const totalPaymentsAmount = payments.reduce((sum, p) => sum + p.amount, 0);
   const pendingBookings = bookings.filter(b => b.status === 'pending').length;
   const pendingInquiries = inquiries.filter(i => i.status === 'pending').length;
+  const pendingApplications = applications.filter(a => a.status === 'pending').length;
 
   // Theme-aware class helpers
   const bg = isDark ? 'bg-slate-900' : 'bg-slate-100';
@@ -299,6 +428,8 @@ function AdminDashboard() {
     { key: 'customers', label: 'Customers' },
     { key: 'bookings', label: 'Bookings', badge: pendingBookings || undefined },
     { key: 'requests', label: 'Requests', badge: pendingInquiries || undefined },
+    { key: 'jobs', label: 'Jobs' },
+    { key: 'applications', label: 'Applications', badge: pendingApplications || undefined },
   ];
 
   const getStatusClasses = (status: string) => {
@@ -377,6 +508,12 @@ function AdminDashboard() {
           >
             &larr; Back to Site
           </a>
+          <button
+            onClick={handleLogout}
+            className={`block w-full text-left px-4 py-2 ${isDark ? 'text-red-400' : 'text-red-600'} ${bgHover} rounded-md transition-colors text-sm`}
+          >
+            Sign Out
+          </button>
         </div>
       </aside>
 
@@ -393,7 +530,7 @@ function AdminDashboard() {
               </div>
 
               {/* Stats Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
                 <div className={`${bgCard} border ${borderColor} rounded-lg p-5`}>
                   <div className={`${textSecondary} text-xs uppercase tracking-wide mb-2`}>Inventory Items</div>
                   <div className={`text-3xl font-bold ${textPrimary}`}>1,321</div>
@@ -428,6 +565,12 @@ function AdminDashboard() {
                   <div className={`${isDark ? 'text-orange-400' : 'text-orange-600'} text-xs uppercase tracking-wide mb-2`}>Pending Requests</div>
                   <div className={`text-3xl font-bold ${isDark ? 'text-orange-400' : 'text-orange-600'}`}>{pendingInquiries}</div>
                   <div className={`${textMuted} text-xs mt-1`}>backorder requests</div>
+                </div>
+
+                <div className={`${bgCard} border ${borderColor} rounded-lg p-5 cursor-pointer`} onClick={() => setActiveNav('applications')}>
+                  <div className={`${isDark ? 'text-violet-400' : 'text-violet-600'} text-xs uppercase tracking-wide mb-2`}>Pending Applications</div>
+                  <div className={`text-3xl font-bold ${isDark ? 'text-violet-400' : 'text-violet-600'}`}>{pendingApplications}</div>
+                  <div className={`${textMuted} text-xs mt-1`}>career applications</div>
                 </div>
               </div>
 
@@ -506,19 +649,6 @@ function AdminDashboard() {
                 </div>
               </div>
 
-              {/* Categories */}
-              <div className={`${bgCard} border ${borderColor} rounded-lg p-6`}>
-                <h3 className={`text-lg font-semibold ${isDark ? 'text-purple-400' : 'text-purple-600'} mb-4`}>Product Categories</h3>
-                <div className="flex flex-wrap gap-2">
-                  {categories.map((cat) => (
-                    <span key={cat.id} className={`px-3 py-1.5 rounded-full text-xs ${
-                      isDark ? 'bg-purple-400/10 text-purple-400 border border-purple-400/20' : 'bg-purple-50 text-purple-600 border border-purple-200'
-                    }`}>
-                      {cat.name}
-                    </span>
-                  ))}
-                </div>
-              </div>
             </div>
           )}
 
@@ -883,6 +1013,12 @@ function AdminDashboard() {
                               <option value="cancelled">Cancelled</option>
                               <option value="no_show">No Show</option>
                             </select>
+                            <button
+                              onClick={() => deleteBooking(booking.id)}
+                              className={`${isDark ? 'text-red-400' : 'text-red-600'} text-sm ${bgHover} px-2 py-1 rounded transition-colors ml-2`}
+                            >
+                              Delete
+                            </button>
                           </td>
                         </tr>
                       ))}
@@ -892,6 +1028,293 @@ function AdminDashboard() {
                 {bookings.length === 0 && (
                   <div className={`text-center ${textMuted} py-12 text-sm`}>
                     No bookings found. Appointments from BayReady will appear here.
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ==================== JOBS ==================== */}
+          {activeNav === 'jobs' && (
+            <div>
+              <div className="mb-8 flex items-center justify-between">
+                <div>
+                  <h2 className={`text-3xl font-bold ${textPrimary} mb-1`}>Job Listings</h2>
+                  <p className={textSecondary}>Manage career opportunities</p>
+                </div>
+                <button
+                  onClick={() => { resetJobForm(); setShowJobForm(true); }}
+                  className={`px-5 py-2.5 ${isDark ? 'bg-blue-500/10 text-blue-400 border-blue-400/30' : 'bg-blue-50 text-blue-600 border-blue-200'} border rounded-md hover:opacity-80 transition-colors text-sm`}
+                >
+                  + Create New Job
+                </button>
+              </div>
+
+              {/* Job Form */}
+              {showJobForm && (
+                <div className={`${bgCard} border ${borderColor} rounded-lg p-6 mb-6`}>
+                  <h3 className={`text-lg font-semibold ${textPrimary} mb-4`}>
+                    {editingJob ? 'Edit Job Listing' : 'Create New Job Listing'}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Title *</label>
+                      <input
+                        type="text"
+                        value={jobFormData.title}
+                        onChange={(e) => setJobFormData(prev => ({ ...prev, title: e.target.value }))}
+                        placeholder="e.g. Car Audio Installer"
+                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors`}
+                      />
+                    </div>
+                    <div>
+                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Department *</label>
+                      <input
+                        type="text"
+                        value={jobFormData.department}
+                        onChange={(e) => setJobFormData(prev => ({ ...prev, department: e.target.value }))}
+                        placeholder="e.g. Installation"
+                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors`}
+                      />
+                    </div>
+                    <div>
+                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Location</label>
+                      <input
+                        type="text"
+                        value={jobFormData.location}
+                        onChange={(e) => setJobFormData(prev => ({ ...prev, location: e.target.value }))}
+                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors`}
+                      />
+                    </div>
+                    <div>
+                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Type</label>
+                      <select
+                        value={jobFormData.type}
+                        onChange={(e) => setJobFormData(prev => ({ ...prev, type: e.target.value as 'full-time' | 'part-time' | 'contract' }))}
+                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors cursor-pointer`}
+                      >
+                        <option value="full-time">Full-time</option>
+                        <option value="part-time">Part-time</option>
+                        <option value="contract">Contract</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Salary Range</label>
+                      <input
+                        type="text"
+                        value={jobFormData.salary_range}
+                        onChange={(e) => setJobFormData(prev => ({ ...prev, salary_range: e.target.value }))}
+                        placeholder="e.g. $40,000 - $60,000"
+                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors`}
+                      />
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Description *</label>
+                    <textarea
+                      value={jobFormData.description}
+                      onChange={(e) => setJobFormData(prev => ({ ...prev, description: e.target.value }))}
+                      rows={4}
+                      placeholder="Describe the role and responsibilities..."
+                      className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors resize-y`}
+                    />
+                  </div>
+                  <div className="mb-4">
+                    <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Requirements</label>
+                    <textarea
+                      value={jobFormData.requirements}
+                      onChange={(e) => setJobFormData(prev => ({ ...prev, requirements: e.target.value }))}
+                      rows={3}
+                      placeholder="List qualifications, skills, experience needed..."
+                      className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors resize-y`}
+                    />
+                  </div>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={createOrUpdateJob}
+                      disabled={!jobFormData.title || !jobFormData.department || !jobFormData.description}
+                      className={`px-5 py-2.5 ${isDark ? 'bg-blue-500 text-white' : 'bg-blue-600 text-white'} rounded-md hover:opacity-90 transition-colors text-sm disabled:opacity-30 disabled:cursor-not-allowed`}
+                    >
+                      {editingJob ? 'Update Job' : 'Create Job'}
+                    </button>
+                    <button
+                      onClick={resetJobForm}
+                      className={`px-5 py-2.5 border ${borderColor} ${textSecondary} rounded-md ${bgHover} transition-colors text-sm`}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Jobs Table */}
+              <div className={`${bgCard} border ${borderColor} rounded-lg overflow-hidden`}>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className={`border-b ${borderColor} ${isDark ? 'bg-slate-800/50' : 'bg-slate-50'}`}>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Title</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Department</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Type</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Salary</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Active</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {jobListings.map((job) => (
+                        <tr key={job.id} className={`border-b ${borderColor} ${bgHover} transition-colors`}>
+                          <td className="px-6 py-3">
+                            <div className={`${textPrimary} text-sm font-medium`}>{job.title}</div>
+                            <div className={`${textMuted} text-xs`}>{job.location}</div>
+                          </td>
+                          <td className={`px-6 py-3 ${textSecondary} text-sm`}>{job.department}</td>
+                          <td className="px-6 py-3">
+                            <span className={`px-2 py-0.5 text-xs rounded-full border ${
+                              isDark ? 'text-cyan-400 border-cyan-400/20 bg-cyan-400/10' : 'text-cyan-600 border-cyan-200 bg-cyan-50'
+                            }`}>
+                              {job.type}
+                            </span>
+                          </td>
+                          <td className={`px-6 py-3 ${textSecondary} text-sm`}>{job.salary_range || '—'}</td>
+                          <td className="px-6 py-3">
+                            <button
+                              onClick={() => toggleJobActive(job)}
+                              className={`px-2.5 py-1 text-xs rounded-full border cursor-pointer transition-colors ${
+                                job.is_active
+                                  ? isDark ? 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10' : 'text-emerald-600 border-emerald-200 bg-emerald-50'
+                                  : isDark ? 'text-slate-400 border-slate-400/30 bg-slate-400/10' : 'text-slate-500 border-slate-200 bg-slate-50'
+                              }`}
+                            >
+                              {job.is_active ? 'ACTIVE' : 'INACTIVE'}
+                            </button>
+                          </td>
+                          <td className="px-6 py-3">
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => {
+                                  setEditingJob(job);
+                                  setJobFormData({
+                                    title: job.title,
+                                    department: job.department,
+                                    location: job.location,
+                                    type: job.type,
+                                    description: job.description,
+                                    requirements: job.requirements || '',
+                                    salary_range: job.salary_range || '',
+                                  });
+                                  setShowJobForm(true);
+                                }}
+                                className={`${textAccent} text-sm ${bgHover} px-2 py-1 rounded transition-colors`}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => deleteJob(job.id)}
+                                className={`${isDark ? 'text-red-400' : 'text-red-600'} text-sm ${bgHover} px-2 py-1 rounded transition-colors`}
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {jobListings.length === 0 && (
+                  <div className={`text-center ${textMuted} py-12 text-sm`}>
+                    No job listings yet. Click &ldquo;Create New Job&rdquo; to add your first listing.
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* ==================== APPLICATIONS ==================== */}
+          {activeNav === 'applications' && (
+            <div>
+              <div className="mb-8">
+                <h2 className={`text-3xl font-bold ${textPrimary} mb-1`}>Career Applications</h2>
+                <p className={textSecondary}>Review and manage job applications</p>
+              </div>
+
+              <div className={`${bgCard} border ${borderColor} rounded-lg overflow-hidden`}>
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className={`border-b ${borderColor} ${isDark ? 'bg-slate-800/50' : 'bg-slate-50'}`}>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Date</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Applicant</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Position</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Resume</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Cover Letter</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Status</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {applications.map((app) => (
+                        <tr key={app.id} className={`border-b ${borderColor} ${bgHover} transition-colors`}>
+                          <td className={`px-6 py-3 ${textSecondary} text-sm`}>
+                            {new Date(app.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                          </td>
+                          <td className="px-6 py-3">
+                            <div className={`${textPrimary} text-sm font-medium`}>{app.applicant_name}</div>
+                            <div className={`${textSecondary} text-xs`}>{app.applicant_email}</div>
+                            {app.applicant_phone && <div className={`${textMuted} text-xs`}>{app.applicant_phone}</div>}
+                          </td>
+                          <td className="px-6 py-3">
+                            <div className={`${textPrimary} text-sm`}>{app.job_listing?.title || 'Unknown Position'}</div>
+                            {app.job_listing?.department && <div className={`${textMuted} text-xs`}>{app.job_listing.department}</div>}
+                          </td>
+                          <td className="px-6 py-3">
+                            {app.resume_url ? (
+                              <a
+                                href={app.resume_url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className={`${textAccent} text-sm underline`}
+                              >
+                                Download
+                              </a>
+                            ) : (
+                              <span className={`${textMuted} text-xs`}>None</span>
+                            )}
+                          </td>
+                          <td className="px-6 py-3">
+                            {app.cover_letter ? (
+                              <div className={`${textMuted} text-xs max-w-xs truncate italic`}>&ldquo;{app.cover_letter}&rdquo;</div>
+                            ) : (
+                              <span className={`${textMuted} text-xs`}>None</span>
+                            )}
+                          </td>
+                          <td className="px-6 py-3">
+                            <span className={`px-2.5 py-1 text-xs rounded-full border ${getStatusClasses(app.status)}`}>
+                              {app.status.toUpperCase()}
+                            </span>
+                          </td>
+                          <td className="px-6 py-3">
+                            <select
+                              value={app.status}
+                              onChange={(e) => updateApplicationStatus(app.id, e.target.value as ApplicationStatus)}
+                              className={`${bgInput} border ${borderColor} ${textPrimary} px-3 py-1.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors cursor-pointer`}
+                            >
+                              <option value="pending">Pending</option>
+                              <option value="reviewed">Reviewed</option>
+                              <option value="interviewed">Interviewed</option>
+                              <option value="hired">Hired</option>
+                              <option value="rejected">Rejected</option>
+                            </select>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                {applications.length === 0 && (
+                  <div className={`text-center ${textMuted} py-12 text-sm`}>
+                    No applications yet. Applications will appear here when candidates apply through the careers page.
                   </div>
                 )}
               </div>
