@@ -49,8 +49,7 @@ export default function CheckoutModal() {
     }
 
     const script = document.createElement('script');
-    // PRODUCTION: script.src = 'https://checkout.clover.com/sdk.js';
-    script.src = 'https://checkout.sandbox.dev.clover.com/sdk.js'; // SANDBOX
+    script.src = 'https://checkout.clover.com/sdk.js';
     script.async = true;
     script.onload = () => setSdkLoaded(true);
     script.onerror = () => setSdkError(true);
