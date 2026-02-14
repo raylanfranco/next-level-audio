@@ -317,7 +317,7 @@ export default function ContactPage() {
       </section>
 
       {/* Map Section */}
-      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      {/* <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
         <div className="absolute inset-0 cyber-grid opacity-10"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-12">
@@ -327,10 +327,10 @@ export default function ContactPage() {
             <p className="text-[#00A0E0]/80 max-w-2xl mx-auto text-lg font-mono">
               Located in Stroudsburg, PA - easily accessible from the Poconos and surrounding areas.
             </p>
-          </div>
+          </div> */}
 
           {/* Map Placeholder - Replace with actual Google Maps embed */}
-          <div className="border-2 border-[#00A0E0]/30 neon-border-soft overflow-hidden">
+          {/* <div className="border-2 border-[#00A0E0]/30 neon-border-soft overflow-hidden">
             <div className="relative h-96 bg-gradient-to-br from-[#00A0E0]/20 to-black flex items-center justify-center">
               <div className="text-center">
                 <svg className="w-16 h-16 text-[#00A0E0]/30 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -342,7 +342,7 @@ export default function ContactPage() {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
     </div>
   );
 }
