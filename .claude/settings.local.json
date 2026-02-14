@@ -47,7 +47,8 @@
       "Bash(findstr:*)",
       "Bash(ls:*)",
       "Bash(tsconfig)",
-      "Bash(vercel \")"
+      "Bash(vercel \")",
+      "Bash(dir:*)"
     ]
   }
 }

@@ -189,7 +189,7 @@ export default function ProductsSection() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-              {items.slice(0, 12).map((item, index) => (
+              {[...items].sort((a, b) => (productImages[a.id] ? 0 : 1) - (productImages[b.id] ? 0 : 1)).slice(0, 12).map((item, index) => (
                 <div
                   key={item.id}
                   className="animate-fade-up bg-black border-2 border-[#00A0E0]/30 overflow-hidden hover:border-[#00A0E0] transition-all duration-500 transform hover:-translate-y-2 group neon-border-soft"
