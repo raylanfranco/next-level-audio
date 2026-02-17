@@ -125,6 +125,14 @@ function AdminDashboard() {
     type: 'full-time', description: '', requirements: '', salary_range: '',
   });
 
+  // Product form state
+  const [showProductForm, setShowProductForm] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<CloverItem | null>(null);
+  const [productFormData, setProductFormData] = useState({
+    name: '', price: '', cost: '', code: '', description: '', categoryId: '', stockCount: '',
+  });
+  const [productSaving, setProductSaving] = useState(false);
+
   const [inventoryOffset, setInventoryOffset] = useState(0);
   const [inventorySearch, setInventorySearch] = useState('');
   const [ordersOffset, setOrdersOffset] = useState(0);
@@ -374,6 +382,71 @@ function AdminDashboard() {
       }
     } catch (error) {
       console.error('Error updating application status:', error);
+    }
+  };
+
+  // Product CRUD
+  const resetProductForm = () => {
+    setProductFormData({ name: '', price: '', cost: '', code: '', description: '', categoryId: '', stockCount: '' });
+    setEditingProduct(null);
+    setShowProductForm(false);
+  };
+
+  const createOrUpdateProduct = async () => {
+    if (!productFormData.name || !productFormData.price) return;
+    setProductSaving(true);
+    try {
+      const priceCents = Math.round(parseFloat(productFormData.price) * 100);
+      const costCents = productFormData.cost ? Math.round(parseFloat(productFormData.cost) * 100) : undefined;
+      const stock = productFormData.stockCount ? parseInt(productFormData.stockCount, 10) : undefined;
+
+      if (editingProduct) {
+        await fetch(`/api/clover/inventory/${editingProduct.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: productFormData.name,
+            price: priceCents,
+            cost: costCents,
+            code: productFormData.code || undefined,
+            description: productFormData.description || undefined,
+            categoryId: productFormData.categoryId || undefined,
+            stockCount: stock,
+          }),
+        });
+      } else {
+        await fetch('/api/clover/inventory', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: productFormData.name,
+            price: priceCents,
+            cost: costCents,
+            code: productFormData.code || undefined,
+            description: productFormData.description || undefined,
+            categoryId: productFormData.categoryId || undefined,
+            stockCount: stock,
+          }),
+        });
+      }
+      resetProductForm();
+      fetchInventoryPage(inventoryOffset, inventorySearch || undefined);
+    } catch (error) {
+      console.error('Error saving product:', error);
+    } finally {
+      setProductSaving(false);
+    }
+  };
+
+  const deleteProduct = async (itemId: string) => {
+    if (!confirm('Delete this product from Clover? This cannot be undone.')) return;
+    try {
+      const res = await fetch(`/api/clover/inventory/${itemId}`, { method: 'DELETE' });
+      if (res.ok) {
+        setInventory(prev => prev.filter(i => i.id !== itemId));
+      }
+    } catch (error) {
+      console.error('Error deleting product:', error);
     }
   };
 
@@ -660,10 +733,122 @@ function AdminDashboard() {
                   <h2 className={`text-3xl font-bold ${textPrimary} mb-1`}>Clover Inventory</h2>
                   <p className={textSecondary}>Live inventory from your Clover POS system</p>
                 </div>
-                <a href="/products" target="_blank" className={`px-5 py-2.5 border ${borderColor} ${textAccent} rounded-md ${bgHover} transition-colors text-sm`}>
-                  View Store &rarr;
-                </a>
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => { resetProductForm(); setShowProductForm(true); }}
+                    className={`px-5 py-2.5 ${isDark ? 'bg-blue-500/10 text-blue-400 border-blue-400/30' : 'bg-blue-50 text-blue-600 border-blue-200'} border rounded-md hover:opacity-80 transition-colors text-sm`}
+                  >
+                    + Add Product
+                  </button>
+                  <a href="/products" target="_blank" className={`px-5 py-2.5 border ${borderColor} ${textAccent} rounded-md ${bgHover} transition-colors text-sm`}>
+                    View Store &rarr;
+                  </a>
+                </div>
               </div>
+
+              {/* Product Form */}
+              {showProductForm && (
+                <div className={`${bgCard} border ${borderColor} rounded-lg p-6 mb-6`}>
+                  <h3 className={`text-lg font-semibold ${textPrimary} mb-4`}>
+                    {editingProduct ? 'Edit Product' : 'Add New Product'}
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                    <div>
+                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Name *</label>
+                      <input
+                        type="text"
+                        value={productFormData.name}
+                        onChange={(e) => setProductFormData(prev => ({ ...prev, name: e.target.value }))}
+                        placeholder="e.g. Pioneer DMH-1500NEX"
+                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors`}
+                      />
+                    </div>
+                    <div>
+                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Price ($) *</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={productFormData.price}
+                        onChange={(e) => setProductFormData(prev => ({ ...prev, price: e.target.value }))}
+                        placeholder="0.00"
+                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors`}
+                      />
+                    </div>
+                    <div>
+                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Cost ($)</label>
+                      <input
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value={productFormData.cost}
+                        onChange={(e) => setProductFormData(prev => ({ ...prev, cost: e.target.value }))}
+                        placeholder="0.00"
+                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors`}
+                      />
+                    </div>
+                    <div>
+                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Barcode / SKU</label>
+                      <input
+                        type="text"
+                        value={productFormData.code}
+                        onChange={(e) => setProductFormData(prev => ({ ...prev, code: e.target.value }))}
+                        placeholder="e.g. 884938377621"
+                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors`}
+                      />
+                    </div>
+                    <div>
+                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Category</label>
+                      <select
+                        value={productFormData.categoryId}
+                        onChange={(e) => setProductFormData(prev => ({ ...prev, categoryId: e.target.value }))}
+                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors cursor-pointer`}
+                      >
+                        <option value="">No Category</option>
+                        {categories.map(cat => (
+                          <option key={cat.id} value={cat.id}>{cat.name}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Stock Count</label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={productFormData.stockCount}
+                        onChange={(e) => setProductFormData(prev => ({ ...prev, stockCount: e.target.value }))}
+                        placeholder="0"
+                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors`}
+                      />
+                    </div>
+                  </div>
+                  <div className="mb-4">
+                    <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Description</label>
+                    <textarea
+                      value={productFormData.description}
+                      onChange={(e) => setProductFormData(prev => ({ ...prev, description: e.target.value }))}
+                      rows={2}
+                      placeholder="Product description..."
+                      className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors resize-y`}
+                    />
+                  </div>
+                  <div className="flex gap-3">
+                    <button
+                      onClick={createOrUpdateProduct}
+                      disabled={!productFormData.name || !productFormData.price || productSaving}
+                      className={`px-5 py-2.5 ${isDark ? 'bg-blue-500 text-white' : 'bg-blue-600 text-white'} rounded-md hover:opacity-90 transition-colors text-sm disabled:opacity-30 disabled:cursor-not-allowed`}
+                    >
+                      {productSaving ? 'Saving...' : editingProduct ? 'Update Product' : 'Add Product'}
+                    </button>
+                    <button
+                      onClick={resetProductForm}
+                      className={`px-5 py-2.5 border ${borderColor} ${textSecondary} rounded-md ${bgHover} transition-colors text-sm`}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              )}
 
               <div className="mb-4">
                 <input
@@ -686,6 +871,7 @@ function AdminDashboard() {
                         <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Cost</th>
                         <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Stock</th>
                         <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Category</th>
+                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -719,6 +905,34 @@ function AdminDashboard() {
                             ) : (
                               <span className={`${textMuted} text-xs`}>—</span>
                             )}
+                          </td>
+                          <td className="px-6 py-3">
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => {
+                                  setEditingProduct(item);
+                                  setProductFormData({
+                                    name: item.name,
+                                    price: (item.price / 100).toFixed(2),
+                                    cost: item.cost ? (item.cost / 100).toFixed(2) : '',
+                                    code: item.code || '',
+                                    description: item.description || '',
+                                    categoryId: item.categories?.elements?.[0]?.id || '',
+                                    stockCount: String(item.stockCount ?? 0),
+                                  });
+                                  setShowProductForm(true);
+                                }}
+                                className={`${textAccent} text-sm ${bgHover} px-2 py-1 rounded transition-colors`}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => deleteProduct(item.id)}
+                                className={`${isDark ? 'text-red-400' : 'text-red-600'} text-sm ${bgHover} px-2 py-1 rounded transition-colors`}
+                              >
+                                Delete
+                              </button>
+                            </div>
                           </td>
                         </tr>
                       ))}

@@ -1,6 +1,48 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cloverFetch, isCloverConfigured } from "@/lib/clover/client";
-import type { CloverItemsResponse } from "@/types/clover";
+import type { CloverItem, CloverItemsResponse } from "@/types/clover";
+
+export async function POST(request: NextRequest) {
+  if (!isCloverConfigured) {
+    return NextResponse.json({ error: "Clover API not configured" }, { status: 503 });
+  }
+
+  try {
+    const body = await request.json();
+    const { name, price, cost, code, description, categoryId, stockCount } = body;
+
+    if (!name || price == null) {
+      return NextResponse.json({ error: "name and price are required" }, { status: 400 });
+    }
+
+    // Create the item
+    const item = await cloverFetch<CloverItem>("/items", {
+      method: "POST",
+      body: { name, price, cost: cost || undefined, code: code || undefined, description: description || undefined },
+    });
+
+    // Assign to category if provided
+    if (categoryId) {
+      await cloverFetch(`/category_items`, {
+        method: "POST",
+        body: { elements: [{ item: { id: item.id }, category: { id: categoryId } }] },
+      }).catch(() => {}); // best-effort
+    }
+
+    // Set stock if provided
+    if (stockCount != null && stockCount > 0) {
+      await cloverFetch(`/item_stocks/${item.id}`, {
+        method: "POST",
+        body: { quantity: stockCount },
+      }).catch(() => {}); // best-effort
+    }
+
+    return NextResponse.json({ item });
+  } catch (error) {
+    console.error("Clover create item error:", error);
+    return NextResponse.json({ error: "Failed to create item", details: String(error) }, { status: 500 });
+  }
+}
 
 export async function GET(request: NextRequest) {
   if (!isCloverConfigured) {
