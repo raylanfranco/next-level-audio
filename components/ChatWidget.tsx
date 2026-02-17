@@ -13,9 +13,6 @@ export default function ChatWidget() {
   const isAdminRoute = pathname?.startsWith('/admin');
   const { isOpen, toggleChat, closeChat } = useChatWidget();
   const { openModal } = useBookingModal();
-
-  // Don't render on admin pages
-  if (isAdminRoute) return null;
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [input, setInput] = useState('');
@@ -49,6 +46,9 @@ export default function ChatWidget() {
       setTimeout(() => inputRef.current?.focus(), 300);
     }
   }, [isOpen]);
+
+  // Don't render on admin pages (guard placed after all hooks to respect Rules of Hooks)
+  if (isAdminRoute) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

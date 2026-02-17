@@ -10,9 +10,7 @@ interface Stat {
 }
 
 const stats: Stat[] = [
-  { value: 500, suffix: '+', label: 'Installs Completed' },
-  { value: 10, suffix: '+', label: 'Years Experience' },
-  { value: 1000, suffix: '+', label: 'Happy Customers' },
+  { value: 20, suffix: '+', label: 'Years Experience' },
   { value: 5, suffix: '★', label: 'Average Rating' },
 ];
 
@@ -59,7 +57,7 @@ export default function StatsCounter() {
     <section className="py-16 md:py-24 bg-black relative overflow-hidden border-t-2 border-b-2 border-[#00A0E0]/20">
       <div className="absolute inset-0 cyber-grid opacity-10"></div>
       <div ref={ref} className="container mx-auto px-4 relative z-10">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12">
+        <div className="flex items-center justify-center gap-16 md:gap-24">
           {stats.map((stat, index) => (
             <div
               key={stat.label}
