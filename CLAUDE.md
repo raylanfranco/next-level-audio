@@ -130,7 +130,7 @@ next-level-audio/          ← NLA: Customer-facing website (Next.js on Vercel)
 2. Opens `CheckoutModal` from cart icon
 3. **Cart step:** Review items, quantities, total
 4. **Payment step:**
-   - Loads Clover SDK script (`checkout.sandbox.dev.clover.com/sdk.js` for sandbox)
+   - Loads Clover SDK script (`checkout.clover.com/sdk.js`)
    - Fetches PAKMS API key from `/api/clover/pakms`
    - Initializes `new Clover(apiAccessKey, { merchantId })` — **NOT** `{ publishableKey }`
    - Creates individual card elements: `CARD_NUMBER`, `CARD_DATE`, `CARD_CVV`, `CARD_POSTAL_CODE`
@@ -157,7 +157,7 @@ next-level-audio/          ← NLA: Customer-facing website (Next.js on Vercel)
 | `PrismaModule` | `src/prisma/` | Database service with Prisma v7 adapter pattern |
 | `CloverModule` | `src/clover/` | OAuth flow, token management, charges, Clover API proxy |
 | `MerchantModule` | `src/merchant/` | Merchant CRUD, settings, onboarding |
-| `ServiceModule` | `src/service/` | Service definitions (name, price, duration, parts mappings) |
+| `ServiceModule` | `src/service/` | Service definitions (name, category, price, duration, parts mappings) |
 | `CustomerModule` | `src/customer/` | Customer find-or-create, CRUD |
 | `VehicleModule` | `src/vehicle/` | Vehicle records linked to customers |
 | `BookingModule` | `src/booking/` | Booking CRUD, availability slots, overlap detection |
@@ -170,7 +170,7 @@ Merchant → has many: Service, Customer, Booking, AvailabilityRule, BlockedDate
   - cloverMerchantId (unique), OAuth tokens, timezone, settings (JSON)
 
 Service → belongs to Merchant, has many Booking
-  - name, durationMins, priceCents, partsMappings (JSON)
+  - name, category, durationMins, priceCents, partsMappings (JSON)
 
 Customer → belongs to Merchant, has many Vehicle, Booking
   - name, email, phone, unique per [merchantId, email]
@@ -229,7 +229,7 @@ BlockedDate → belongs to Merchant
 
 5 steps: **Service → Date & Time → Vehicle Intake → Your Info → Confirm**
 
-1. **Service:** Fetches merchant's services, customer picks one. Shows price + duration.
+1. **Service:** Two-phase selection — first picks a category (if multiple exist), then picks a service within that category. If only one category exists, skips straight to service list. Shows price + duration.
 2. **Date & Time:** Calendar grid (CalendarGrid.tsx) → picks a date → fetches `/merchants/:id/bookings/slots?serviceId=X&date=Y` → shows available time slots
 3. **Vehicle Intake:** VehicleSelector (year/make/model/trim dropdowns) + IntakeQuestionnaire (dynamic questions based on service)
 4. **Your Info:** Name, email, phone
@@ -258,7 +258,7 @@ BlockedDate → belongs to Merchant
 
 **BayReady (NestJS):** OAuth-based integration for multi-merchant support.
 - OAuth onboarding: Merchant authorizes via Clover OAuth v2 → tokens stored in DB
-- API calls: Auto-refreshing OAuth access tokens → `apisandbox.dev.clover.com/v3/merchants/{id}/...`
+- API calls: Auto-refreshing OAuth access tokens → `api.clover.com/v3/merchants/{id}/...`
 - Card charges: `CLOVER_ECOMM_PRIVATE_KEY` env var (or falls back to OAuth token)
 
 ### Clover SDK Initialization
@@ -266,8 +266,7 @@ BlockedDate → belongs to Merchant
 ```typescript
 // Load script
 const script = document.createElement('script');
-script.src = 'https://checkout.sandbox.dev.clover.com/sdk.js'; // SANDBOX
-// script.src = 'https://checkout.clover.com/sdk.js'; // PRODUCTION
+script.src = 'https://checkout.clover.com/sdk.js';
 
 // Initialize
 const clover = new window.Clover(apiAccessKey, { merchantId });
@@ -316,16 +315,17 @@ const result = await clover.createToken();
 | OAuth (browser) | `sandbox.dev.clover.com/oauth/v2/authorize` | `www.clover.com/oauth/v2/authorize` |
 | Test card | `4242 4242 4242 4242` (any future exp, any CVV) | Real cards only |
 
-### Hybrid Sandbox/Production (Current NLA Setup)
+### Current Setup (Full Production)
 
-NLA currently uses **production inventory** (reads real product catalog) with **sandbox charges** (test payments). This is controlled by:
+Both NLA and BayReady are running in **full production mode** — real inventory reads AND real charges:
 
-- `CLOVER_API_TOKEN` + `CLOVER_API_BASE_URL=https://api.clover.com` → inventory reads go to production
-- `CLOVER_ECOMM_PUBLIC_KEY` + `CLOVER_ECOMM_PRIVATE_KEY` → sandbox ecomm keys for charges
-- `CLOVER_CHARGE_ENV=sandbox` → explicitly routes charges to sandbox endpoint regardless of `CLOVER_API_BASE_URL`
-- `NEXT_PUBLIC_CLOVER_MERCHANT_ID` → sandbox merchant ID (for SDK initialization)
+- `CLOVER_API_TOKEN` + `CLOVER_API_BASE_URL=https://api.clover.com` → production inventory reads
+- `CLOVER_ECOMM_PUBLIC_KEY` + `CLOVER_ECOMM_PRIVATE_KEY` → production ecomm keys for charges
+- `CLOVER_CHARGE_ENV=production` → routes charges to production endpoint
+- `NEXT_PUBLIC_CLOVER_MERCHANT_ID=5C5J719BX6571` → production merchant ID (for SDK initialization)
+- CheckoutModal SDK URL: `https://checkout.clover.com/sdk.js`
 
-**To switch to full production:** Remove `CLOVER_CHARGE_ENV`, set production ecomm keys, set production merchant ID for `NEXT_PUBLIC_CLOVER_MERCHANT_ID`, and change SDK URL in `CheckoutModal.tsx`.
+**To revert to sandbox for testing:** Set `CLOVER_CHARGE_ENV=sandbox`, swap ecomm keys to sandbox values, set `NEXT_PUBLIC_CLOVER_MERCHANT_ID` to sandbox merchant ID, and change SDK URL in `CheckoutModal.tsx` to `https://checkout.sandbox.dev.clover.com/sdk.js`.
 
 ### Token Types (Easy to Confuse!)
 
@@ -414,13 +414,11 @@ Cart persists to `localStorage` key `nla-cart`.
 ### NLA (.env.local on Vercel)
 
 ```bash
-# Clover Inventory (Production)
+# Clover (Production)
 CLOVER_API_TOKEN=              # Merchant API token — for /v3/merchants/... reads
 CLOVER_API_BASE_URL=           # https://api.clover.com (prod) or https://apisandbox.dev.clover.com (sandbox)
 CLOVER_MERCHANT_ID=            # Production merchant ID (server-side only)
-
-# Clover Ecommerce (currently sandbox)
-NEXT_PUBLIC_CLOVER_MERCHANT_ID= # Merchant ID for frontend SDK — matches charge environment
+NEXT_PUBLIC_CLOVER_MERCHANT_ID= # Merchant ID for frontend SDK — must match charge environment
 CLOVER_ECOMM_PUBLIC_KEY=        # Ecomm public key for iframe SDK
 CLOVER_ECOMM_PRIVATE_KEY=       # Ecomm private key for /v1/charges
 CLOVER_CHARGE_ENV=              # "sandbox" or "production" — overrides URL derivation
@@ -440,7 +438,7 @@ RESEND_API_KEY=                 # Resend API key for sending emails
 DATABASE_URL=                   # Railway internal PostgreSQL URL
 CLOVER_APP_ID=                  # Clover OAuth App ID
 CLOVER_APP_SECRET=              # Clover OAuth App Secret
-CLOVER_API_BASE_URL=            # https://sandbox.dev.clover.com (sandbox) or https://www.clover.com (prod)
+CLOVER_API_BASE_URL=            # https://www.clover.com (prod) or https://sandbox.dev.clover.com (sandbox)
 CLOVER_ECOMM_PRIVATE_KEY=       # Ecomm private key for charges
 FRONTEND_URL=                   # Comma-separated allowed origins for CORS
 PORT=                           # Railway assigns this (default 3001 locally)
@@ -609,24 +607,26 @@ allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-
 - API routes in `app/api/` use `NextRequest`/`NextResponse` (not the old `req`/`res` pattern).
 
 ### Admin Page
-- Located at `/admin` — hidden from public navigation.
+- Located at `/admin` — hidden from public navigation, protected by Supabase Auth.
 - `ConditionalLayout.tsx` detects `/admin` routes and hides Header/Footer/scanline.
 - Has its own theme system (`AdminThemeProvider`) with dark/light toggle.
-- Not authenticated yet — authentication is a planned feature using Supabase Auth.
+- **Authentication:** Supabase Auth with email/password via `middleware.ts`. Unauthenticated users are redirected to `/admin/login`. Login page at `app/admin/login/page.tsx`. Logout calls `supabase.auth.signOut()`.
+- Auth clients: `lib/supabase/browser.ts` (browser singleton), `lib/supabase/server.ts` (server-side with cookies), `lib/supabase/middleware.ts` (SSR client for middleware checks).
 
 ### Environment Decoupling
-- NLA uses `CLOVER_CHARGE_ENV` to decouple charge routing from inventory API base URL. This allows production inventory reads with sandbox charges for testing.
+- NLA uses `CLOVER_CHARGE_ENV` to decouple charge routing from inventory API base URL. This allows switching between sandbox/production charges independently.
 - BayReady derives charge URL from `CLOVER_API_BASE_URL` — if it contains "sandbox", charges go to sandbox endpoint.
+- **Current state:** Both NLA and BayReady are fully on production.
 
-### File: Switching Sandbox ↔ Production
+### Switching Production → Sandbox (For Testing)
 
-To switch NLA from sandbox to production charges:
-1. `CheckoutModal.tsx`: Change SDK URL to `https://checkout.clover.com/sdk.js`
-2. `.env.local`: Set production ecomm keys, remove `CLOVER_CHARGE_ENV=sandbox`, set `NEXT_PUBLIC_CLOVER_MERCHANT_ID` to production merchant ID
+**NLA:**
+1. `CheckoutModal.tsx`: Change SDK URL to `https://checkout.sandbox.dev.clover.com/sdk.js`
+2. `.env.local`: Set sandbox ecomm keys, set `CLOVER_CHARGE_ENV=sandbox`, set `NEXT_PUBLIC_CLOVER_MERCHANT_ID` to sandbox merchant ID
 3. Vercel env vars: Update to match
 
-To switch BayReady from sandbox to production:
-1. `CloverCardForm.tsx`: Change SDK URL to `https://checkout.clover.com/sdk.js`
-2. `frontend/.env`: Set production ecomm public key + merchant ID
-3. `backend/.env`: Set `CLOVER_API_BASE_URL=https://www.clover.com`, production ecomm private key
+**BayReady:**
+1. `CloverCardForm.tsx`: Change SDK URL to `https://checkout.sandbox.dev.clover.com/sdk.js`
+2. `frontend/.env`: Set sandbox ecomm public key + merchant ID
+3. `backend/.env`: Set `CLOVER_API_BASE_URL=https://sandbox.dev.clover.com`, sandbox ecomm private key
 4. Railway + Vercel env vars: Update to match

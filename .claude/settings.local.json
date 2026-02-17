@@ -48,7 +48,15 @@
       "Bash(ls:*)",
       "Bash(tsconfig)",
       "Bash(vercel \")",
-      "Bash(dir:*)"
+      "Bash(dir:*)",
+      "Bash(npm ls:*)",
+      "Bash(xargs:*)",
+      "Bash(npm run build:*)",
+      "WebFetch(domain:carapi.app)",
+      "WebFetch(domain:api.v12.estore.catalograck.com)",
+      "WebFetch(domain:metradiy.com)",
+      "WebFetch(domain:axxessinterfaces.com)",
+      "WebFetch(domain:metradealer.com)"
     ]
   }
 }
