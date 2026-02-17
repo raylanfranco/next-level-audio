@@ -100,7 +100,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 border-2 border-[#00A0E0] text-[#00A0E0] font-bold text-sm uppercase tracking-wider transition-all hover:bg-[#00A0E0]/10 disabled:opacity-30 disabled:cursor-not-allowed cyber-button"
+            className="w-full py-3 border-2 border-[#00A0E0] text-[#00A0E0] font-bold text-sm uppercase tracking-wider transition-all hover:bg-[#00A0E0]/10 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer cyber-button"
             style={{ fontFamily: 'var(--font-oxanium)' }}
           >
             {loading ? 'SIGNING IN...' : 'SIGN IN'}

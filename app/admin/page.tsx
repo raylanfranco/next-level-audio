@@ -476,6 +476,7 @@ function AdminDashboard() {
   const bgCard = isDark ? 'bg-slate-800' : 'bg-white';
   const bgInput = isDark ? 'bg-slate-900' : 'bg-slate-50';
   const bgHover = isDark ? 'hover:bg-slate-700/50' : 'hover:bg-slate-50';
+  const btnHover = `${bgHover} cursor-pointer`;
   const borderColor = isDark ? 'border-slate-700' : 'border-slate-200';
   const textPrimary = isDark ? 'text-slate-100' : 'text-slate-900';
   const textSecondary = isDark ? 'text-slate-400' : 'text-slate-500';
@@ -511,7 +512,7 @@ function AdminDashboard() {
   };
 
   // Pagination button classes
-  const paginationBtn = `px-4 py-2 border ${borderColor} ${textAccent} text-sm ${bgHover} transition-colors disabled:opacity-30 disabled:cursor-not-allowed`;
+  const paginationBtn = `px-4 py-2 border ${borderColor} ${textAccent} text-sm ${btnHover} transition-colors disabled:opacity-30 disabled:cursor-not-allowed`;
 
   return (
     <div className={`min-h-screen ${bg} flex`}>
@@ -536,7 +537,7 @@ function AdminDashboard() {
                   className={`w-full text-left px-4 py-2.5 rounded-md transition-colors text-sm font-medium ${
                     activeNav === item.key
                       ? `${isDark ? 'bg-blue-500/10 text-blue-400' : 'bg-blue-50 text-blue-600'} border-l-2 border-blue-500`
-                      : `${textSecondary} ${bgHover}`
+                      : `${textSecondary} ${btnHover}`
                   }`}
                 >
                   {item.label}
@@ -556,7 +557,7 @@ function AdminDashboard() {
         <div className={`p-4 border-t ${borderColor} space-y-2`}>
           <button
             onClick={toggleTheme}
-            className={`flex items-center gap-2 w-full px-4 py-2 ${textSecondary} ${bgHover} rounded-md transition-colors text-sm`}
+            className={`flex items-center gap-2 w-full px-4 py-2 ${textSecondary} ${btnHover} rounded-md transition-colors text-sm`}
           >
             {isDark ? (
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -571,19 +572,19 @@ function AdminDashboard() {
           </button>
           <button
             onClick={() => fetchOverviewData()}
-            className={`block w-full text-left px-4 py-2 ${textSecondary} ${bgHover} rounded-md transition-colors text-sm`}
+            className={`block w-full text-left px-4 py-2 ${textSecondary} ${btnHover} rounded-md transition-colors text-sm`}
           >
             Refresh Data
           </button>
           <a
             href="/"
-            className={`block px-4 py-2 ${textSecondary} ${bgHover} rounded-md transition-colors text-sm`}
+            className={`block px-4 py-2 ${textSecondary} ${btnHover} rounded-md transition-colors text-sm`}
           >
             &larr; Back to Site
           </a>
           <button
             onClick={handleLogout}
-            className={`block w-full text-left px-4 py-2 ${isDark ? 'text-red-400' : 'text-red-600'} ${bgHover} rounded-md transition-colors text-sm`}
+            className={`block w-full text-left px-4 py-2 ${isDark ? 'text-red-400' : 'text-red-600'} ${btnHover} rounded-md transition-colors text-sm`}
           >
             Sign Out
           </button>
@@ -676,7 +677,7 @@ function AdminDashboard() {
                           {order.createdTime && <div className={`${textMuted} text-xs mt-1`}>{formatDate(order.createdTime)}</div>}
                         </div>
                       ))}
-                      <button onClick={() => setActiveNav('orders')} className={`w-full py-2 ${textAccent} border ${borderColor} rounded-md ${bgHover} transition-colors text-sm`}>
+                      <button onClick={() => setActiveNav('orders')} className={`w-full py-2 ${textAccent} border ${borderColor} rounded-md ${btnHover} transition-colors text-sm`}>
                         View All Orders
                       </button>
                     </div>
@@ -714,7 +715,7 @@ function AdminDashboard() {
                           </div>
                         </div>
                       ))}
-                      <button onClick={() => setActiveNav('payments')} className={`w-full py-2 ${isDark ? 'text-emerald-400' : 'text-emerald-600'} border ${borderColor} rounded-md ${bgHover} transition-colors text-sm`}>
+                      <button onClick={() => setActiveNav('payments')} className={`w-full py-2 ${isDark ? 'text-emerald-400' : 'text-emerald-600'} border ${borderColor} rounded-md ${btnHover} transition-colors text-sm`}>
                         View All Payments
                       </button>
                     </div>
@@ -740,7 +741,7 @@ function AdminDashboard() {
                   >
                     + Add Product
                   </button>
-                  <a href="/products" target="_blank" className={`px-5 py-2.5 border ${borderColor} ${textAccent} rounded-md ${bgHover} transition-colors text-sm`}>
+                  <a href="/products" target="_blank" className={`px-5 py-2.5 border ${borderColor} ${textAccent} rounded-md ${btnHover} transition-colors text-sm`}>
                     View Store &rarr;
                   </a>
                 </div>
@@ -842,7 +843,7 @@ function AdminDashboard() {
                     </button>
                     <button
                       onClick={resetProductForm}
-                      className={`px-5 py-2.5 border ${borderColor} ${textSecondary} rounded-md ${bgHover} transition-colors text-sm`}
+                      className={`px-5 py-2.5 border ${borderColor} ${textSecondary} rounded-md ${btnHover} transition-colors text-sm`}
                     >
                       Cancel
                     </button>
@@ -922,13 +923,13 @@ function AdminDashboard() {
                                   });
                                   setShowProductForm(true);
                                 }}
-                                className={`${textAccent} text-sm ${bgHover} px-2 py-1 rounded transition-colors`}
+                                className={`${textAccent} text-sm ${btnHover} px-2 py-1 rounded transition-colors`}
                               >
                                 Edit
                               </button>
                               <button
                                 onClick={() => deleteProduct(item.id)}
-                                className={`${isDark ? 'text-red-400' : 'text-red-600'} text-sm ${bgHover} px-2 py-1 rounded transition-colors`}
+                                className={`${isDark ? 'text-red-400' : 'text-red-600'} text-sm ${btnHover} px-2 py-1 rounded transition-colors`}
                               >
                                 Delete
                               </button>
@@ -1150,7 +1151,7 @@ function AdminDashboard() {
                   href="https://bayready.vercel.app"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`px-5 py-2.5 border ${borderColor} ${textAccent} rounded-md ${bgHover} transition-colors text-sm`}
+                  className={`px-5 py-2.5 border ${borderColor} ${textAccent} rounded-md ${btnHover} transition-colors text-sm`}
                 >
                   Open BayReady &rarr;
                 </a>
@@ -1229,7 +1230,7 @@ function AdminDashboard() {
                             </select>
                             <button
                               onClick={() => deleteBooking(booking.id)}
-                              className={`${isDark ? 'text-red-400' : 'text-red-600'} text-sm ${bgHover} px-2 py-1 rounded transition-colors ml-2`}
+                              className={`${isDark ? 'text-red-400' : 'text-red-600'} text-sm ${btnHover} px-2 py-1 rounded transition-colors ml-2`}
                             >
                               Delete
                             </button>
@@ -1353,7 +1354,7 @@ function AdminDashboard() {
                     </button>
                     <button
                       onClick={resetJobForm}
-                      className={`px-5 py-2.5 border ${borderColor} ${textSecondary} rounded-md ${bgHover} transition-colors text-sm`}
+                      className={`px-5 py-2.5 border ${borderColor} ${textSecondary} rounded-md ${btnHover} transition-colors text-sm`}
                     >
                       Cancel
                     </button>
@@ -1419,13 +1420,13 @@ function AdminDashboard() {
                                   });
                                   setShowJobForm(true);
                                 }}
-                                className={`${textAccent} text-sm ${bgHover} px-2 py-1 rounded transition-colors`}
+                                className={`${textAccent} text-sm ${btnHover} px-2 py-1 rounded transition-colors`}
                               >
                                 Edit
                               </button>
                               <button
                                 onClick={() => deleteJob(job.id)}
-                                className={`${isDark ? 'text-red-400' : 'text-red-600'} text-sm ${bgHover} px-2 py-1 rounded transition-colors`}
+                                className={`${isDark ? 'text-red-400' : 'text-red-600'} text-sm ${btnHover} px-2 py-1 rounded transition-colors`}
                               >
                                 Delete
                               </button>

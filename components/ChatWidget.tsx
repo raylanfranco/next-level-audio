@@ -2,14 +2,20 @@
 
 import { useChat } from '@ai-sdk/react';
 import { useState, useRef, useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { useChatWidget } from './ChatContext';
 import { useBookingModal } from './BookingModalContext';
 import { chatbotConfig } from '@/lib/chatbot/config';
 import type { UIMessage } from 'ai';
 
 export default function ChatWidget() {
+  const pathname = usePathname();
+  const isAdminRoute = pathname?.startsWith('/admin');
   const { isOpen, toggleChat, closeChat } = useChatWidget();
   const { openModal } = useBookingModal();
+
+  // Don't render on admin pages
+  if (isAdminRoute) return null;
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [input, setInput] = useState('');
