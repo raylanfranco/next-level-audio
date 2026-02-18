@@ -101,6 +101,42 @@ export default function Home() {
       {/* Stats Counter */}
       <StatsCounter />
 
+      {/* Premium Brands */}
+      <section className="py-16 md:py-24 bg-black relative overflow-hidden border-t-2 border-b-2 border-[#00A0E0]/20">
+        <div className="absolute inset-0 cyber-grid opacity-10"></div>
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+            <AnimateOnScroll animation="slide-right">
+              <div>
+                <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                  PREMIUM BRANDS YOU CAN TRUST
+                </h2>
+                <p className="text-[#00A0E0]/70 font-mono text-sm md:text-base">
+                  Expert installation with quality parts from the industry&apos;s leading manufacturers.
+                </p>
+              </div>
+            </AnimateOnScroll>
+            <AnimateOnScroll animation="slide-left" delay={0.2}>
+              <div className="grid grid-cols-3 gap-4">
+                {['SONY', 'COMPUSTAR', 'KICKER', 'PIONEER', 'JBL', 'KENWOOD'].map((brand) => (
+                  <div
+                    key={brand}
+                    className="flex items-center justify-center py-6 px-4 border border-[#00A0E0]/20 bg-[#00A0E0]/5 hover:border-[#00A0E0]/50 hover:bg-[#00A0E0]/10 transition-all duration-300"
+                  >
+                    <span
+                      className="text-white/80 text-sm md:text-base font-bold tracking-widest"
+                      style={{ fontFamily: 'var(--font-oxanium)' }}
+                    >
+                      {brand}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </AnimateOnScroll>
+          </div>
+        </div>
+      </section>
+
       {/* Products Section */}
       <ProductsSection />
 

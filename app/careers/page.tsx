@@ -1,51 +1,48 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
-import type { JobListing } from '@/types/career';
 
-const jobTypeLabels: Record<string, string> = {
-  'full-time': 'Full-Time',
-  'part-time': 'Part-Time',
-  'contract': 'Contract',
-};
+const EMPLOYMENT_STATUSES = ['Looking for new opportunity', 'Unemployed', 'Self employed'];
+const EMPLOYMENT_TYPES = ['Full time', 'Part time', 'Sub contract work as needed'];
+const DESIRED_POSITIONS = [
+  'Car Audio Installer',
+  'Window Tint Technician',
+  'Remote Start / Electronics Tech',
+  'Vinyl Wrap / PPF Installer',
+  'General Shop Help',
+  'Other',
+];
 
 export default function CareersPage() {
-  const [jobs, setJobs] = useState<JobListing[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedJob, setSelectedJob] = useState<JobListing | null>(null);
   const [formData, setFormData] = useState({
     applicant_name: '',
     applicant_email: '',
     applicant_phone: '',
-    cover_letter: '',
+    employment_status: '',
+    employment_type: '',
+    desired_positions: [] as string[],
+    message: '',
   });
   const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const formRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    fetch('/api/careers/jobs')
-      .then((res) => res.json())
-      .then((data) => setJobs(data.jobs || []))
-      .catch(() => setJobs([]))
-      .finally(() => setLoading(false));
-  }, []);
-
-  const handleApply = (job: JobListing) => {
-    setSelectedJob(job);
-    setSubmitStatus('idle');
-    setErrorMessage('');
-    setTimeout(() => {
-      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }, 100);
-  };
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handlePositionToggle = (position: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      desired_positions: prev.desired_positions.includes(position)
+        ? prev.desired_positions.filter((p) => p !== position)
+        : [...prev.desired_positions, position],
+    }));
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,18 +58,25 @@ export default function CareersPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedJob) return;
 
     setIsSubmitting(true);
     setErrorMessage('');
 
     try {
+      const coverLetterParts: string[] = [];
+      if (formData.employment_status) coverLetterParts.push(`Employment Status: ${formData.employment_status}`);
+      if (formData.employment_type) coverLetterParts.push(`Employment Type: ${formData.employment_type}`);
+      if (formData.desired_positions.length > 0) coverLetterParts.push(`Desired Position(s): ${formData.desired_positions.join(', ')}`);
+      if (formData.message) coverLetterParts.push(`\nMessage:\n${formData.message}`);
+
       const body = new FormData();
-      body.append('job_listing_id', selectedJob.id);
       body.append('applicant_name', formData.applicant_name);
       body.append('applicant_email', formData.applicant_email);
       body.append('applicant_phone', formData.applicant_phone);
-      body.append('cover_letter', formData.cover_letter);
+      body.append('cover_letter', coverLetterParts.join('\n'));
+      if (formData.desired_positions.length > 0) {
+        body.append('position', formData.desired_positions.join(', '));
+      }
       if (resumeFile) {
         body.append('resume', resumeFile);
       }
@@ -89,8 +93,9 @@ export default function CareersPage() {
       }
 
       setSubmitStatus('success');
-      setFormData({ applicant_name: '', applicant_email: '', applicant_phone: '', cover_letter: '' });
+      setFormData({ applicant_name: '', applicant_email: '', applicant_phone: '', employment_status: '', employment_type: '', desired_positions: [], message: '' });
       setResumeFile(null);
+      setAgreedToTerms(false);
     } catch (err) {
       setSubmitStatus('error');
       setErrorMessage(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
@@ -101,134 +106,15 @@ export default function CareersPage() {
 
   return (
     <div className="w-full">
-      {/* Hero Section */}
-      <section className="relative pt-32 pb-20 md:pt-40 md:pb-32 bg-black overflow-hidden">
-        <div className="absolute inset-0 cyber-grid opacity-20"></div>
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center max-w-4xl mx-auto">
-            <p className="text-[#00A0E0] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
-              CAREERS
-            </p>
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
-              JOIN OUR TEAM
-            </h1>
-            <p className="text-[#00A0E0]/80 text-lg md:text-xl max-w-2xl mx-auto font-mono">
-              Be part of Stroudsburg&apos;s premier car audio and automotive customization team.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Open Positions */}
-      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      {/* 50/50 Split — Form (left) + Hero Image (right) */}
+      <section ref={formRef} className="relative min-h-screen bg-black overflow-hidden">
         <div className="absolute inset-0 cyber-grid opacity-10"></div>
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
-              OPEN POSITIONS
-            </h2>
-            <p className="text-[#00A0E0]/80 max-w-2xl mx-auto text-lg font-mono">
-              Explore our current openings and find the right fit for your skills.
-            </p>
-          </div>
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 min-h-screen">
 
-          {loading ? (
-            <div className="text-center py-16">
-              <div className="w-8 h-8 border-2 border-[#00A0E0]/30 border-t-[#00A0E0] rounded-full animate-spin mx-auto mb-4" />
-              <p className="text-[#00A0E0]/60 font-mono text-sm">Loading positions...</p>
-            </div>
-          ) : jobs.length === 0 ? (
-            <div className="text-center py-16">
-              <svg className="w-16 h-16 text-[#00A0E0]/30 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              <p className="text-[#00A0E0]/60 font-mono text-lg mb-2">No open positions at this time.</p>
-              <p className="text-[#00A0E0]/40 font-mono text-sm">Check back soon — we&apos;re always growing!</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {jobs.map((job, index) => (
-                <AnimateOnScroll key={job.id} animation="fade-up" delay={index * 0.1}>
-                  <div className="bg-black border-2 border-[#00A0E0]/30 p-8 neon-border-soft group hover:border-[#00A0E0] transition-all duration-300 hover:-translate-y-1 h-full flex flex-col">
-                    <div className="flex-1">
-                      <h3 className="text-2xl font-bold text-[#00A0E0] mb-3 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
-                        {job.title}
-                      </h3>
-
-                      {/* Badges */}
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        <span className="text-xs font-mono px-3 py-1 border border-[#00A0E0]/30 text-[#00A0E0]/80">
-                          {job.department}
-                        </span>
-                        <span className="text-xs font-mono px-3 py-1 border border-[#00A0E0]/30 text-[#00A0E0]/80">
-                          {jobTypeLabels[job.type] || job.type}
-                        </span>
-                        <span className="text-xs font-mono px-3 py-1 border border-[#00A0E0]/30 text-[#00A0E0]/80">
-                          {job.location}
-                        </span>
-                      </div>
-
-                      {job.salary_range && (
-                        <p className="text-[#00A0E0] font-mono text-sm mb-4">
-                          {job.salary_range}
-                        </p>
-                      )}
-
-                      <p className="text-[#00A0E0]/60 font-mono text-sm mb-4 line-clamp-3">
-                        {job.description}
-                      </p>
-
-                      {job.requirements && (
-                        <div className="mb-6">
-                          <p className="text-[#00A0E0]/80 font-mono text-xs uppercase mb-2">Requirements</p>
-                          <p className="text-[#00A0E0]/50 font-mono text-sm line-clamp-3">
-                            {job.requirements}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-
-                    <button
-                      onClick={() => handleApply(job)}
-                      className="w-full bg-[#00A0E0]/20 text-[#00A0E0] border-2 border-[#00A0E0] px-6 py-3 font-semibold text-sm hover:bg-[#00A0E0]/30 transition-all duration-300 neon-border-soft cyber-button cursor-pointer"
-                      style={{ fontFamily: 'var(--font-oxanium)' }}
-                    >
-                      APPLY NOW
-                    </button>
-                  </div>
-                </AnimateOnScroll>
-              ))}
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Application Form */}
-      {selectedJob && (
-        <section ref={formRef} className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
-          <div className="absolute inset-0 cyber-grid opacity-10"></div>
-          <div className="container mx-auto px-4 relative z-10">
-            <div className="max-w-2xl mx-auto">
-              <div className="bg-black border-2 border-[#00A0E0]/30 p-8 md:p-12 neon-border-soft">
-                <div className="flex items-center justify-between mb-8">
-                  <div>
-                    <h2 className="text-3xl font-bold text-[#00A0E0] neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
-                      APPLY
-                    </h2>
-                    <p className="text-[#00A0E0]/60 font-mono text-sm mt-1">
-                      {selectedJob.title} — {selectedJob.department}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => { setSelectedJob(null); setSubmitStatus('idle'); }}
-                    className="text-[#00A0E0]/60 hover:text-[#00A0E0] transition-colors cursor-pointer"
-                  >
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-
+          {/* Left — Application Form */}
+          <div className="flex items-start justify-center px-6 pt-36 pb-16 md:px-12 lg:pt-32 lg:pb-20">
+            <div className="w-full max-w-full">
+              <div className="bg-black border-2 border-[#00A0E0]/30 p-8 md:p-10 neon-border-soft">
                 {submitStatus === 'success' ? (
                   <div className="text-center py-12">
                     <svg className="w-16 h-16 text-[#00A0E0] mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -241,16 +127,17 @@ export default function CareersPage() {
                       Thank you for your interest! We&apos;ll review your application and get back to you.
                     </p>
                     <button
-                      onClick={() => { setSelectedJob(null); setSubmitStatus('idle'); }}
+                      onClick={() => setSubmitStatus('idle')}
                       className="text-[#00A0E0] hover:text-[#00B8FF] font-mono underline cursor-pointer"
                     >
-                      Back to positions
+                      Submit another application
                     </button>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-6">
+                    {/* Full Name */}
                     <div>
-                      <label htmlFor="applicant_name" className="block text-[#00A0E0] font-mono text-sm mb-2 uppercase">
+                      <label htmlFor="applicant_name" className="block text-white font-mono text-sm mb-2 uppercase">
                         Full Name *
                       </label>
                       <input
@@ -260,14 +147,15 @@ export default function CareersPage() {
                         value={formData.applicant_name}
                         onChange={handleChange}
                         required
-                        className="w-full px-4 py-3 bg-black border-2 border-[#00A0E0]/30 text-[#00A0E0] placeholder-[#00A0E0]/40 font-mono focus:outline-none focus:border-[#00A0E0] transition-colors"
+                        className="w-full px-4 py-3 bg-black border-2 border-[#00A0E0]/30 text-white placeholder-white/40 font-mono focus:outline-none focus:border-[#00A0E0] transition-colors"
                         placeholder="Your full name"
                       />
                     </div>
 
+                    {/* Email + Phone */}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label htmlFor="applicant_email" className="block text-[#00A0E0] font-mono text-sm mb-2 uppercase">
+                        <label htmlFor="applicant_email" className="block text-white font-mono text-sm mb-2 uppercase">
                           Email *
                         </label>
                         <input
@@ -277,12 +165,12 @@ export default function CareersPage() {
                           value={formData.applicant_email}
                           onChange={handleChange}
                           required
-                          className="w-full px-4 py-3 bg-black border-2 border-[#00A0E0]/30 text-[#00A0E0] placeholder-[#00A0E0]/40 font-mono focus:outline-none focus:border-[#00A0E0] transition-colors"
+                          className="w-full px-4 py-3 bg-black border-2 border-[#00A0E0]/30 text-white placeholder-white/40 font-mono focus:outline-none focus:border-[#00A0E0] transition-colors"
                           placeholder="your@email.com"
                         />
                       </div>
                       <div>
-                        <label htmlFor="applicant_phone" className="block text-[#00A0E0] font-mono text-sm mb-2 uppercase">
+                        <label htmlFor="applicant_phone" className="block text-white font-mono text-sm mb-2 uppercase">
                           Phone *
                         </label>
                         <input
@@ -292,14 +180,79 @@ export default function CareersPage() {
                           value={formData.applicant_phone}
                           onChange={handleChange}
                           required
-                          className="w-full px-4 py-3 bg-black border-2 border-[#00A0E0]/30 text-[#00A0E0] placeholder-[#00A0E0]/40 font-mono focus:outline-none focus:border-[#00A0E0] transition-colors"
+                          className="w-full px-4 py-3 bg-black border-2 border-[#00A0E0]/30 text-white placeholder-white/40 font-mono focus:outline-none focus:border-[#00A0E0] transition-colors"
                           placeholder="(555) 555-5555"
                         />
                       </div>
                     </div>
 
+                    {/* Employment Status */}
                     <div>
-                      <label htmlFor="resume" className="block text-[#00A0E0] font-mono text-sm mb-2 uppercase">
+                      <p className="text-white font-mono text-sm mb-3 uppercase">
+                        What&apos;s your employment status?
+                      </p>
+                      <div className="flex flex-wrap gap-4">
+                        {EMPLOYMENT_STATUSES.map((status) => (
+                          <label key={status} className="flex items-center gap-2 cursor-pointer group">
+                            <input
+                              type="radio"
+                              name="employment_status"
+                              value={status}
+                              checked={formData.employment_status === status}
+                              onChange={handleChange}
+                              className="appearance-none w-4 h-4 border-2 border-[#00A0E0]/50 checked:bg-[#00A0E0] checked:border-[#00A0E0] transition-colors cursor-pointer"
+                            />
+                            <span className="text-white/70 font-mono text-sm group-hover:text-white transition-colors">{status}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Employment Type */}
+                    <div>
+                      <p className="text-white font-mono text-sm mb-3 uppercase">
+                        Employment type
+                      </p>
+                      <div className="flex flex-wrap gap-4">
+                        {EMPLOYMENT_TYPES.map((type) => (
+                          <label key={type} className="flex items-center gap-2 cursor-pointer group">
+                            <input
+                              type="radio"
+                              name="employment_type"
+                              value={type}
+                              checked={formData.employment_type === type}
+                              onChange={handleChange}
+                              className="appearance-none w-4 h-4 border-2 border-[#00A0E0]/50 checked:bg-[#00A0E0] checked:border-[#00A0E0] transition-colors cursor-pointer"
+                            />
+                            <span className="text-white/70 font-mono text-sm group-hover:text-white transition-colors">{type}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Desired Positions */}
+                    <div>
+                      <p className="text-white font-mono text-sm mb-3 uppercase">
+                        Desired position(s)
+                      </p>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        {DESIRED_POSITIONS.map((position) => (
+                          <label key={position} className="flex items-center gap-2 cursor-pointer group">
+                            <input
+                              type="checkbox"
+                              checked={formData.desired_positions.includes(position)}
+                              onChange={() => handlePositionToggle(position)}
+                              className="appearance-none w-4 h-4 border-2 border-[#00A0E0]/50 checked:bg-[#00A0E0] checked:border-[#00A0E0] transition-colors cursor-pointer"
+                            />
+                            <span className="text-white/70 font-mono text-sm group-hover:text-white transition-colors">{position}</span>
+                          </label>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Resume */}
+                    <div>
+                      <label htmlFor="resume" className="block text-white font-mono text-sm mb-2 uppercase">
                         Resume
                       </label>
                       <input
@@ -307,29 +260,46 @@ export default function CareersPage() {
                         id="resume"
                         accept=".pdf,.doc,.docx"
                         onChange={handleFileChange}
-                        className="w-full px-4 py-3 bg-black border-2 border-[#00A0E0]/30 text-[#00A0E0] font-mono focus:outline-none focus:border-[#00A0E0] transition-colors file:mr-4 file:py-1 file:px-4 file:border file:border-[#00A0E0]/30 file:text-[#00A0E0] file:bg-transparent file:font-mono file:text-sm file:cursor-pointer cursor-pointer"
+                        className="w-full px-4 py-3 bg-black border-2 border-[#00A0E0]/30 text-white font-mono focus:outline-none focus:border-[#00A0E0] transition-colors file:mr-4 file:py-1 file:px-4 file:border file:border-[#00A0E0]/30 file:text-white/70 file:bg-transparent file:font-mono file:text-sm file:cursor-pointer cursor-pointer"
                       />
-                      <p className="text-[#00A0E0]/40 font-mono text-xs mt-1">PDF, DOC, or DOCX (max 5MB)</p>
+                      <p className="text-white/40 font-mono text-xs mt-1">PDF, DOC, or DOCX (max 5MB)</p>
                     </div>
 
+                    {/* Message */}
                     <div>
-                      <label htmlFor="cover_letter" className="block text-[#00A0E0] font-mono text-sm mb-2 uppercase">
-                        Cover Letter
+                      <label htmlFor="message" className="block text-white font-mono text-sm mb-2 uppercase">
+                        Message
                       </label>
                       <textarea
-                        id="cover_letter"
-                        name="cover_letter"
-                        value={formData.cover_letter}
+                        id="message"
+                        name="message"
+                        value={formData.message}
                         onChange={handleChange}
-                        rows={6}
-                        className="w-full px-4 py-3 bg-black border-2 border-[#00A0E0]/30 text-[#00A0E0] placeholder-[#00A0E0]/40 font-mono focus:outline-none focus:border-[#00A0E0] transition-colors resize-none"
-                        placeholder="Tell us why you'd be a great fit..."
+                        rows={5}
+                        className="w-full px-4 py-3 bg-black border-2 border-[#00A0E0]/30 text-white placeholder-white/40 font-mono focus:outline-none focus:border-[#00A0E0] transition-colors resize-none"
+                        placeholder="Tell us about your experience, skills, or any information we should know..."
                       />
+                    </div>
+
+                    {/* Terms */}
+                    <div>
+                      <label className="flex items-start gap-3 cursor-pointer group">
+                        <input
+                          type="checkbox"
+                          checked={agreedToTerms}
+                          onChange={(e) => setAgreedToTerms(e.target.checked)}
+                          required
+                          className="appearance-none w-4 h-4 mt-0.5 border-2 border-[#00A0E0]/50 checked:bg-[#00A0E0] checked:border-[#00A0E0] transition-colors cursor-pointer flex-shrink-0"
+                        />
+                        <span className="text-white/70 font-mono text-xs leading-relaxed group-hover:text-white/90 transition-colors">
+                          I acknowledge that by submitting an employment inquiry and resume, I am in no way guaranteed a position with Next Level Audio. Next Level Audio reserves the right to respond or not respond to my inquiry based on their needs and review process. We are an equal opportunity employer and follow all applicable state and federal employment laws.
+                        </span>
+                      </label>
                     </div>
 
                     <button
                       type="submit"
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || !agreedToTerms}
                       className="w-full bg-[#00A0E0]/20 text-[#00A0E0] border-2 border-[#00A0E0] px-8 py-4 font-semibold text-lg hover:bg-[#00A0E0]/30 transition-all duration-300 neon-border-soft cyber-button disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                       style={{ fontFamily: 'var(--font-oxanium)' }}
                     >
@@ -342,7 +312,7 @@ export default function CareersPage() {
                           SUBMITTING...
                         </span>
                       ) : (
-                        'SUBMIT APPLICATION'
+                        'SUBMIT'
                       )}
                     </button>
 
@@ -356,10 +326,50 @@ export default function CareersPage() {
               </div>
             </div>
           </div>
-        </section>
-      )}
 
-      {/* CTA Section */}
+          {/* Right — Hero Image + Text */}
+          <div className="relative hidden lg:flex items-center justify-center border-l-2 border-[#00A0E0]/20">
+            <img
+              src="/images/gallery/join-us.png"
+              alt="Join the Next Level Audio team"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/60"></div>
+            <div className="relative z-10 text-center px-12 max-w-lg">
+              <p className="text-[#00A0E0] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                CAREERS
+              </p>
+              <h1 className="text-5xl xl:text-6xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                START YOUR CAREER WITH US
+              </h1>
+              <p className="text-[#00A0E0]/80 text-lg font-mono">
+                Be part of Stroudsburg&apos;s premier car audio and automotive customization team.
+              </p>
+            </div>
+          </div>
+
+          {/* Mobile hero — shows above form on small screens */}
+          <div className="lg:hidden relative h-64 order-first">
+            <img
+              src="/images/gallery/join-us.png"
+              alt="Join the Next Level Audio team"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-black/60"></div>
+            <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 text-center">
+              <p className="text-[#00A0E0] text-xs uppercase tracking-widest mb-2 font-semibold neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                CAREERS
+              </p>
+              <h1 className="text-3xl font-bold text-white neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                START YOUR CAREER WITH US
+              </h1>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* Why Next Level Section */}
       <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
         <div className="absolute inset-0 cyber-grid opacity-10"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
@@ -413,6 +423,37 @@ export default function CareersPage() {
               </div>
             </AnimateOnScroll>
           </div>
+        </div>
+      </section>
+
+      {/* Find Us — Google Map */}
+      <section className="bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+        <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
+          <AnimateOnScroll animation="fade-up">
+            <div className="text-center mb-10">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                FIND US
+              </h2>
+              <p className="text-[#00A0E0]/80 font-mono text-sm md:text-base max-w-xl mx-auto">
+                Visit our shop in Stroudsburg, PA — serving the Pocono Mountains and Monroe County area.
+              </p>
+            </div>
+          </AnimateOnScroll>
+          <AnimateOnScroll animation="fade-up" delay={0.15}>
+            <div className="border-2 border-[#00A0E0]/30 neon-border-soft overflow-hidden">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12046.44235724779!2d-75.2157096!3d40.9900071!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c4891d338ef55b%3A0xd2a0254037c29699!2sNext%20Level%20Audio!5e0!3m2!1sen!2sph!4v1694036537644!5m2!1sen!2sph"
+                width="100%"
+                height="450"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Next Level Audio — Google Maps"
+                className="w-full"
+              />
+            </div>
+          </AnimateOnScroll>
         </div>
       </section>
     </div>

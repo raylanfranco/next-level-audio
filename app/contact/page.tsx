@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
+import { useBookingModal } from '@/components/BookingModalContext';
+import AnimateOnScroll from '@/components/AnimateOnScroll';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -13,6 +14,7 @@ export default function ContactPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const { openModal } = useBookingModal();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -296,13 +298,13 @@ export default function ContactPage() {
 
               {/* Quick Actions */}
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link
-                  href="/book-appointment"
-                  className="flex-1 text-center bg-[#00A0E0]/20 text-[#00A0E0] border-2 border-[#00A0E0] px-6 py-4 font-semibold hover:bg-[#00A0E0]/30 transition-all duration-300 neon-border-soft cyber-button"
+                <button
+                  onClick={openModal}
+                  className="flex-1 text-center bg-[#00A0E0]/20 text-[#00A0E0] border-2 border-[#00A0E0] px-6 py-4 font-semibold hover:bg-[#00A0E0]/30 transition-all duration-300 neon-border-soft cyber-button cursor-pointer"
                   style={{ fontFamily: 'var(--font-oxanium)' }}
                 >
                   BOOK APPOINTMENT
-                </Link>
+                </button>
                 <a
                   href="tel:+15707304433"
                   className="flex-1 text-center border-2 border-[#00A0E0]/50 bg-black text-[#00A0E0] px-6 py-4 font-semibold hover:border-[#00A0E0] transition-all duration-300 neon-border-soft cyber-button"
@@ -316,33 +318,37 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Map Section */}
-      {/* <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      {/* Find Us — Google Map */}
+      <section className="bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
         <div className="absolute inset-0 cyber-grid opacity-10"></div>
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
-              FIND US
-            </h2>
-            <p className="text-[#00A0E0]/80 max-w-2xl mx-auto text-lg font-mono">
-              Located in Stroudsburg, PA - easily accessible from the Poconos and surrounding areas.
-            </p>
-          </div> */}
-
-          {/* Map Placeholder - Replace with actual Google Maps embed */}
-          {/* <div className="border-2 border-[#00A0E0]/30 neon-border-soft overflow-hidden">
-            <div className="relative h-96 bg-gradient-to-br from-[#00A0E0]/20 to-black flex items-center justify-center">
-              <div className="text-center">
-                <svg className="w-16 h-16 text-[#00A0E0]/30 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                </svg>
-                <p className="text-[#00A0E0]/40 font-mono text-lg">MAP PLACEHOLDER</p>
-                <p className="text-[#00A0E0]/30 font-mono text-sm mt-2">Replace with Google Maps embed</p>
-              </div>
+        <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
+          <AnimateOnScroll animation="fade-up">
+            <div className="text-center mb-10">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                FIND US
+              </h2>
+              <p className="text-[#00A0E0]/80 font-mono text-sm md:text-base max-w-xl mx-auto">
+                Located in Stroudsburg, PA — easily accessible from the Pocono Mountains and surrounding areas.
+              </p>
             </div>
-          </div>
+          </AnimateOnScroll>
+          <AnimateOnScroll animation="fade-up" delay={0.15}>
+            <div className="border-2 border-[#00A0E0]/30 neon-border-soft overflow-hidden">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12046.44235724779!2d-75.2157096!3d40.9900071!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c4891d338ef55b%3A0xd2a0254037c29699!2sNext%20Level%20Audio!5e0!3m2!1sen!2sph!4v1694036537644!5m2!1sen!2sph"
+                width="100%"
+                height="450"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Next Level Audio — Google Maps"
+                className="w-full"
+              />
+            </div>
+          </AnimateOnScroll>
         </div>
-      </section> */}
+      </section>
     </div>
   );
 }

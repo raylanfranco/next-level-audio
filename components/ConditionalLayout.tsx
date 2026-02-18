@@ -14,7 +14,6 @@ export default function ConditionalLayout({
 
   return (
     <>
-      {!isAdminRoute && <div className="scanline"></div>}
       {!isAdminRoute && <Header />}
       <main className={isAdminRoute ? '' : 'min-h-screen'}>
         {children}
