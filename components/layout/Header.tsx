@@ -6,6 +6,11 @@ import { useState, useEffect } from 'react';
 import { useBookingModal } from '@/components/BookingModalContext';
 import { useCart } from '@/components/CartContext';
 
+const serviceSubLinks = [
+  { href: '/services/window-tinting', label: 'Window Tinting' },
+  { href: '/services/car-audio', label: 'Car Audio' },
+];
+
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -31,11 +36,15 @@ export default function Header() {
     return () => { document.body.style.overflow = ''; };
   }, [isMenuOpen]);
 
-  const navLinkClass = `transition-all duration-300 font-medium text-sm ${
+  const navLinkClass = `relative transition-all duration-300 font-medium text-sm group/link ${
     isScrolled
       ? 'text-[#00A0E0]/80 hover:text-[#00B8FF] neon-glow-soft cursor-pointer'
       : 'text-[#00A0E0] hover:text-[#00B8FF] neon-glow-soft cursor-pointer'
   }`;
+
+  const navUnderline = (
+    <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#00A0E0] transition-all duration-300 group-hover/link:w-full shadow-[0_0_6px_#00A0E0]" />
+  );
 
   return (
     <>
@@ -56,20 +65,60 @@ export default function Header() {
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               HOME
+              {navUnderline}
             </Link>
-            <Link
-              href="/services"
-              className={navLinkClass}
-              style={{ fontFamily: 'var(--font-oxanium)' }}
-            >
-              SERVICES
-            </Link>
+
+            {/* Services dropdown */}
+            <div className="relative group/dropdown">
+              <Link
+                href="/services"
+                className={`${navLinkClass} flex items-center gap-1`}
+                style={{ fontFamily: 'var(--font-oxanium)' }}
+              >
+                SERVICES
+                <svg
+                  className="w-3.5 h-3.5 transition-transform duration-200 group-hover/dropdown:rotate-180"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+                {navUnderline}
+              </Link>
+
+              {/* Dropdown panel */}
+              <div className="absolute top-full left-1/2 -translate-x-1/2 pt-3 opacity-0 invisible group-hover/dropdown:opacity-100 group-hover/dropdown:visible transition-all duration-200">
+                <div className="bg-black/95 backdrop-blur-md border-2 border-[#00A0E0]/30 min-w-[200px] py-2 shadow-[0_0_20px_rgba(0,160,224,0.15)]">
+                  <Link
+                    href="/services"
+                    className="block px-5 py-2.5 text-[#00A0E0]/60 hover:text-[#00A0E0] hover:bg-[#00A0E0]/5 transition-colors text-xs tracking-widest"
+                    style={{ fontFamily: 'var(--font-oxanium)' }}
+                  >
+                    ALL SERVICES
+                  </Link>
+                  <div className="border-t border-[#00A0E0]/10 mx-3 my-1" />
+                  {serviceSubLinks.map((sub) => (
+                    <Link
+                      key={sub.href}
+                      href={sub.href}
+                      className="block px-5 py-2.5 text-[#00A0E0]/80 hover:text-[#00B8FF] hover:bg-[#00A0E0]/5 transition-colors text-xs tracking-widest"
+                      style={{ fontFamily: 'var(--font-oxanium)' }}
+                    >
+                      {sub.label.toUpperCase()}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+
             <Link
               href="/products"
               className={navLinkClass}
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               PRODUCTS
+              {navUnderline}
             </Link>
           </nav>
 
@@ -91,6 +140,7 @@ export default function Header() {
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               GALLERY
+              {navUnderline}
             </Link>
             <Link
               href="/careers"
@@ -98,6 +148,7 @@ export default function Header() {
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               CAREERS
+              {navUnderline}
             </Link>
             <button
               onClick={openModal}
@@ -105,6 +156,7 @@ export default function Header() {
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               BOOK
+              {navUnderline}
             </button>
           </nav>
 
@@ -209,7 +261,6 @@ export default function Header() {
         <nav className="flex-1 flex flex-col items-center justify-center space-y-6">
           {[
             { href: '/', label: 'HOME' },
-            { href: '/services', label: 'SERVICES' },
             { href: '/products', label: 'PRODUCTS' },
             { href: '/gallery', label: 'GALLERY' },
             { href: '/careers', label: 'CAREERS' },
@@ -224,6 +275,32 @@ export default function Header() {
               {label}
             </Link>
           ))}
+
+          {/* Services with sub-links on mobile */}
+          <div className="flex flex-col items-center">
+            <Link
+              href="/services"
+              onClick={() => setIsMenuOpen(false)}
+              className="text-[#00A0E0] hover:text-[#00B8FF] text-2xl tracking-widest neon-glow-soft transition-colors"
+              style={{ fontFamily: 'var(--font-oxanium)' }}
+            >
+              SERVICES
+            </Link>
+            <div className="flex flex-col items-center mt-2 space-y-1.5">
+              {serviceSubLinks.map((sub) => (
+                <Link
+                  key={sub.href}
+                  href={sub.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-[#00A0E0]/50 hover:text-[#00B8FF] text-sm tracking-widest transition-colors"
+                  style={{ fontFamily: 'var(--font-oxanium)' }}
+                >
+                  {sub.label.toUpperCase()}
+                </Link>
+              ))}
+            </div>
+          </div>
+
           <button
             onClick={() => { openModal(); setIsMenuOpen(false); }}
             className="text-[#00A0E0] hover:text-[#00B8FF] text-2xl tracking-widest neon-glow-soft transition-colors cursor-pointer"
