@@ -49,6 +49,9 @@ next-env.d.ts
 # BayReady (separate repo, lives here during development)
 /bayready/
 
+# Internal docs (strategy, playbooks — not for public repo)
+/docs/
+
 # Misc dev artifacts
 dashboard.png
 nul
