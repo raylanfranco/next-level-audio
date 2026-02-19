@@ -22,7 +22,7 @@ export default function ClientLayout({ children }: { children: ReactNode }) {
           {children}
           <ModalRenderer />
           <CheckoutModal />
-          {/* <ChatWidget /> */}
+          <ChatWidget />
         </ChatProvider>
       </BookingModalProvider>
     </CartProvider>

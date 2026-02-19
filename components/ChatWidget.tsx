@@ -1,26 +1,49 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
-import { useState, useRef, useEffect } from 'react';
+import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { useChatWidget } from './ChatContext';
 import { useBookingModal } from './BookingModalContext';
 import { chatbotConfig } from '@/lib/chatbot/config';
 import type { UIMessage } from 'ai';
+import type { WidgetScreen, QuoteFormData, FitmentFormData } from './chat-widget/types';
+import { INITIAL_QUOTE_FORM, INITIAL_FITMENT_FORM } from './chat-widget/types';
+import ContactActionBar from './chat-widget/ContactActionBar';
+import WelcomeScreen from './chat-widget/WelcomeScreen';
+import ContactScreen from './chat-widget/ContactScreen';
+import QuoteFlow from './chat-widget/QuoteFlow';
+import FitmentFlow from './chat-widget/FitmentFlow';
+import ChatScreen from './chat-widget/ChatScreen';
+import SubmittedScreen from './chat-widget/SubmittedScreen';
+
+const aiEnabled = process.env.NEXT_PUBLIC_AI_CHAT_ENABLED === 'true';
+
+const SCREEN_TITLES: Record<WidgetScreen, string> = {
+  welcome: 'YOUR ASSISTANT',
+  quote: 'GET A QUOTE',
+  fitment: 'CHECK FITMENT',
+  contact: 'CONTACT US',
+  chat: 'AI ASSISTANT',
+  submitted: 'REQUEST SENT',
+};
 
 export default function ChatWidget() {
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith('/admin');
   const { isOpen, toggleChat, closeChat } = useChatWidget();
   const { openModal } = useBookingModal();
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const [input, setInput] = useState('');
 
+  // State machine
+  const [screen, setScreen] = useState<WidgetScreen>('welcome');
+  const [quoteForm, setQuoteForm] = useState<QuoteFormData>(INITIAL_QUOTE_FORM);
+  const [fitmentForm, setFitmentForm] = useState<FitmentFormData>(INITIAL_FITMENT_FORM);
+
+  // AI chat (called unconditionally for Rules of Hooks)
   const welcomeMessage: UIMessage = {
     id: 'welcome',
     role: 'assistant',
-    parts: [{ type: 'text', text: chatbotConfig.ui.welcomeMessage }],
+    parts: [{ type: 'text', text: "How can I help? I can answer questions about our services, hours, and more." }],
   };
 
   const { messages, sendMessage, status } = useChat({
@@ -33,39 +56,46 @@ export default function ChatWidget() {
     },
   });
 
-  const isLoading = status === 'submitted' || status === 'streaming';
-
-  // Auto-scroll to bottom on new messages
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
-  // Focus input when opened
-  useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 300);
-    }
-  }, [isOpen]);
-
-  // Don't render on admin pages (guard placed after all hooks to respect Rules of Hooks)
+  // Don't render on admin pages (guard after all hooks)
   if (isAdminRoute) return null;
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!input.trim() || isLoading) return;
-    sendMessage({ text: input });
-    setInput('');
-  };
+  function resetAndClose() {
+    closeChat();
+    // Reset state after close animation
+    setTimeout(() => {
+      setScreen('welcome');
+      setQuoteForm(INITIAL_QUOTE_FORM);
+      setFitmentForm(INITIAL_FITMENT_FORM);
+    }, 300);
+  }
 
-  // Extract text from message parts
-  const getMessageText = (message: UIMessage): string => {
-    return message.parts
-      .filter(
-        (part): part is { type: 'text'; text: string } => part.type === 'text',
-      )
-      .map((part) => part.text)
-      .join('');
-  };
+  function handleBook() {
+    openModal();
+    resetAndClose();
+  }
+
+  function handleNavigate(target: WidgetScreen) {
+    setScreen(target);
+  }
+
+  function handleBack() {
+    setScreen('welcome');
+  }
+
+  function handleQuoteSubmitted() {
+    setScreen('submitted');
+  }
+
+  function handleStartOver() {
+    setScreen('welcome');
+    setQuoteForm(INITIAL_QUOTE_FORM);
+    setFitmentForm(INITIAL_FITMENT_FORM);
+  }
+
+  function handleNavigateQuoteFromFitment() {
+    setFitmentForm(INITIAL_FITMENT_FORM);
+    setScreen('quote');
+  }
 
   return (
     <>
@@ -92,128 +122,98 @@ export default function ChatWidget() {
         </button>
       )}
 
-      {/* Chat panel */}
+      {/* Widget panel */}
       {isOpen && (
         <div className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 w-full sm:w-[400px] h-full sm:h-[520px] flex flex-col bg-black border-2 border-[#00A0E0]/50 neon-border-soft chat-panel-enter">
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b-2 border-[#00A0E0]/30 bg-[#00A0E0]/5 shrink-0">
-            <div>
-              <h3
-                className="text-[#00A0E0] text-sm font-bold tracking-wider neon-glow-soft"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
-              >
-                NEXT LEVEL AUDIO
-              </h3>
-              <p
-                className="text-[#00A0E0]/60 text-xs tracking-widest"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
-              >
-                AI ASSISTANT
-              </p>
+            <div className="flex items-center gap-3">
+              {screen !== 'welcome' && (
+                <button
+                  onClick={handleBack}
+                  className="text-[#00A0E0]/60 hover:text-[#00A0E0] transition-colors cursor-pointer"
+                  aria-label="Go back"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+              )}
+              <div>
+                <h3
+                  className="text-[#00A0E0] text-sm font-bold tracking-wider neon-glow-soft"
+                  style={{ fontFamily: 'var(--font-oxanium)' }}
+                >
+                  {chatbotConfig.business.name.toUpperCase()}
+                </h3>
+                <p
+                  className="text-[#00A0E0]/60 text-xs tracking-widest"
+                  style={{ fontFamily: 'var(--font-oxanium)' }}
+                >
+                  {SCREEN_TITLES[screen]}
+                </p>
+              </div>
             </div>
             <button
-              onClick={closeChat}
+              onClick={resetAndClose}
               className="w-8 h-8 flex items-center justify-center text-[#00A0E0]/60 hover:text-[#00A0E0] hover:bg-[#00A0E0]/10 transition-colors cursor-pointer"
               aria-label="Close chat"
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
 
-          {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide">
-            {messages.map((message) => {
-              if (message.role !== 'user' && message.role !== 'assistant')
-                return null;
-              const text = getMessageText(message);
-              if (!text) return null;
-
-              const isUser = message.role === 'user';
-              return (
-                <div
-                  key={message.id}
-                  className={`flex ${isUser ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div
-                    className={`max-w-[80%] px-3 py-2 text-sm font-mono leading-relaxed ${
-                      isUser
-                        ? 'bg-[#00A0E0]/20 text-[#00A0E0] border border-[#00A0E0]/30'
-                        : 'bg-[#0a0a0a] text-[#00A0E0]/90 border border-[#00A0E0]/15'
-                    }`}
-                  >
-                    {text}
-                  </div>
-                </div>
-              );
-            })}
-
-            {/* Typing indicator */}
-            {isLoading && (
-              <div className="flex justify-start">
-                <div className="bg-[#0a0a0a] border border-[#00A0E0]/15 px-4 py-2">
-                  <div className="flex space-x-1.5">
-                    <span className="w-1.5 h-1.5 bg-[#00A0E0] typing-dot" />
-                    <span
-                      className="w-1.5 h-1.5 bg-[#00A0E0] typing-dot"
-                      style={{ animationDelay: '0.2s' }}
-                    />
-                    <span
-                      className="w-1.5 h-1.5 bg-[#00A0E0] typing-dot"
-                      style={{ animationDelay: '0.4s' }}
-                    />
-                  </div>
-                </div>
-              </div>
+          {/* Screen content */}
+          <div className="flex-1 flex flex-col min-h-0">
+            {screen === 'welcome' && (
+              <WelcomeScreen
+                onBook={handleBook}
+                onNavigate={handleNavigate}
+                aiEnabled={aiEnabled}
+              />
             )}
 
-            <div ref={messagesEndRef} />
+            {screen === 'quote' && (
+              <QuoteFlow
+                form={quoteForm}
+                setForm={setQuoteForm}
+                onSubmitted={handleQuoteSubmitted}
+                onBack={handleBack}
+              />
+            )}
+
+            {screen === 'fitment' && (
+              <FitmentFlow
+                form={fitmentForm}
+                setForm={setFitmentForm}
+                onBack={handleBack}
+                onNavigateQuote={handleNavigateQuoteFromFitment}
+              />
+            )}
+
+            {screen === 'contact' && <ContactScreen />}
+
+            {screen === 'chat' && (
+              <ChatScreen
+                messages={messages}
+                sendMessage={sendMessage}
+                status={status}
+              />
+            )}
+
+            {screen === 'submitted' && (
+              <SubmittedScreen
+                quoteData={quoteForm}
+                onStartOver={handleStartOver}
+                onClose={resetAndClose}
+              />
+            )}
           </div>
 
-          {/* Input */}
-          <form
-            onSubmit={handleSubmit}
-            className="shrink-0 border-t-2 border-[#00A0E0]/30 p-3 flex gap-2 bg-[#00A0E0]/5"
-          >
-            <input
-              ref={inputRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder={chatbotConfig.ui.placeholder}
-              className="flex-1 bg-black border border-[#00A0E0]/30 px-3 py-2 text-sm text-[#00A0E0] font-mono placeholder:text-[#00A0E0]/30 focus:outline-none focus:border-[#00A0E0]"
-            />
-            <button
-              type="submit"
-              disabled={isLoading || !input.trim()}
-              className="px-3 py-2 bg-[#00A0E0]/20 border border-[#00A0E0]/50 text-[#00A0E0] hover:bg-[#00A0E0]/30 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
-              aria-label="Send message"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 19V5m0 0l-7 7m7-7l7 7"
-                />
-              </svg>
-            </button>
-          </form>
+          {/* Contact action bar (shown on all screens except chat which has its own input) */}
+          {screen !== 'chat' && <ContactActionBar />}
         </div>
       )}
     </>

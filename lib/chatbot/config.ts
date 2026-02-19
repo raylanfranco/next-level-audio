@@ -98,11 +98,31 @@ export const chatbotConfig = {
     monoFont: 'var(--font-geist-mono)',
   },
   ui: {
-    welcomeMessage:
-      "Hey! I'm the Next Level Audio assistant. How can I help you today?",
-    placeholder: 'Ask about our services...',
+    welcomeMessage: 'Hey! How can we help you today?',
+    placeholder: 'Type your question...',
     position: 'bottom-right' as const,
   },
+  quickActions: [
+    { id: 'book', label: 'Book an Appointment', icon: 'calendar' as const, action: 'open_booking_modal' as const },
+    { id: 'quote', label: 'Get a Quote', icon: 'dollar' as const, action: 'navigate' as const, screen: 'quote' as const },
+    { id: 'fitment', label: 'Check Fitment', icon: 'wrench' as const, action: 'navigate' as const, screen: 'fitment' as const },
+    { id: 'contact', label: 'Contact Us', icon: 'phone' as const, action: 'navigate' as const, screen: 'contact' as const },
+  ],
+  contactActions: [
+    { id: 'text', label: 'Text', icon: 'message-square' as const, href: 'sms:+15707304433' },
+    { id: 'call', label: 'Call', icon: 'phone' as const, href: 'tel:+15707304433' },
+    { id: 'email', label: 'Email', icon: 'mail' as const, href: 'mailto:nextlevelaudio@ymail.com' },
+    { id: 'directions', label: 'Map', icon: 'map-pin' as const, href: 'https://maps.google.com/?q=944+North+9th+Street+Stroudsburg+PA+18360', external: true },
+  ],
+  quoteServices: [
+    { id: 'window-tinting', label: 'Window Tinting' },
+    { id: 'car-audio', label: 'Car Audio' },
+    { id: 'remote-start', label: 'Remote Start' },
+    { id: 'security-systems', label: 'Security Systems' },
+    { id: 'custom-lighting', label: 'Custom Lighting' },
+    { id: 'auto-accessories', label: 'Auto Accessories' },
+    { id: 'other', label: 'Other / Not Sure' },
+  ],
 };
 
 export type ChatbotConfig = typeof chatbotConfig;
