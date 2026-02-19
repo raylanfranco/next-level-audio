@@ -1,15 +1,23 @@
 import { openai } from '@ai-sdk/openai';
-import { streamText, tool, stepCountIs } from 'ai';
+import { streamText, tool, stepCountIs, convertToModelMessages } from 'ai';
 import { z } from 'zod';
 import { chatbotConfig, buildSystemPrompt } from '@/lib/chatbot/config';
 
 export async function POST(req: Request) {
+  if (!process.env.OPENAI_API_KEY) {
+    return new Response(JSON.stringify({ error: 'Missing OPENAI_API_KEY' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
   const { messages } = await req.json();
+  const modelMessages = await convertToModelMessages(messages);
 
   const result = streamText({
     model: openai('gpt-4o-mini'),
     system: buildSystemPrompt(chatbotConfig),
-    messages,
+    messages: modelMessages,
     tools: {
       getServiceInfo: tool({
         description: 'Get detailed info about a specific service',
