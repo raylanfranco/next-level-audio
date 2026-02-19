@@ -241,7 +241,7 @@ export default function ProductsPage() {
                       All Products
                     </button>
                   </li>
-                  {categories.map((cat) => (
+                  {categories.filter((cat) => !cat.name.toLowerCase().includes('tint')).map((cat) => (
                     <li key={cat.id}>
                       <button
                         onClick={() => handleCategorySelect(cat.id)}

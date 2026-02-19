@@ -15,7 +15,6 @@ const CURATED_TABS = [
   { key: 'subwoofers', label: 'SUBWOOFERS', match: 'sub' },
   { key: 'speakers', label: 'SPEAKERS', match: 'speaker' },
   { key: 'lighting', label: 'LIGHTING', match: 'light' },
-  { key: 'tinting', label: 'WINDOW TINTING', match: 'tint' },
   { key: 'remote', label: 'REMOTE START', match: 'remote' },
   { key: 'security', label: 'SECURITY', match: 'secur' },
   { key: 'accessories', label: 'ACCESSORIES', match: 'accessor' },
@@ -63,7 +62,8 @@ export default function ProductsSection() {
     setLoading(true);
     try {
       const categoryId = resolveCategoryId(tabKey);
-      const params = new URLSearchParams({ limit: '12', offset: '0', expand: 'categories' });
+      const fetchLimit = categoryId ? '12' : '100';
+      const params = new URLSearchParams({ limit: fetchLimit, offset: '0', expand: 'categories' });
       if (categoryId) params.set('category', categoryId);
 
       const res = await fetch(`/api/clover/inventory?${params}`);
@@ -189,7 +189,11 @@ export default function ProductsSection() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-              {items.filter((item) => !!productImages[item.id]).slice(0, 12).map((item, index) => (
+              {[...items].sort((a, b) => {
+                const aHas = productImages[a.id] ? 0 : 1;
+                const bHas = productImages[b.id] ? 0 : 1;
+                return aHas - bHas;
+              }).slice(0, 12).map((item, index) => (
                 <div
                   key={item.id}
                   className="animate-fade-up bg-black border-2 border-[#00A0E0]/30 overflow-hidden hover:border-[#00A0E0] transition-all duration-500 transform hover:-translate-y-2 group neon-border-soft"
