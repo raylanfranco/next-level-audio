@@ -4,7 +4,7 @@ export const chatbotConfig = {
     tagline: 'Elevate Your Journey With Our Expert Touch',
     address: '944 North 9th Street, Stroudsburg, PA 18360',
     phone: '(570) 730-4433',
-    email: 'nextlevelaudio@ymail.com',
+    email: 'nextlevelauto@ymail.com',
     hours: {
       'Monday - Friday': '9AM - 7PM',
       'Saturday': '9AM - 2PM',
@@ -111,7 +111,7 @@ export const chatbotConfig = {
   contactActions: [
     { id: 'text', label: 'Text', icon: 'message-square' as const, href: 'sms:+15707304433' },
     { id: 'call', label: 'Call', icon: 'phone' as const, href: 'tel:+15707304433' },
-    { id: 'email', label: 'Email', icon: 'mail' as const, href: 'mailto:nextlevelaudio@ymail.com' },
+    { id: 'email', label: 'Email', icon: 'mail' as const, href: 'mailto:nextlevelauto@ymail.com' },
     { id: 'directions', label: 'Map', icon: 'map-pin' as const, href: 'https://maps.google.com/?q=944+North+9th+Street+Stroudsburg+PA+18360', external: true },
   ],
   quoteServices: [

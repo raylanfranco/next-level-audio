@@ -56,7 +56,9 @@
       "WebFetch(domain:api.v12.estore.catalograck.com)",
       "WebFetch(domain:metradiy.com)",
       "WebFetch(domain:axxessinterfaces.com)",
-      "WebFetch(domain:metradealer.com)"
+      "WebFetch(domain:metradealer.com)",
+      "WebFetch(domain:www.kriswindowtintde.com)",
+      "Bash(done)"
     ]
   }
 }

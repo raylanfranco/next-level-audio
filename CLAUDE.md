@@ -506,7 +506,7 @@ allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-
    - `nextlevelaudio` → new business slug
    - `NLA` / `nla` → new abbreviation
    - Phone number `(570) 730-4433` → new phone
-   - Email `nextlevelaudio@ymail.com` → new admin email (in `lib/email/resend.ts`)
+   - Email `nextlevelauto@ymail.com` → new admin email (in `lib/email/resend.ts`)
    - Address in Footer component → new address
 
 ### Step 2: Clover Setup

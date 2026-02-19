@@ -4,7 +4,7 @@ const resend = process.env.RESEND_API_KEY
   ? new Resend(process.env.RESEND_API_KEY)
   : null;
 
-const ADMIN_EMAIL = 'nextlevelaudio@ymail.com';
+const ADMIN_EMAIL = 'nextlevelauto@ymail.com';
 const FROM_EMAIL = 'Next Level Audio <onboarding@resend.dev>';
 
 export interface InquiryEmailData {

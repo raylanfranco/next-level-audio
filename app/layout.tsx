@@ -57,7 +57,7 @@ export default function RootLayout({
                 "Professional car audio installation, window tinting, and auto accessories in Stroudsburg, PA.",
               url: "https://nextlevelaudiopa.com",
               telephone: "+1-570-730-4433",
-              email: "nextlevelaudio@ymail.com",
+              email: "nextlevelauto@ymail.com",
               address: {
                 "@type": "PostalAddress",
                 addressLocality: "Stroudsburg",
