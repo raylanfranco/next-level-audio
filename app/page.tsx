@@ -118,17 +118,24 @@ export default function Home() {
             </AnimateOnScroll>
             <AnimateOnScroll animation="slide-left" delay={0.2}>
               <div className="grid grid-cols-3 gap-4">
-                {['SONY', 'COMPUSTAR', 'KICKER', 'PIONEER', 'JBL', 'KENWOOD'].map((brand) => (
+                {[
+                  { name: 'Sony', image: '/images/brands/stroudsburg_sony.avif' },
+                  { name: 'Compustar', image: '/images/brands/stroudsburg_compustar.avif' },
+                  { name: 'Kicker', image: '/images/brands/stroundsburg_kicker.avif' },
+                  { name: 'Pioneer', image: '/images/brands/stroudsburg_pioneer.avif' },
+                  { name: 'JBL', image: '/images/brands/stroudsburg_jbl.avif' },
+                  { name: 'Stinger', image: '/images/brands/stroudsburg_s.avif' },
+                ].map((brand) => (
                   <div
-                    key={brand}
+                    key={brand.name}
                     className="flex items-center justify-center py-6 px-4 border border-[#00A0E0]/20 bg-[#00A0E0]/5 hover:border-[#00A0E0]/50 hover:bg-[#00A0E0]/10 transition-all duration-300"
                   >
-                    <span
-                      className="text-white/80 text-sm md:text-base font-bold tracking-widest"
-                      style={{ fontFamily: 'var(--font-oxanium)' }}
-                    >
-                      {brand}
-                    </span>
+                    <img
+                      src={brand.image}
+                      alt={brand.name}
+                      className="max-h-12 max-w-full object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
+                      loading="lazy"
+                    />
                   </div>
                 ))}
               </div>
