@@ -91,7 +91,16 @@ const services = [
 ];
 
 const brands = [
-  'JBL', 'Kicker', 'Pioneer', 'Kenwood', 'Alpine', 'Rockford Fosgate', 'Sony',
+  { name: 'JBL', image: '/images/brands/stroudsburg_jbl.avif' },
+  { name: 'Kicker', image: '/images/brands/stroundsburg_kicker.avif' },
+  { name: 'Pioneer', image: '/images/brands/stroudsburg_pioneer.avif' },
+  { name: 'Compustar', image: '/images/brands/stroudsburg_compustar.avif' },
+  { name: 'Sony', image: '/images/brands/stroudsburg_sony.avif' },
+  { name: 'PRV Audio', image: '/images/brands/stroudsburg_prv.avif' },
+  { name: 'Drone Mobile', image: '/images/brands/stroudsburg_drone.avif' },
+  { name: 'iDatalink', image: '/images/brands/stroudsburg_idatalink.avif' },
+  { name: 'Elite Audio', image: '/images/brands/stroudsburg_elite.avif' },
+  { name: 'Stinger', image: '/images/brands/stroudsburg_s.avif' },
 ];
 
 const whyPro = [
@@ -320,16 +329,16 @@ export default function CarAudioPage() {
             </div>
           </AnimateOnScroll>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-4 max-w-5xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-5xl mx-auto">
             {brands.map((brand, index) => (
-              <AnimateOnScroll key={brand} animation="scale-up" delay={index * 0.05}>
-                <div className="bg-black border-2 border-[#00A0E0]/30 p-6 text-center hover:border-[#00A0E0] hover:bg-[#00A0E0]/5 transition-all duration-300 neon-border-soft">
-                  <span
-                    className="text-[#00A0E0] font-bold text-sm tracking-wider"
-                    style={{ fontFamily: 'var(--font-oxanium)' }}
-                  >
-                    {brand}
-                  </span>
+              <AnimateOnScroll key={brand.name} animation="scale-up" delay={index * 0.05}>
+                <div className="bg-black border-2 border-[#00A0E0]/30 p-4 flex items-center justify-center hover:border-[#00A0E0] hover:bg-[#00A0E0]/5 transition-all duration-300 neon-border-soft aspect-[3/2]">
+                  <img
+                    src={brand.image}
+                    alt={brand.name}
+                    className="max-h-16 max-w-full object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
+                    loading="lazy"
+                  />
                 </div>
               </AnimateOnScroll>
             ))}
