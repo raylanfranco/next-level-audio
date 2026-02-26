@@ -128,12 +128,12 @@ export default function Home() {
                 ].map((brand) => (
                   <div
                     key={brand.name}
-                    className="flex items-center justify-center py-6 px-4 border border-[#00A0E0]/20 bg-[#00A0E0]/5 hover:border-[#00A0E0]/50 hover:bg-[#00A0E0]/10 transition-all duration-300"
+                    className="flex items-center justify-center p-6 border border-[#00A0E0]/20 bg-[#00A0E0]/5 hover:border-[#00A0E0]/50 hover:bg-[#00A0E0]/10 transition-all duration-300 aspect-[3/2]"
                   >
                     <img
                       src={brand.image}
                       alt={brand.name}
-                      className="max-h-12 max-w-full object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
+                      className="max-h-20 w-full object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
                       loading="lazy"
                     />
                   </div>

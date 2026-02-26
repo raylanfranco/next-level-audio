@@ -336,7 +336,7 @@ export default function CarAudioPage() {
                   <img
                     src={brand.image}
                     alt={brand.name}
-                    className="max-h-16 max-w-full object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
+                    className="max-h-20 w-full object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
                     loading="lazy"
                   />
                 </div>
