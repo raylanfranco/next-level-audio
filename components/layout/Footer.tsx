@@ -43,6 +43,11 @@ export default function Footer() {
                   CONTACT
                 </Link>
               </li>
+              <li>
+                <Link href="/#financing" className="text-[#E01020]/70 hover:text-[#E01020] transition-colors neon-glow-soft">
+                  FINANCING
+                </Link>
+              </li>
             </ul>
           </div>
 
