@@ -344,7 +344,9 @@ Both NLA and BayReady are running in **full production mode** — real inventory
 
 ### NLA Theme (Cyberpunk)
 
-- **Primary color:** `#00A0E0` (cyan/neon blue)
+- **Primary color:** `#E01020` (red) — dark: `#B00D1A`, light: `#FF2A3A`
+- **Glitch accent:** `#FFD700` (gold)
+- **Note:** CSS variable names still say `--neon-blue` (internal only); values are red
 - **Background:** `#0a0a0a` (near-black)
 - **Fonts:**
   - Headings: `Oxanium` (via `--font-oxanium`)
@@ -539,7 +541,7 @@ allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-
      --neon-blue-light: #YOUR_LIGHTER_SHADE;
    }
    ```
-   Also search-and-replace `#00A0E0` across all component files (used as Tailwind arbitrary values like `text-[#00A0E0]`).
+   Also search-and-replace `#E01020` across all component files (used as Tailwind arbitrary values like `text-[#E01020]`).
 
 2. **Fonts:** Edit `app/layout.tsx` to import different Google Fonts. Update `@theme inline` in `globals.css`.
 
