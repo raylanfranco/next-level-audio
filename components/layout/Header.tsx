@@ -124,7 +124,7 @@ export default function Header() {
 
           <Link href="/" className="flex items-center justify-center flex-shrink-0 mx-8 mt-8">
             <Image
-              src="/images/logo.png"
+              src="/images/logo-new.png"
               alt="Next Level Audio"
               width={360}
               height={100}
@@ -195,7 +195,7 @@ export default function Header() {
         <div className="flex lg:hidden items-center justify-between h-16">
           <Link href="/" className="flex items-center">
             <Image
-              src="/images/logo.png"
+              src="/images/logo-new.png"
               alt="Next Level Audio"
               width={180}
               height={50}
@@ -238,7 +238,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-16 px-4">
           <Link href="/" className="flex items-center" onClick={() => setIsMenuOpen(false)}>
             <Image
-              src="/images/logo.png"
+              src="/images/logo-new.png"
               alt="Next Level Audio"
               width={180}
               height={50}
