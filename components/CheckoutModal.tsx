@@ -256,6 +256,12 @@ export default function CheckoutModal() {
                     </div>
                   </div>
 
+                  <div className="bg-[#E01020]/5 border border-[#E01020]/20 p-3 mb-4">
+                    <p className="text-[#E01020]/70 font-mono text-xs">
+                      <span className="font-bold text-[#E01020]">PICKUP ONLY:</span> Orders are available for in-store pickup at 944 N 9th St, Stroudsburg, PA.
+                    </p>
+                  </div>
+
                   <button
                     onClick={() => setStep('payment')}
                     className="w-full bg-[#E01020]/20 border-2 border-[#E01020] text-[#E01020] px-6 py-3 font-semibold text-sm hover:bg-[#E01020]/30 transition-all duration-300 cursor-pointer"
@@ -413,9 +419,17 @@ export default function CheckoutModal() {
                   Reference: {chargeId}
                 </p>
               )}
-              <p className="text-[#E01020]/60 font-mono text-xs mb-6">
+              <p className="text-[#E01020]/60 font-mono text-xs mb-2">
                 A receipt has been sent to your email.
               </p>
+              <div className="bg-[#E01020]/5 border border-[#E01020]/20 p-3 mb-6">
+                <p className="text-[#E01020]/70 font-mono text-xs">
+                  <span className="font-bold text-[#E01020]">PICKUP LOCATION:</span> 944 N 9th St, Stroudsburg, PA 18360
+                </p>
+                <p className="text-[#E01020]/50 font-mono text-xs mt-1">
+                  We&apos;ll notify you when your order is ready.
+                </p>
+              </div>
               <button
                 onClick={handleClose}
                 className="text-[#E01020] hover:text-[#FF2A3A] font-mono underline text-sm cursor-pointer"

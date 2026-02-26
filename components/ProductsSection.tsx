@@ -143,6 +143,9 @@ export default function ProductsSection() {
             <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
               Browse our inventory by category — find exactly what your ride needs
             </p>
+            <p className="text-[#E01020]/50 max-w-xl mx-auto text-sm font-mono mt-2">
+              All products available for in-store pickup
+            </p>
           </div>
         </AnimateOnScroll>
 

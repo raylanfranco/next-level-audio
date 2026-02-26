@@ -194,6 +194,23 @@ export default function ProductsPage() {
         </div>
       </section>
 
+      {/* Pickup Notice */}
+      <section className="bg-black relative">
+        <div className="container mx-auto px-4 pt-6">
+          <div className="bg-[#E01020]/5 border-2 border-[#E01020]/30 p-4">
+            <div className="flex items-center gap-3">
+              <svg className="w-6 h-6 text-[#E01020] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+              </svg>
+              <p className="text-[#E01020]/80 font-mono text-sm">
+                <span className="font-bold text-[#E01020]">IN-STORE PICKUP ONLY</span> — Online ordering is available for convenience, but all orders must be picked up at our Stroudsburg, PA location.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Main Content: Sidebar + Grid */}
       <section className="bg-black relative min-h-screen">
         <div className="container mx-auto px-4 py-8">
