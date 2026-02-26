@@ -54,7 +54,7 @@ export default function StatsCounter() {
   const { ref, isInView } = useInView({ threshold: 0.3 });
 
   return (
-    <section className="py-16 md:py-24 bg-black relative overflow-hidden border-t-2 border-b-2 border-[#00A0E0]/20">
+    <section className="py-16 md:py-24 bg-black relative overflow-hidden border-t-2 border-b-2 border-[#E01020]/20">
       <div className="absolute inset-0 cyber-grid opacity-10"></div>
       <div ref={ref} className="container mx-auto px-4 relative z-10">
         <div className="flex items-center justify-center gap-16 md:gap-24">
@@ -65,12 +65,12 @@ export default function StatsCounter() {
               style={{ animationDelay: `${index * 0.15}s`, animationFillMode: 'both' }}
             >
               <div
-                className="text-4xl md:text-6xl font-bold text-[#00A0E0] mb-2 neon-glow"
+                className="text-4xl md:text-6xl font-bold text-[#E01020] mb-2 neon-glow"
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
                 <AnimatedNumber target={stat.value} suffix={stat.suffix} started={isInView} />
               </div>
-              <div className="text-[#00A0E0]/60 font-mono text-sm md:text-base uppercase tracking-wider">
+              <div className="text-[#E01020]/60 font-mono text-sm md:text-base uppercase tracking-wider">
                 {stat.label}
               </div>
             </div>

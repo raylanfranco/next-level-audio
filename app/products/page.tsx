@@ -181,13 +181,13 @@ export default function ProductsPage() {
         <div className="absolute inset-0 cyber-grid opacity-20"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
-            <p className="text-[#00A0E0] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+            <p className="text-[#E01020] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
               SHOP OUR COLLECTION
             </p>
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
               PRODUCTS
             </h1>
-            <p className="text-[#00A0E0]/80 text-lg md:text-xl max-w-2xl mx-auto font-mono">
+            <p className="text-[#E01020]/80 text-lg md:text-xl max-w-2xl mx-auto font-mono">
               1,300+ items from our Clover POS inventory. Premium car audio equipment and auto accessories.
             </p>
           </div>
@@ -202,7 +202,7 @@ export default function ProductsPage() {
             {/* Mobile sidebar toggle */}
             <button
               onClick={() => setMobileSidebarOpen(!mobileSidebarOpen)}
-              className="lg:hidden fixed bottom-6 right-6 z-50 bg-[#00A0E0] text-black px-4 py-3 font-mono font-semibold text-sm shadow-lg shadow-[#00A0E0]/30"
+              className="lg:hidden fixed bottom-6 right-6 z-50 bg-[#E01020] text-black px-4 py-3 font-mono font-semibold text-sm shadow-lg shadow-[#E01020]/30"
             >
               {mobileSidebarOpen ? 'Close Filters' : 'Filters'}
             </button>
@@ -215,27 +215,27 @@ export default function ProductsPage() {
             `}>
               {/* Search */}
               <div className="mb-6">
-                <h3 className="text-[#00A0E0] text-xs uppercase font-semibold mb-3 font-mono tracking-wider">Search</h3>
+                <h3 className="text-[#E01020] text-xs uppercase font-semibold mb-3 font-mono tracking-wider">Search</h3>
                 <input
                   type="text"
                   placeholder="Search by name or barcode..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-black border border-[#00A0E0]/30 text-white placeholder-[#00A0E0]/30 font-mono text-sm focus:outline-none focus:border-[#00A0E0] transition-colors"
+                  className="w-full px-4 py-2.5 bg-black border border-[#E01020]/30 text-white placeholder-[#E01020]/30 font-mono text-sm focus:outline-none focus:border-[#E01020] transition-colors"
                 />
               </div>
 
               {/* Categories */}
               <div className="mb-6">
-                <h3 className="text-[#00A0E0] text-xs uppercase font-semibold mb-3 font-mono tracking-wider">Categories</h3>
+                <h3 className="text-[#E01020] text-xs uppercase font-semibold mb-3 font-mono tracking-wider">Categories</h3>
                 <ul className="space-y-1">
                   <li>
                     <button
                       onClick={() => handleCategorySelect(null)}
                       className={`w-full text-left px-3 py-2 font-mono text-sm transition-colors ${
                         selectedCategory === null
-                          ? 'bg-[#00A0E0]/10 text-[#00A0E0] border-l-2 border-[#00A0E0]'
-                          : 'text-[#00A0E0]/60 hover:text-[#00A0E0] hover:bg-[#00A0E0]/5'
+                          ? 'bg-[#E01020]/10 text-[#E01020] border-l-2 border-[#E01020]'
+                          : 'text-[#E01020]/60 hover:text-[#E01020] hover:bg-[#E01020]/5'
                       }`}
                     >
                       All Products
@@ -247,8 +247,8 @@ export default function ProductsPage() {
                         onClick={() => handleCategorySelect(cat.id)}
                         className={`w-full text-left px-3 py-2 font-mono text-sm transition-colors ${
                           selectedCategory === cat.id
-                            ? 'bg-[#00A0E0]/10 text-[#00A0E0] border-l-2 border-[#00A0E0]'
-                            : 'text-[#00A0E0]/60 hover:text-[#00A0E0] hover:bg-[#00A0E0]/5'
+                            ? 'bg-[#E01020]/10 text-[#E01020] border-l-2 border-[#E01020]'
+                            : 'text-[#E01020]/60 hover:text-[#E01020] hover:bg-[#E01020]/5'
                         }`}
                       >
                         {cat.name}
@@ -260,7 +260,7 @@ export default function ProductsPage() {
 
               {/* Availability Filter */}
               <div className="mb-6">
-                <h3 className="text-[#00A0E0] text-xs uppercase font-semibold mb-3 font-mono tracking-wider">Availability</h3>
+                <h3 className="text-[#E01020] text-xs uppercase font-semibold mb-3 font-mono tracking-wider">Availability</h3>
                 <div className="space-y-1">
                   {(['all', 'in-stock', 'low-stock', 'out-of-stock'] as StockFilter[]).map((filter) => (
                     <button
@@ -269,13 +269,13 @@ export default function ProductsPage() {
                       className={`w-full text-left px-3 py-2 font-mono text-sm transition-colors ${
                         stockFilter === filter
                           ? filter === 'all'
-                            ? 'bg-[#00A0E0]/10 text-[#00A0E0] border-l-2 border-[#00A0E0]'
+                            ? 'bg-[#E01020]/10 text-[#E01020] border-l-2 border-[#E01020]'
                             : filter === 'in-stock'
                             ? 'bg-green-400/10 text-green-400 border-l-2 border-green-400'
                             : filter === 'low-stock'
                             ? 'bg-yellow-400/10 text-yellow-400 border-l-2 border-yellow-400'
                             : 'bg-red-400/10 text-red-400 border-l-2 border-red-400'
-                          : 'text-[#00A0E0]/60 hover:text-[#00A0E0] hover:bg-[#00A0E0]/5'
+                          : 'text-[#E01020]/60 hover:text-[#E01020] hover:bg-[#E01020]/5'
                       }`}
                     >
                       {filter === 'all' ? 'All' : filter === 'in-stock' ? 'In Stock' : filter === 'low-stock' ? 'Low Stock' : 'Out of Stock'}
@@ -292,7 +292,7 @@ export default function ProductsPage() {
                     setStockFilter('all');
                     handleCategorySelect(null);
                   }}
-                  className="w-full px-3 py-2 text-[#00A0E0] border border-[#00A0E0]/30 hover:border-[#00A0E0] font-mono text-sm transition-colors"
+                  className="w-full px-3 py-2 text-[#E01020] border border-[#E01020]/30 hover:border-[#E01020] font-mono text-sm transition-colors"
                 >
                   Clear All Filters
                 </button>
@@ -303,10 +303,10 @@ export default function ProductsPage() {
             <div className="flex-1 min-w-0">
               {/* Results count */}
               <div className="mb-6 flex items-center justify-between">
-                <p className="text-[#00A0E0]/60 font-mono text-sm">
+                <p className="text-[#E01020]/60 font-mono text-sm">
                   {loading ? 'Loading...' : `${inStockItems.length} products${outOfStockItems.length > 0 ? ` (${outOfStockItems.length} out of stock)` : ''}`}
                   {selectedCategory && categories.length > 0 && (
-                    <span className="text-[#00A0E0]">
+                    <span className="text-[#E01020]">
                       {' '}in {categories.find(c => c.id === selectedCategory)?.name}
                     </span>
                   )}
@@ -315,19 +315,19 @@ export default function ProductsPage() {
 
               {loading ? (
                 <div className="text-center py-20">
-                  <div className="inline-block w-12 h-12 border-4 border-[#00A0E0]/30 border-t-[#00A0E0] animate-spin"></div>
-                  <p className="text-[#00A0E0]/60 mt-4 font-mono">Loading inventory from Clover...</p>
+                  <div className="inline-block w-12 h-12 border-4 border-[#E01020]/30 border-t-[#E01020] animate-spin"></div>
+                  <p className="text-[#E01020]/60 mt-4 font-mono">Loading inventory from Clover...</p>
                 </div>
               ) : filteredItems.length === 0 ? (
                 <div className="text-center py-20">
-                  <p className="text-[#00A0E0]/60 font-mono text-lg mb-4">No products found.</p>
+                  <p className="text-[#E01020]/60 font-mono text-lg mb-4">No products found.</p>
                   <button
                     onClick={() => {
                       setSearchQuery('');
                       setStockFilter('all');
                       handleCategorySelect(null);
                     }}
-                    className="text-[#00A0E0] hover:text-[#00B8FF] font-mono underline"
+                    className="text-[#E01020] hover:text-[#FF2A3A] font-mono underline"
                   >
                     Clear all filters
                   </button>
@@ -344,7 +344,7 @@ export default function ProductsPage() {
                       return (
                         <div
                           key={item.id}
-                          className="bg-black border border-[#00A0E0]/30 overflow-hidden hover:border-[#00A0E0] transition-all duration-300 group"
+                          className="bg-black border border-[#E01020]/30 overflow-hidden hover:border-[#E01020] transition-all duration-300 group"
                         >
                           <div className="relative aspect-square bg-white flex items-center justify-center overflow-hidden">
                             {productImages[item.id] ? (
@@ -379,13 +379,13 @@ export default function ProductsPage() {
                               {item.onlineName || item.name}
                             </h3>
                             {item.description && (
-                              <p className="text-[#00A0E0]/60 text-xs font-mono mb-4 line-clamp-2">
+                              <p className="text-[#E01020]/60 text-xs font-mono mb-4 line-clamp-2">
                                 {item.description}
                               </p>
                             )}
 
                             <div className="flex items-center justify-between">
-                              <span className="text-xl font-bold text-[#00A0E0] font-mono">
+                              <span className="text-xl font-bold text-[#E01020] font-mono">
                                 {formatCents(item.price)}
                               </span>
                               {status === 'out-of-stock' ? (
@@ -418,7 +418,7 @@ export default function ProductsPage() {
                                   className={`px-4 py-2 border font-semibold font-mono text-xs transition-colors cursor-pointer ${
                                     addedItemId === item.id
                                       ? 'bg-green-400/20 text-green-400 border-green-400'
-                                      : 'bg-[#00A0E0]/20 text-[#00A0E0] border-[#00A0E0] hover:bg-[#00A0E0]/30'
+                                      : 'bg-[#E01020]/20 text-[#E01020] border-[#E01020] hover:bg-[#E01020]/30'
                                   }`}
                                 >
                                   {addedItemId === item.id ? 'ADDED!' : 'ADD TO CART'}
@@ -437,7 +437,7 @@ export default function ProductsPage() {
                       <button
                         onClick={handleLoadMore}
                         disabled={loadingMore}
-                        className="px-8 py-3 border border-[#00A0E0]/30 text-[#00A0E0] font-mono hover:border-[#00A0E0] transition-colors disabled:opacity-50"
+                        className="px-8 py-3 border border-[#E01020]/30 text-[#E01020] font-mono hover:border-[#E01020] transition-colors disabled:opacity-50"
                       >
                         {loadingMore ? 'Loading...' : 'Load More Products'}
                       </button>
@@ -500,13 +500,13 @@ export default function ProductsPage() {
                                   {item.onlineName || item.name}
                                 </h3>
                                 {item.description && (
-                                  <p className="text-[#00A0E0]/40 text-xs font-mono mb-4 line-clamp-2">
+                                  <p className="text-[#E01020]/40 text-xs font-mono mb-4 line-clamp-2">
                                     {item.description}
                                   </p>
                                 )}
 
                                 <div className="flex items-center justify-between">
-                                  <span className="text-xl font-bold text-[#00A0E0]/50 font-mono">
+                                  <span className="text-xl font-bold text-[#E01020]/50 font-mono">
                                     {formatCents(item.price)}
                                   </span>
                                   <button
@@ -546,26 +546,26 @@ export default function ProductsPage() {
       />
 
       {/* CTA Section */}
-      <section className="py-20 md:py-32 bg-black text-white relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      <section className="py-20 md:py-32 bg-black text-white relative overflow-hidden border-t-2 border-[#E01020]/30">
         <div className="absolute inset-0 cyber-grid opacity-30"></div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-4xl md:text-6xl font-bold mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
             NEED INSTALLATION?
           </h2>
-          <p className="text-xl md:text-2xl text-[#00A0E0] mb-12 max-w-3xl mx-auto leading-relaxed font-mono">
+          <p className="text-xl md:text-2xl text-[#E01020] mb-12 max-w-3xl mx-auto leading-relaxed font-mono">
             Our expert technicians can install any product you purchase. Book an appointment today!
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link
               href="/services"
-              className="inline-block bg-[#00A0E0]/20 text-[#00A0E0] border-2 border-[#00A0E0] px-10 py-5 font-semibold text-lg hover:bg-[#00A0E0]/30 transition-all duration-300 transform hover:scale-105 cyber-button"
+              className="inline-block bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-10 py-5 font-semibold text-lg hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 cyber-button"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               BOOK INSTALLATION
             </Link>
             <Link
               href="/contact"
-              className="inline-block border-2 border-[#00A0E0]/50 bg-black/40 backdrop-blur-sm text-[#00A0E0] px-10 py-5 font-semibold text-lg hover:border-[#00A0E0] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 cyber-button"
+              className="inline-block border-2 border-[#E01020]/50 bg-black/40 backdrop-blur-sm text-[#E01020] px-10 py-5 font-semibold text-lg hover:border-[#E01020] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 cyber-button"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               CONTACT US

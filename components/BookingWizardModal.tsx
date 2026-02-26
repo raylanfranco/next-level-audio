@@ -17,10 +17,10 @@ export default function BookingWizardModal({ isOpen, onClose }: BookingWizardMod
 
   return (
     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-black border-2 border-[#00A0E0]/50 w-full max-w-3xl h-[90vh] flex flex-col neon-border-soft">
+      <div className="bg-black border-2 border-[#E01020]/50 w-full max-w-3xl h-[90vh] flex flex-col neon-border-soft">
         {/* Header */}
-        <div className="p-4 border-b-2 border-[#00A0E0]/30 flex justify-between items-center flex-shrink-0">
-          <h2 className="text-2xl font-bold text-[#00A0E0] neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
+        <div className="p-4 border-b-2 border-[#E01020]/30 flex justify-between items-center flex-shrink-0">
+          <h2 className="text-2xl font-bold text-[#E01020] neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
             BOOK APPOINTMENT
           </h2>
           <button
@@ -29,7 +29,7 @@ export default function BookingWizardModal({ isOpen, onClose }: BookingWizardMod
               setIframeLoaded(false);
               setIframeError(false);
             }}
-            className="text-[#00A0E0] hover:text-white transition-colors cursor-pointer"
+            className="text-[#E01020] hover:text-white transition-colors cursor-pointer"
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -43,8 +43,8 @@ export default function BookingWizardModal({ isOpen, onClose }: BookingWizardMod
           {!iframeLoaded && !iframeError && (
             <div className="absolute inset-0 flex items-center justify-center bg-black">
               <div className="text-center">
-                <div className="w-8 h-8 border-2 border-[#00A0E0]/30 border-t-[#00A0E0] rounded-full animate-spin mx-auto mb-4" />
-                <p className="text-[#00A0E0]/60 font-mono text-sm">Loading booking system...</p>
+                <div className="w-8 h-8 border-2 border-[#E01020]/30 border-t-[#E01020] rounded-full animate-spin mx-auto mb-4" />
+                <p className="text-[#E01020]/60 font-mono text-sm">Loading booking system...</p>
               </div>
             </div>
           )}
@@ -53,14 +53,14 @@ export default function BookingWizardModal({ isOpen, onClose }: BookingWizardMod
           {iframeError && (
             <div className="absolute inset-0 flex items-center justify-center bg-black">
               <div className="text-center px-6">
-                <p className="text-[#00A0E0]/80 font-mono text-sm mb-4">
+                <p className="text-[#E01020]/80 font-mono text-sm mb-4">
                   The booking system couldn&apos;t be loaded inline.
                 </p>
                 <a
                   href={BOOKING_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block bg-[#00A0E0]/20 text-[#00A0E0] border-2 border-[#00A0E0] px-8 py-3 font-semibold text-sm hover:bg-[#00A0E0]/30 transition-all duration-300 neon-border-soft cyber-button"
+                  className="inline-block bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-8 py-3 font-semibold text-sm hover:bg-[#E01020]/30 transition-all duration-300 neon-border-soft cyber-button"
                   style={{ fontFamily: 'var(--font-oxanium)' }}
                 >
                   OPEN BOOKING PAGE

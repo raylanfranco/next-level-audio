@@ -45,7 +45,7 @@ export default function VideoSection() {
 
   return (
     <>
-      <section className="relative bg-black overflow-hidden border-t-2 border-[#00A0E0]/30">
+      <section className="relative bg-black overflow-hidden border-t-2 border-[#E01020]/30">
         {/* Section heading */}
         <div className="py-16 md:py-20">
           <AnimateOnScroll animation="fade-up">
@@ -56,7 +56,7 @@ export default function VideoSection() {
               >
                 SEE US IN ACTION
               </h2>
-              <p className="text-[#00A0E0]/80 max-w-2xl mx-auto text-lg font-mono px-4">
+              <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono px-4">
                 Watch our expert technicians transform vehicles with premium installations and services
               </p>
             </div>
@@ -89,16 +89,16 @@ export default function VideoSection() {
             {/* Scanline overlay for cyberpunk flair */}
             <div className="absolute inset-0 pointer-events-none opacity-20"
               style={{
-                backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0, 160, 224, 0.03) 2px, rgba(0, 160, 224, 0.03) 4px)',
+                backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(224, 16, 32, 0.03) 2px, rgba(224, 16, 32, 0.03) 4px)',
               }}
             />
 
             {/* Play button + text */}
             <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
               {/* Play circle */}
-              <div className="w-20 h-20 md:w-24 md:h-24 border-2 border-[#00A0E0] flex items-center justify-center group-hover:scale-110 transition-transform duration-300 pulse-glow bg-black/40 backdrop-blur-sm">
+              <div className="w-20 h-20 md:w-24 md:h-24 border-2 border-[#E01020] flex items-center justify-center group-hover:scale-110 transition-transform duration-300 pulse-glow bg-black/40 backdrop-blur-sm">
                 <svg
-                  className="w-8 h-8 md:w-10 md:h-10 text-[#00A0E0] ml-1"
+                  className="w-8 h-8 md:w-10 md:h-10 text-[#E01020] ml-1"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                 >
@@ -106,14 +106,14 @@ export default function VideoSection() {
                 </svg>
               </div>
               <p
-                className="mt-4 text-white/80 text-sm md:text-base font-mono uppercase tracking-widest group-hover:text-[#00A0E0] transition-colors duration-300"
+                className="mt-4 text-white/80 text-sm md:text-base font-mono uppercase tracking-widest group-hover:text-[#E01020] transition-colors duration-300"
               >
                 Watch the Full Video
               </p>
             </div>
 
             {/* Bottom neon line */}
-            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#00A0E0]/50" />
+            <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#E01020]/50" />
           </div>
         </AnimateOnScroll>
       </section>
@@ -127,7 +127,7 @@ export default function VideoSection() {
           {/* Close button */}
           <button
             onClick={closeLightbox}
-            className="absolute top-6 right-6 text-[#00A0E0] hover:text-white transition-colors z-10 cursor-pointer"
+            className="absolute top-6 right-6 text-[#E01020] hover:text-white transition-colors z-10 cursor-pointer"
             aria-label="Close video"
           >
             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
@@ -137,7 +137,7 @@ export default function VideoSection() {
 
           {/* Video container */}
           <div
-            className="relative w-full max-w-5xl mx-4 border-2 border-[#00A0E0]/30 neon-border-soft"
+            className="relative w-full max-w-5xl mx-4 border-2 border-[#E01020]/30 neon-border-soft"
             onClick={(e) => e.stopPropagation()}
           >
             <video

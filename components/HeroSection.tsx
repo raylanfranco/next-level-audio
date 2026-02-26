@@ -37,7 +37,7 @@ function TypewriterText({ text }: { text: string }) {
     <span className="inline-block">
       {displayText}
       <span
-        className={`inline-block w-[2px] h-[0.8em] bg-[#00A0E0] ml-1 align-middle ${
+        className={`inline-block w-[2px] h-[0.8em] bg-[#E01020] ml-1 align-middle ${
           showCursor ? 'animate-pulse' : 'opacity-0'
         }`}
       />
@@ -90,11 +90,11 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
             <source src={videoSrc} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/50 to-[#00A0E0]/30" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/90 via-black/50 to-[#E01020]/30" />
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
         </>
       ) : (
-        <div className="absolute inset-0 bg-gradient-to-br from-[#00A0E0]/30 via-black to-[#00A0E0]/20" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#E01020]/30 via-black to-[#E01020]/20" />
       )}
 
       {/* Cyber Grid Overlay */}
@@ -104,7 +104,7 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
       <div className="relative z-10 container mx-auto px-4 text-center">
         <div className="max-w-4xl mx-auto">
           <p
-            className="hero-stagger hero-stagger-1 text-[#00A0E0] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft"
+            className="hero-stagger hero-stagger-1 text-[#E01020] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft"
             style={{ fontFamily: 'var(--font-oxanium)' }}
           >
             WELCOME TO NEXT LEVEL AUDIO
@@ -114,7 +114,7 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
             style={{ fontFamily: 'var(--font-oxanium)' }}
           >
             ELEVATE
-            <span className="block text-[#00A0E0] neon-glow-soft">YOUR JOURNEY</span>
+            <span className="block text-[#E01020] neon-glow-soft">YOUR JOURNEY</span>
             <span className="block text-sm md:text-lg text-white font-normal mt-2">
               <TypewriterText text={TYPEWRITER_TEXT} />
             </span>
@@ -126,14 +126,14 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
           <div className="hero-stagger hero-stagger-4 flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button
               onClick={openModal}
-              className="px-8 py-4 bg-[#00A0E0]/20 text-white border-2 border-[#00A0E0] font-semibold text-lg hover:bg-[#00A0E0]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button cursor-pointer"
+              className="px-8 py-4 bg-[#E01020]/20 text-white border-2 border-[#E01020] font-semibold text-lg hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button cursor-pointer"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               BOOK APPOINTMENT
             </button>
             <Link
               href="/services"
-              className="px-8 py-4 bg-black/40 backdrop-blur-sm text-white border-2 border-[#00A0E0]/50 font-semibold text-lg hover:border-[#00A0E0] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button"
+              className="px-8 py-4 bg-black/40 backdrop-blur-sm text-white border-2 border-[#E01020]/50 font-semibold text-lg hover:border-[#E01020] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               OUR SERVICES

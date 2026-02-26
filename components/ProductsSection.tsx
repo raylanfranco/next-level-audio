@@ -140,7 +140,7 @@ export default function ProductsSection() {
             >
               SHOP BY CATEGORY
             </h2>
-            <p className="text-[#00A0E0]/80 max-w-2xl mx-auto text-lg font-mono">
+            <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
               Browse our inventory by category — find exactly what your ride needs
             </p>
           </div>
@@ -159,8 +159,8 @@ export default function ProductsSection() {
                 onClick={() => handleTabClick(tab.key)}
                 className={`flex-shrink-0 px-5 py-2.5 border-2 font-mono text-xs font-semibold uppercase tracking-wider transition-all duration-300 cursor-pointer whitespace-nowrap ${
                   activeTab === tab.key
-                    ? 'bg-[#00A0E0]/20 text-[#00A0E0] border-[#00A0E0] neon-border-soft'
-                    : 'bg-transparent text-[#00A0E0]/50 border-[#00A0E0]/20 hover:border-[#00A0E0]/50 hover:text-[#00A0E0]/80'
+                    ? 'bg-[#E01020]/20 text-[#E01020] border-[#E01020] neon-border-soft'
+                    : 'bg-transparent text-[#E01020]/50 border-[#E01020]/20 hover:border-[#E01020]/50 hover:text-[#E01020]/80'
                 }`}
               >
                 {tab.label}
@@ -174,18 +174,18 @@ export default function ProductsSection() {
           {loading ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="bg-black border-2 border-[#00A0E0]/10 animate-pulse">
-                  <div className="aspect-square bg-[#00A0E0]/5" />
+                <div key={i} className="bg-black border-2 border-[#E01020]/10 animate-pulse">
+                  <div className="aspect-square bg-[#E01020]/5" />
                   <div className="p-6 space-y-3">
-                    <div className="h-5 bg-[#00A0E0]/10 w-3/4" />
-                    <div className="h-4 bg-[#00A0E0]/5 w-1/2" />
+                    <div className="h-5 bg-[#E01020]/10 w-3/4" />
+                    <div className="h-4 bg-[#E01020]/5 w-1/2" />
                   </div>
                 </div>
               ))}
             </div>
           ) : items.length === 0 ? (
             <div className="text-center py-16">
-              <p className="text-[#00A0E0]/40 font-mono text-lg">No products found in this category.</p>
+              <p className="text-[#E01020]/40 font-mono text-lg">No products found in this category.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
@@ -196,7 +196,7 @@ export default function ProductsSection() {
               }).slice(0, 12).map((item, index) => (
                 <div
                   key={item.id}
-                  className="animate-fade-up bg-black border-2 border-[#00A0E0]/30 overflow-hidden hover:border-[#00A0E0] transition-all duration-500 transform hover:-translate-y-2 group neon-border-soft"
+                  className="animate-fade-up bg-black border-2 border-[#E01020]/30 overflow-hidden hover:border-[#E01020] transition-all duration-500 transform hover:-translate-y-2 group neon-border-soft"
                   style={{ animationDelay: `${index * 0.06}s`, animationFillMode: 'both' }}
                 >
                   <div className="relative aspect-square bg-[#0a0a0a] overflow-hidden">
@@ -209,23 +209,23 @@ export default function ProductsSection() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <svg className="w-16 h-16 text-[#00A0E0]/15" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1}>
+                        <svg className="w-16 h-16 text-[#E01020]/15" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
                         </svg>
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-[#00A0E0]/10 group-hover:bg-[#00A0E0]/20 transition-colors duration-500"></div>
+                    <div className="absolute inset-0 bg-[#E01020]/10 group-hover:bg-[#E01020]/20 transition-colors duration-500"></div>
                   </div>
 
                   <div className="p-6">
                     <h3
-                      className="text-lg font-bold text-[#00A0E0] mb-2 line-clamp-2 neon-glow-soft"
+                      className="text-lg font-bold text-[#E01020] mb-2 line-clamp-2 neon-glow-soft"
                       style={{ fontFamily: 'var(--font-oxanium)' }}
                     >
                       {(item.onlineName || item.name).toUpperCase()}
                     </h3>
                     <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold text-[#00A0E0] font-mono neon-glow-soft">
+                      <span className="text-2xl font-bold text-[#E01020] font-mono neon-glow-soft">
                         {formatCents(item.price)}
                       </span>
                       <button
@@ -233,7 +233,7 @@ export default function ProductsSection() {
                         className={`px-4 py-2 border-2 font-semibold font-mono text-xs transition-all duration-300 cursor-pointer ${
                           addedItemId === item.id
                             ? 'bg-green-400/20 text-green-400 border-green-400'
-                            : 'bg-[#00A0E0]/20 text-[#00A0E0] border-[#00A0E0] hover:bg-[#00A0E0]/30 neon-border-soft cyber-button'
+                            : 'bg-[#E01020]/20 text-[#E01020] border-[#E01020] hover:bg-[#E01020]/30 neon-border-soft cyber-button'
                         }`}
                       >
                         {addedItemId === item.id ? 'ADDED!' : 'ADD TO CART'}
@@ -252,7 +252,7 @@ export default function ProductsSection() {
             <div className="text-center">
               <Link
                 href="/products"
-                className="inline-block px-8 py-4 bg-[#00A0E0]/20 text-[#00A0E0] border-2 border-[#00A0E0] font-semibold text-lg font-mono hover:bg-[#00A0E0]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
+                className="inline-block px-8 py-4 bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] font-semibold text-lg font-mono hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
                 VIEW ALL PRODUCTS

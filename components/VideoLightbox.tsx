@@ -69,9 +69,9 @@ export default function VideoLightbox({
           
           {/* Play Button Overlay */}
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-20 h-20 bg-[#00A0E0]/20 border-2 border-[#00A0E0] flex items-center justify-center group-hover:bg-[#00A0E0]/30 transition-colors shadow-2xl transform group-hover:scale-110 neon-border-soft pulse-glow" style={{ borderRadius: 0 }}>
+            <div className="w-20 h-20 bg-[#E01020]/20 border-2 border-[#E01020] flex items-center justify-center group-hover:bg-[#E01020]/30 transition-colors shadow-2xl transform group-hover:scale-110 neon-border-soft pulse-glow" style={{ borderRadius: 0 }}>
               <svg
-                className="w-8 h-8 text-[#00A0E0] ml-1"
+                className="w-8 h-8 text-[#E01020] ml-1"
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
@@ -82,7 +82,7 @@ export default function VideoLightbox({
 
           {title && (
             <div className="absolute bottom-4 left-4 right-4">
-              <h3 className="text-[#00A0E0] font-semibold text-lg neon-glow-soft drop-shadow-lg" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <h3 className="text-[#E01020] font-semibold text-lg neon-glow-soft drop-shadow-lg" style={{ fontFamily: 'var(--font-oxanium)' }}>
                 {title.toUpperCase()}
               </h3>
             </div>

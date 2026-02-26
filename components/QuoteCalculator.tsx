@@ -26,14 +26,14 @@ export default function QuoteCalculator() {
   }, 0);
 
   return (
-    <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+    <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#E01020]/30">
       <div className="absolute inset-0 cyber-grid opacity-10"></div>
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
             QUOTE CALCULATOR
           </h2>
-          <p className="text-[#00A0E0]/80 max-w-2xl mx-auto text-lg font-mono">
+          <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
             Get an instant estimate for your automotive needs. Select the services you're interested in below.
           </p>
         </div>
@@ -45,20 +45,20 @@ export default function QuoteCalculator() {
                 key={service.id}
                 className={`p-6 border-2 transition-all duration-300 cursor-pointer ${
                   selectedServices.includes(service.id)
-                    ? 'border-[#00A0E0] bg-[#00A0E0]/10'
-                    : 'border-[#00A0E0]/30 hover:border-[#00A0E0]/60'
+                    ? 'border-[#E01020] bg-[#E01020]/10'
+                    : 'border-[#E01020]/30 hover:border-[#E01020]/60'
                 } neon-border-soft`}
                 onClick={() => toggleService(service.id)}
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="text-xl font-bold text-[#00A0E0] mb-2" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                    <h3 className="text-xl font-bold text-[#E01020] mb-2" style={{ fontFamily: 'var(--font-oxanium)' }}>
                       {service.title}
                     </h3>
-                    <p className="text-[#00A0E0]/70 font-mono">${service.price}</p>
+                    <p className="text-[#E01020]/70 font-mono">${service.price}</p>
                   </div>
-                  <div className={`w-6 h-6 border-2 border-[#00A0E0] flex items-center justify-center ${
-                    selectedServices.includes(service.id) ? 'bg-[#00A0E0]' : ''
+                  <div className={`w-6 h-6 border-2 border-[#E01020] flex items-center justify-center ${
+                    selectedServices.includes(service.id) ? 'bg-[#E01020]' : ''
                   }`}>
                     {selectedServices.includes(service.id) && (
                       <svg className="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -72,14 +72,14 @@ export default function QuoteCalculator() {
           </div>
 
           <div className="text-center">
-            <div className="bg-black border-2 border-[#00A0E0]/50 p-8 rounded-lg neon-border-soft">
-              <h3 className="text-2xl font-bold text-[#00A0E0] mb-4" style={{ fontFamily: 'var(--font-oxanium)' }}>
+            <div className="bg-black border-2 border-[#E01020]/50 p-8 rounded-lg neon-border-soft">
+              <h3 className="text-2xl font-bold text-[#E01020] mb-4" style={{ fontFamily: 'var(--font-oxanium)' }}>
                 ESTIMATED TOTAL
               </h3>
               <p className="text-4xl font-bold text-white neon-glow">
                 ${total.toLocaleString()}
               </p>
-              <p className="text-[#00A0E0]/60 mt-4 font-mono">
+              <p className="text-[#E01020]/60 mt-4 font-mono">
                 * This is a placeholder estimate. Actual prices may vary based on specific requirements.
               </p>
             </div>

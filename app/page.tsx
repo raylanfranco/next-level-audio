@@ -47,7 +47,7 @@ export default function Home() {
               <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow hover-glitch" style={{ fontFamily: 'var(--font-oxanium)' }}>
                 OUR SERVICES
               </h2>
-              <p className="text-[#00A0E0]/80 max-w-2xl mx-auto text-lg font-mono">
+              <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
                 We specialize in professional car audio installation, window tinting, and auto accessories
                 in the Stroudsburg area.
               </p>
@@ -57,33 +57,33 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {services.map((service, index) => (
               <AnimateOnScroll key={service.num} animation="fade-up" delay={index * 0.15}>
-                <div className="bg-black border-2 border-[#00A0E0]/30 overflow-hidden hover:border-[#00A0E0] transition-all duration-500 transform hover:-translate-y-2 group neon-border-soft">
-                  <div className="h-64 bg-gradient-to-br from-[#00A0E0]/20 to-black relative overflow-hidden">
+                <div className="bg-black border-2 border-[#E01020]/30 overflow-hidden hover:border-[#E01020] transition-all duration-500 transform hover:-translate-y-2 group neon-border-soft">
+                  <div className="h-64 bg-gradient-to-br from-[#E01020]/20 to-black relative overflow-hidden">
                     <img
                       src={service.image}
                       alt={service.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
-                    <div className="absolute inset-0 bg-[#00A0E0]/10 group-hover:bg-[#00A0E0]/20 transition-colors duration-500"></div>
-                    <div className="absolute inset-0 border-b-2 border-[#00A0E0]/50"></div>
+                    <div className="absolute inset-0 bg-[#E01020]/10 group-hover:bg-[#E01020]/20 transition-colors duration-500"></div>
+                    <div className="absolute inset-0 border-b-2 border-[#E01020]/50"></div>
                     {/* Animated number overlay */}
                     <div
-                      className="absolute top-4 right-4 text-6xl font-bold text-white/10 group-hover:text-[#00A0E0]/25 transition-colors duration-500 select-none"
+                      className="absolute top-4 right-4 text-6xl font-bold text-white/10 group-hover:text-[#E01020]/25 transition-colors duration-500 select-none"
                       style={{ fontFamily: 'var(--font-oxanium)' }}
                     >
                       {service.num}
                     </div>
                   </div>
                   <div className="p-8">
-                    <h3 className="text-2xl font-bold text-[#00A0E0] mb-4 neon-glow-soft group-hover:text-[#00B8FF] transition-colors duration-300" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                    <h3 className="text-2xl font-bold text-[#E01020] mb-4 neon-glow-soft group-hover:text-[#FF2A3A] transition-colors duration-300" style={{ fontFamily: 'var(--font-oxanium)' }}>
                       {service.title}
                     </h3>
-                    <p className="text-[#00A0E0]/70 mb-6 leading-relaxed font-mono text-sm">
+                    <p className="text-[#E01020]/70 mb-6 leading-relaxed font-mono text-sm">
                       {service.desc}
                     </p>
                     <Link
                       href={service.href}
-                      className="text-[#00A0E0] font-semibold hover:text-[#00B8FF] transition-colors inline-flex items-center group/link font-mono text-sm neon-glow-soft"
+                      className="text-[#E01020] font-semibold hover:text-[#FF2A3A] transition-colors inline-flex items-center group/link font-mono text-sm neon-glow-soft"
                     >
                       {service.cta}
                       <svg className="w-5 h-5 ml-2 group-hover/link:translate-x-2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -102,7 +102,7 @@ export default function Home() {
       <StatsCounter />
 
       {/* Premium Brands */}
-      <section className="py-16 md:py-24 bg-black relative overflow-hidden border-t-2 border-b-2 border-[#00A0E0]/20">
+      <section className="py-16 md:py-24 bg-black relative overflow-hidden border-t-2 border-b-2 border-[#E01020]/20">
         <div className="absolute inset-0 cyber-grid opacity-10"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -111,7 +111,7 @@ export default function Home() {
                 <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
                   PREMIUM BRANDS YOU CAN TRUST
                 </h2>
-                <p className="text-[#00A0E0]/70 font-mono text-sm md:text-base">
+                <p className="text-[#E01020]/70 font-mono text-sm md:text-base">
                   Expert installation with quality parts from the industry&apos;s leading manufacturers.
                 </p>
               </div>
@@ -128,7 +128,7 @@ export default function Home() {
                 ].map((brand) => (
                   <div
                     key={brand.name}
-                    className="flex items-center justify-center p-6 border border-[#00A0E0]/20 bg-[#00A0E0]/5 hover:border-[#00A0E0]/50 hover:bg-[#00A0E0]/10 transition-all duration-300 aspect-[3/2]"
+                    className="flex items-center justify-center p-6 border border-[#E01020]/20 bg-[#E01020]/5 hover:border-[#E01020]/50 hover:bg-[#E01020]/10 transition-all duration-300 aspect-[3/2]"
                   >
                     <img
                       src={brand.image}
@@ -151,7 +151,7 @@ export default function Home() {
       <VideoSection />
 
       {/* About Section */}
-      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#E01020]/30">
         <div className="absolute inset-0 cyber-grid opacity-10"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
@@ -160,22 +160,22 @@ export default function Home() {
                 <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 neon-glow hover-glitch" style={{ fontFamily: 'var(--font-oxanium)' }}>
                   ABOUT NEXT LEVEL AUDIO
                 </h2>
-                <p className="text-[#00A0E0]/80 mb-6 text-lg leading-relaxed font-mono">
+                <p className="text-[#E01020]/80 mb-6 text-lg leading-relaxed font-mono">
                   We are the top choice in Stroudsburg, PA for window tinting services and car audio installation.
                   We understand the importance of sticking to a budget while still providing high-quality craftsmanship.
                 </p>
-                <p className="text-[#00A0E0]/80 mb-6 text-lg leading-relaxed font-mono">
+                <p className="text-[#E01020]/80 mb-6 text-lg leading-relaxed font-mono">
                   Our team will work closely with you throughout the project to ensure that the results exceed
                   your expectations while staying within your budget constraints.
                 </p>
-                <p className="text-[#00A0E0]/80 text-lg leading-relaxed font-mono">
+                <p className="text-[#E01020]/80 text-lg leading-relaxed font-mono">
                   We strive for excellence in everything we do - no matter how big or small the job may be -
                   because your satisfaction is our top priority!
                 </p>
               </div>
             </AnimateOnScroll>
             <AnimateOnScroll animation="slide-left" delay={0.2}>
-              <div className="border-2 border-[#00A0E0]/30 h-96 shadow-2xl overflow-hidden neon-border-soft">
+              <div className="border-2 border-[#E01020]/30 h-96 shadow-2xl overflow-hidden neon-border-soft">
                 <img
                   src="/images/about-short.png"
                   alt="About Next Level Audio"
@@ -188,7 +188,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 md:py-32 bg-black text-white relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      <section className="py-20 md:py-32 bg-black text-white relative overflow-hidden border-t-2 border-[#E01020]/30">
         <div className="absolute inset-0 cyber-grid opacity-30"></div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <AnimateOnScroll animation="fade-up">
@@ -197,7 +197,7 @@ export default function Home() {
             </h2>
           </AnimateOnScroll>
           <AnimateOnScroll animation="fade-up" delay={0.15}>
-            <p className="text-xl md:text-2xl text-[#00A0E0] mb-12 max-w-3xl mx-auto leading-relaxed font-mono">
+            <p className="text-xl md:text-2xl text-[#E01020] mb-12 max-w-3xl mx-auto leading-relaxed font-mono">
               Contact us today to discuss how we can help meet your automotive needs!
             </p>
           </AnimateOnScroll>
@@ -205,14 +205,14 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link
                 href="/book-appointment"
-                className="inline-block bg-[#00A0E0]/20 text-[#00A0E0] border-2 border-[#00A0E0] px-10 py-5 font-semibold text-lg hover:bg-[#00A0E0]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
+                className="inline-block bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-10 py-5 font-semibold text-lg hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
                 BOOK APPOINTMENT
               </Link>
               <Link
                 href="/contact"
-                className="inline-block border-2 border-[#00A0E0]/50 bg-black/40 backdrop-blur-sm text-[#00A0E0] px-10 py-5 font-semibold text-lg hover:border-[#00A0E0] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button"
+                className="inline-block border-2 border-[#E01020]/50 bg-black/40 backdrop-blur-sm text-[#E01020] px-10 py-5 font-semibold text-lg hover:border-[#E01020] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button"
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
                 CONTACT US

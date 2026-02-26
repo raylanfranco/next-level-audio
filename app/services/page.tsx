@@ -131,13 +131,13 @@ export default function ServicesPage() {
         <div className="absolute inset-0 cyber-grid opacity-20"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
-            <p className="text-[#00A0E0] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+            <p className="text-[#E01020] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
               WHAT WE OFFER
             </p>
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
               OUR SERVICES
             </h1>
-            <p className="text-[#00A0E0]/80 text-lg md:text-xl max-w-2xl mx-auto font-mono">
+            <p className="text-[#E01020]/80 text-lg md:text-xl max-w-2xl mx-auto font-mono">
               Professional automotive services tailored to your needs. Quality craftsmanship, competitive prices, and customer satisfaction guaranteed.
             </p>
           </div>
@@ -145,49 +145,49 @@ export default function ServicesPage() {
       </section>
 
       {/* Services Grid */}
-      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#E01020]/30">
         <div className="absolute inset-0 cyber-grid opacity-10"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service) => (
               <div
                 key={service.id}
-                className="bg-black border-2 border-[#00A0E0]/30 overflow-hidden hover:border-[#00A0E0] transition-all duration-300 transform hover:-translate-y-2 group neon-border-soft"
+                className="bg-black border-2 border-[#E01020]/30 overflow-hidden hover:border-[#E01020] transition-all duration-300 transform hover:-translate-y-2 group neon-border-soft"
               >
                 {/* Service Image */}
                 {service.image && (
-                  <div className="relative h-48 bg-gradient-to-br from-[#00A0E0]/20 to-black overflow-hidden">
+                  <div className="relative h-48 bg-gradient-to-br from-[#E01020]/20 to-black overflow-hidden">
                     <img
                       src={service.image}
                       alt={service.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
-                    <div className="absolute inset-0 bg-[#00A0E0]/10 group-hover:bg-[#00A0E0]/20 transition-colors"></div>
-                    <div className="absolute inset-0 border-b-2 border-[#00A0E0]/50"></div>
+                    <div className="absolute inset-0 bg-[#E01020]/10 group-hover:bg-[#E01020]/20 transition-colors"></div>
+                    <div className="absolute inset-0 border-b-2 border-[#E01020]/50"></div>
                   </div>
                 )}
                 {/* Service Header */}
-                <div className="p-8 border-b-2 border-[#00A0E0]/30">
-                  <div className="text-[#00A0E0] mb-4 neon-glow-soft">
+                <div className="p-8 border-b-2 border-[#E01020]/30">
+                  <div className="text-[#E01020] mb-4 neon-glow-soft">
                     {service.icon}
                   </div>
-                  <h2 className="text-2xl font-bold text-[#00A0E0] mb-4 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                  <h2 className="text-2xl font-bold text-[#E01020] mb-4 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
                     {service.title}
                   </h2>
-                  <p className="text-[#00A0E0]/70 leading-relaxed font-mono text-sm">
+                  <p className="text-[#E01020]/70 leading-relaxed font-mono text-sm">
                     {service.description}
                   </p>
                 </div>
 
                 {/* Features List */}
                 <div className="p-8">
-                  <h3 className="text-sm font-bold text-[#00A0E0]/60 mb-4 uppercase tracking-wider font-mono">
+                  <h3 className="text-sm font-bold text-[#E01020]/60 mb-4 uppercase tracking-wider font-mono">
                     Features
                   </h3>
                   <ul className="space-y-3">
                     {service.features.map((feature, index) => (
-                      <li key={index} className="flex items-center text-[#00A0E0]/80 font-mono text-sm">
-                        <svg className="w-4 h-4 mr-3 text-[#00A0E0] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <li key={index} className="flex items-center text-[#E01020]/80 font-mono text-sm">
+                        <svg className="w-4 h-4 mr-3 text-[#E01020] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                         {feature}
@@ -205,14 +205,14 @@ export default function ServicesPage() {
       <QuoteCalculator />
 
       {/* Why Choose Us Section */}
-      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#E01020]/30">
         <div className="absolute inset-0 cyber-grid opacity-10"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
               WHY CHOOSE US
             </h2>
-            <p className="text-[#00A0E0]/80 max-w-2xl mx-auto text-lg font-mono">
+            <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
               We&apos;re committed to delivering exceptional quality and service on every project
             </p>
           </div>
@@ -224,14 +224,14 @@ export default function ServicesPage() {
               { title: 'COMPETITIVE PRICING', desc: 'Fair prices without compromising on quality or service' },
               { title: 'WARRANTY BACKED', desc: 'All our work comes with comprehensive warranty coverage' },
             ].map((item, index) => (
-              <div key={index} className="text-center p-8 border-2 border-[#00A0E0]/30 hover:border-[#00A0E0] transition-all duration-300 neon-border-soft">
-                <div className="text-5xl font-bold text-[#00A0E0] mb-4 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <div key={index} className="text-center p-8 border-2 border-[#E01020]/30 hover:border-[#E01020] transition-all duration-300 neon-border-soft">
+                <div className="text-5xl font-bold text-[#E01020] mb-4 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
                   0{index + 1}
                 </div>
-                <h3 className="text-xl font-bold text-[#00A0E0] mb-3 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                <h3 className="text-xl font-bold text-[#E01020] mb-3 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
                   {item.title}
                 </h3>
-                <p className="text-[#00A0E0]/70 font-mono text-sm">
+                <p className="text-[#E01020]/70 font-mono text-sm">
                   {item.desc}
                 </p>
               </div>
@@ -241,26 +241,26 @@ export default function ServicesPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 md:py-32 bg-black text-white relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      <section className="py-20 md:py-32 bg-black text-white relative overflow-hidden border-t-2 border-[#E01020]/30">
         <div className="absolute inset-0 cyber-grid opacity-30"></div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-4xl md:text-7xl font-bold mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
             READY TO UPGRADE?
           </h2>
-          <p className="text-xl md:text-2xl text-[#00A0E0] mb-12 max-w-3xl mx-auto leading-relaxed font-mono">
+          <p className="text-xl md:text-2xl text-[#E01020] mb-12 max-w-3xl mx-auto leading-relaxed font-mono">
             Contact us today for a free consultation and quote on your next project!
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <button
               onClick={openModal}
-              className="inline-block bg-[#00A0E0]/20 text-[#00A0E0] border-2 border-[#00A0E0] px-10 py-5 font-semibold text-lg hover:bg-[#00A0E0]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
+              className="inline-block bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-10 py-5 font-semibold text-lg hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               BOOK APPOINTMENT
             </button>
             <Link
               href="/contact"
-              className="inline-block border-2 border-[#00A0E0]/50 bg-black/40 backdrop-blur-sm text-[#00A0E0] px-10 py-5 font-semibold text-lg hover:border-[#00A0E0] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button"
+              className="inline-block border-2 border-[#E01020]/50 bg-black/40 backdrop-blur-sm text-[#E01020] px-10 py-5 font-semibold text-lg hover:border-[#E01020] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               CONTACT US

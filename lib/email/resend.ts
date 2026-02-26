@@ -32,8 +32,8 @@ export async function sendInquiryNotification(data: InquiryEmailData) {
     subject: `[${typeLabel}] ${data.productName} - ${data.customerName}`,
     html: `
       <div style="font-family: monospace; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #00A0E0;">New ${typeLabel}</h2>
-        <hr style="border-color: #00A0E0;" />
+        <h2 style="color: #E01020;">New ${typeLabel}</h2>
+        <hr style="border-color: #E01020;" />
         <h3>Product</h3>
         <p><strong>${data.productName}</strong> - ${data.productPrice}</p>
         <h3>Customer</h3>
@@ -42,7 +42,7 @@ export async function sendInquiryNotification(data: InquiryEmailData) {
         <p>Phone: <a href="tel:${data.customerPhone}">${data.customerPhone}</a></p>
         <h3>Message</h3>
         <p>${data.message || 'No message provided'}</p>
-        <hr style="border-color: #00A0E0;" />
+        <hr style="border-color: #E01020;" />
         <p style="color: #888;">Sent from Next Level Audio website</p>
       </div>
     `,
@@ -77,15 +77,15 @@ export async function sendContactNotification(data: ContactEmailData) {
     subject: `[Contact Form] ${data.name} - ${data.service || 'General'}`,
     html: `
       <div style="font-family: monospace; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #00A0E0;">New Contact Form Submission</h2>
-        <hr style="border-color: #00A0E0;" />
+        <h2 style="color: #E01020;">New Contact Form Submission</h2>
+        <hr style="border-color: #E01020;" />
         <p><strong>Name:</strong> ${data.name}</p>
         <p><strong>Email:</strong> <a href="mailto:${data.email}">${data.email}</a></p>
         <p><strong>Phone:</strong> ${data.phone || 'Not provided'}</p>
         <p><strong>Service:</strong> ${data.service || 'Not specified'}</p>
         <h3>Message</h3>
         <p>${data.message}</p>
-        <hr style="border-color: #00A0E0;" />
+        <hr style="border-color: #E01020;" />
         <p style="color: #888;">Sent from Next Level Audio website</p>
       </div>
     `,
@@ -122,8 +122,8 @@ export async function sendCareerApplicationNotification(data: CareerApplicationE
     subject: `[Career Application] ${data.positionTitle} - ${data.applicantName}`,
     html: `
       <div style="font-family: monospace; max-width: 600px; margin: 0 auto;">
-        <h2 style="color: #00A0E0;">New Career Application</h2>
-        <hr style="border-color: #00A0E0;" />
+        <h2 style="color: #E01020;">New Career Application</h2>
+        <hr style="border-color: #E01020;" />
         <h3>Position</h3>
         <p><strong>${data.positionTitle}</strong> — ${data.department}</p>
         <h3>Applicant</h3>
@@ -133,7 +133,7 @@ export async function sendCareerApplicationNotification(data: CareerApplicationE
         ${data.resumeUrl ? `<p>Resume: <a href="${data.resumeUrl}">Download Resume</a></p>` : '<p>Resume: Not provided</p>'}
         <h3>Cover Letter</h3>
         <p>${data.coverLetter || 'No cover letter provided'}</p>
-        <hr style="border-color: #00A0E0;" />
+        <hr style="border-color: #E01020;" />
         <p style="color: #888;">Sent from Next Level Audio website</p>
       </div>
     `,

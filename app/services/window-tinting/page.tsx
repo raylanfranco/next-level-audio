@@ -197,7 +197,7 @@ export default function WindowTintingPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <p
-                className="text-[#00A0E0] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft"
+                className="text-[#E01020] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft"
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
                 STROUDSBURG, PA &bull; POCONO REGION
@@ -208,21 +208,21 @@ export default function WindowTintingPage() {
               >
                 PROFESSIONAL WINDOW TINTING
               </h1>
-              <p className="text-[#00A0E0]/80 text-lg md:text-xl max-w-xl font-mono leading-relaxed mb-8">
+              <p className="text-[#E01020]/80 text-lg md:text-xl max-w-xl font-mono leading-relaxed mb-8">
                 Premium ceramic and carbon window films installed by experienced technicians.
                 Protect your interior, reduce heat, and upgrade your vehicle&apos;s look — right here in Stroudsburg.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   href="/contact"
-                  className="inline-block bg-[#00A0E0]/20 text-[#00A0E0] border-2 border-[#00A0E0] px-8 py-4 font-semibold text-base hover:bg-[#00A0E0]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button text-center"
+                  className="inline-block bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-8 py-4 font-semibold text-base hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button text-center"
                   style={{ fontFamily: 'var(--font-oxanium)' }}
                 >
                   GET A FREE QUOTE
                 </Link>
                 <Link
                   href="tel:+15707304433"
-                  className="inline-block border-2 border-[#00A0E0]/50 bg-black/40 text-[#00A0E0] px-8 py-4 font-semibold text-base hover:border-[#00A0E0] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button text-center"
+                  className="inline-block border-2 border-[#E01020]/50 bg-black/40 text-[#E01020] px-8 py-4 font-semibold text-base hover:border-[#E01020] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button text-center"
                   style={{ fontFamily: 'var(--font-oxanium)' }}
                 >
                   CALL (570) 730-4433
@@ -230,7 +230,7 @@ export default function WindowTintingPage() {
               </div>
             </div>
             <div className="relative hidden lg:block">
-              <div className="relative overflow-hidden border-2 border-[#00A0E0]/30 neon-border-soft">
+              <div className="relative overflow-hidden border-2 border-[#E01020]/30 neon-border-soft">
                 <img
                   src="/images/services/window-tints.png"
                   alt="Professional window tinting on a vehicle in Stroudsburg, PA"
@@ -244,7 +244,7 @@ export default function WindowTintingPage() {
       </section>
 
       {/* Benefits Grid */}
-      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#E01020]/30">
         <div className="absolute inset-0 cyber-grid opacity-10"></div>
         <div className="container mx-auto px-4 relative z-10">
           <AnimateOnScroll animation="fade-up">
@@ -255,7 +255,7 @@ export default function WindowTintingPage() {
               >
                 WHY TINT YOUR WINDOWS?
               </h2>
-              <p className="text-[#00A0E0]/80 max-w-2xl mx-auto text-lg font-mono">
+              <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
                 More than just aesthetics — professional window tinting protects you, your passengers, and your vehicle
               </p>
             </div>
@@ -264,23 +264,23 @@ export default function WindowTintingPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {benefits.map((benefit, index) => (
               <AnimateOnScroll key={benefit.title} animation="fade-up" delay={index * 0.1}>
-                <div className="bg-black border-2 border-[#00A0E0]/30 p-8 hover:border-[#00A0E0] transition-all duration-300 transform hover:-translate-y-2 neon-border-soft h-full">
-                  <div className="text-[#00A0E0] mb-4 neon-glow-soft">
+                <div className="bg-black border-2 border-[#E01020]/30 p-8 hover:border-[#E01020] transition-all duration-300 transform hover:-translate-y-2 neon-border-soft h-full">
+                  <div className="text-[#E01020] mb-4 neon-glow-soft">
                     {benefit.icon}
                   </div>
                   <div
-                    className="text-3xl font-bold text-[#00A0E0] mb-2 neon-glow"
+                    className="text-3xl font-bold text-[#E01020] mb-2 neon-glow"
                     style={{ fontFamily: 'var(--font-oxanium)' }}
                   >
                     {benefit.stat}
                   </div>
                   <h3
-                    className="text-lg font-bold text-[#00A0E0] mb-3 neon-glow-soft"
+                    className="text-lg font-bold text-[#E01020] mb-3 neon-glow-soft"
                     style={{ fontFamily: 'var(--font-oxanium)' }}
                   >
                     {benefit.title}
                   </h3>
-                  <p className="text-[#00A0E0]/70 font-mono text-sm leading-relaxed">
+                  <p className="text-[#E01020]/70 font-mono text-sm leading-relaxed">
                     {benefit.description}
                   </p>
                 </div>
@@ -291,7 +291,7 @@ export default function WindowTintingPage() {
       </section>
 
       {/* Film Types */}
-      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#E01020]/30">
         <div className="absolute inset-0 cyber-grid opacity-10"></div>
         <div className="container mx-auto px-4 relative z-10">
           <AnimateOnScroll animation="fade-up">
@@ -302,7 +302,7 @@ export default function WindowTintingPage() {
               >
                 FILM OPTIONS
               </h2>
-              <p className="text-[#00A0E0]/80 max-w-2xl mx-auto text-lg font-mono">
+              <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
                 We carry multiple tiers of window film to match every budget and performance need
               </p>
             </div>
@@ -311,11 +311,11 @@ export default function WindowTintingPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {filmTypes.map((film, index) => (
               <AnimateOnScroll key={film.name} animation="fade-up" delay={index * 0.15}>
-                <div className={`bg-black border-2 ${index === 0 ? 'border-[#00A0E0]' : 'border-[#00A0E0]/30'} overflow-hidden hover:border-[#00A0E0] transition-all duration-300 transform hover:-translate-y-2 neon-border-soft h-full flex flex-col`}>
+                <div className={`bg-black border-2 ${index === 0 ? 'border-[#E01020]' : 'border-[#E01020]/30'} overflow-hidden hover:border-[#E01020] transition-all duration-300 transform hover:-translate-y-2 neon-border-soft h-full flex flex-col`}>
                   {/* Tier badge */}
-                  <div className={`px-6 py-3 ${index === 0 ? 'bg-[#00A0E0]/20' : 'bg-[#00A0E0]/5'} border-b-2 border-[#00A0E0]/30`}>
+                  <div className={`px-6 py-3 ${index === 0 ? 'bg-[#E01020]/20' : 'bg-[#E01020]/5'} border-b-2 border-[#E01020]/30`}>
                     <span
-                      className="text-xs font-bold text-[#00A0E0] tracking-widest"
+                      className="text-xs font-bold text-[#E01020] tracking-widest"
                       style={{ fontFamily: 'var(--font-oxanium)' }}
                     >
                       {film.tier}
@@ -324,36 +324,36 @@ export default function WindowTintingPage() {
 
                   <div className="p-8 flex-1 flex flex-col">
                     <h3
-                      className="text-2xl font-bold text-[#00A0E0] mb-4 neon-glow-soft"
+                      className="text-2xl font-bold text-[#E01020] mb-4 neon-glow-soft"
                       style={{ fontFamily: 'var(--font-oxanium)' }}
                     >
                       {film.name}
                     </h3>
-                    <p className="text-[#00A0E0]/70 font-mono text-sm leading-relaxed mb-6">
+                    <p className="text-[#E01020]/70 font-mono text-sm leading-relaxed mb-6">
                       {film.description}
                     </p>
 
                     {/* Specs */}
                     <div className="space-y-3 mb-6">
-                      <div className="flex justify-between items-center border-b border-[#00A0E0]/10 pb-2">
-                        <span className="text-[#00A0E0]/60 font-mono text-xs uppercase tracking-wider">Heat Rejection</span>
-                        <span className="text-[#00A0E0] font-mono text-sm font-bold">{film.heatRejection}</span>
+                      <div className="flex justify-between items-center border-b border-[#E01020]/10 pb-2">
+                        <span className="text-[#E01020]/60 font-mono text-xs uppercase tracking-wider">Heat Rejection</span>
+                        <span className="text-[#E01020] font-mono text-sm font-bold">{film.heatRejection}</span>
                       </div>
-                      <div className="flex justify-between items-center border-b border-[#00A0E0]/10 pb-2">
-                        <span className="text-[#00A0E0]/60 font-mono text-xs uppercase tracking-wider">UV Block</span>
-                        <span className="text-[#00A0E0] font-mono text-sm font-bold">{film.uvBlock}</span>
+                      <div className="flex justify-between items-center border-b border-[#E01020]/10 pb-2">
+                        <span className="text-[#E01020]/60 font-mono text-xs uppercase tracking-wider">UV Block</span>
+                        <span className="text-[#E01020] font-mono text-sm font-bold">{film.uvBlock}</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-[#00A0E0]/60 font-mono text-xs uppercase tracking-wider">Warranty</span>
-                        <span className="text-[#00A0E0] font-mono text-sm font-bold">{film.warranty}</span>
+                        <span className="text-[#E01020]/60 font-mono text-xs uppercase tracking-wider">Warranty</span>
+                        <span className="text-[#E01020] font-mono text-sm font-bold">{film.warranty}</span>
                       </div>
                     </div>
 
                     {/* Features */}
                     <ul className="space-y-2 mt-auto">
                       {film.features.map((feature) => (
-                        <li key={feature} className="flex items-center text-[#00A0E0]/80 font-mono text-sm">
-                          <svg className="w-4 h-4 mr-2 text-[#00A0E0] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <li key={feature} className="flex items-center text-[#E01020]/80 font-mono text-sm">
+                          <svg className="w-4 h-4 mr-2 text-[#E01020] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                           </svg>
                           {feature}
@@ -369,13 +369,13 @@ export default function WindowTintingPage() {
       </section>
 
       {/* PA Tint Laws */}
-      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#E01020]/30">
         <div className="container mx-auto px-4 relative z-10">
           <AnimateOnScroll animation="fade-up">
             <div className="max-w-4xl mx-auto">
-              <div className="bg-black border-2 border-[#00A0E0]/50 p-8 md:p-12 neon-border-soft">
+              <div className="bg-black border-2 border-[#E01020]/50 p-8 md:p-12 neon-border-soft">
                 <div className="flex items-start gap-4 mb-6">
-                  <div className="text-[#00A0E0] shrink-0 mt-1">
+                  <div className="text-[#E01020] shrink-0 mt-1">
                     <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -387,68 +387,68 @@ export default function WindowTintingPage() {
                     >
                       PENNSYLVANIA TINT LAWS
                     </h2>
-                    <p className="text-[#00A0E0]/60 font-mono text-sm">
+                    <p className="text-[#E01020]/60 font-mono text-sm">
                       Know the rules before you tint — we&apos;ll help you stay legal
                     </p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                  <div className="border border-[#00A0E0]/20 p-6">
+                  <div className="border border-[#E01020]/20 p-6">
                     <h3
-                      className="text-[#00A0E0] font-bold mb-3 tracking-wider"
+                      className="text-[#E01020] font-bold mb-3 tracking-wider"
                       style={{ fontFamily: 'var(--font-oxanium)' }}
                     >
                       SEDANS
                     </h3>
-                    <ul className="space-y-2 text-[#00A0E0]/80 font-mono text-sm">
+                    <ul className="space-y-2 text-[#E01020]/80 font-mono text-sm">
                       <li className="flex items-start gap-2">
-                        <span className="text-[#00A0E0] shrink-0">&#9656;</span>
+                        <span className="text-[#E01020] shrink-0">&#9656;</span>
                         <span>Windshield: Non-reflective tint on top 3 inches</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-[#00A0E0] shrink-0">&#9656;</span>
+                        <span className="text-[#E01020] shrink-0">&#9656;</span>
                         <span>Front sides: Must allow 70% VLT (visible light transmission)</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-[#00A0E0] shrink-0">&#9656;</span>
+                        <span className="text-[#E01020] shrink-0">&#9656;</span>
                         <span>Rear sides: Must allow 70% VLT</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-[#00A0E0] shrink-0">&#9656;</span>
+                        <span className="text-[#E01020] shrink-0">&#9656;</span>
                         <span>Back windshield: Must allow 70% VLT</span>
                       </li>
                     </ul>
                   </div>
-                  <div className="border border-[#00A0E0]/20 p-6">
+                  <div className="border border-[#E01020]/20 p-6">
                     <h3
-                      className="text-[#00A0E0] font-bold mb-3 tracking-wider"
+                      className="text-[#E01020] font-bold mb-3 tracking-wider"
                       style={{ fontFamily: 'var(--font-oxanium)' }}
                     >
                       SUVs, VANS & TRUCKS
                     </h3>
-                    <ul className="space-y-2 text-[#00A0E0]/80 font-mono text-sm">
+                    <ul className="space-y-2 text-[#E01020]/80 font-mono text-sm">
                       <li className="flex items-start gap-2">
-                        <span className="text-[#00A0E0] shrink-0">&#9656;</span>
+                        <span className="text-[#E01020] shrink-0">&#9656;</span>
                         <span>Windshield: Non-reflective tint on top 3 inches</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-[#00A0E0] shrink-0">&#9656;</span>
+                        <span className="text-[#E01020] shrink-0">&#9656;</span>
                         <span>Front sides: Must allow 70% VLT</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-[#00A0E0] shrink-0">&#9656;</span>
+                        <span className="text-[#E01020] shrink-0">&#9656;</span>
                         <span>Rear sides: Any darkness permitted</span>
                       </li>
                       <li className="flex items-start gap-2">
-                        <span className="text-[#00A0E0] shrink-0">&#9656;</span>
+                        <span className="text-[#E01020] shrink-0">&#9656;</span>
                         <span>Back windshield: Any darkness permitted</span>
                       </li>
                     </ul>
                   </div>
                 </div>
 
-                <p className="text-[#00A0E0]/50 font-mono text-xs">
+                <p className="text-[#E01020]/50 font-mono text-xs">
                   Medical exemptions are available for certain conditions. We&apos;ll help you navigate the regulations and choose the right tint level for your vehicle type. Not sure what&apos;s legal? Give us a call.
                 </p>
               </div>
@@ -458,7 +458,7 @@ export default function WindowTintingPage() {
       </section>
 
       {/* Service Area */}
-      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#E01020]/30">
         <div className="absolute inset-0 cyber-grid opacity-10"></div>
         <div className="container mx-auto px-4 relative z-10">
           <AnimateOnScroll animation="fade-up">
@@ -469,7 +469,7 @@ export default function WindowTintingPage() {
               >
                 SERVING THE POCONO REGION
               </h2>
-              <p className="text-[#00A0E0]/80 text-lg font-mono leading-relaxed mb-8">
+              <p className="text-[#E01020]/80 text-lg font-mono leading-relaxed mb-8">
                 Next Level Audio is proud to serve Stroudsburg and the surrounding Pocono Mountain communities with professional window tinting services. Our shop is conveniently located and easily accessible from throughout Monroe County and beyond.
               </p>
               <div className="flex flex-wrap justify-center gap-3">
@@ -489,7 +489,7 @@ export default function WindowTintingPage() {
                 ].map((area) => (
                   <span
                     key={area}
-                    className="px-4 py-2 border border-[#00A0E0]/30 text-[#00A0E0]/80 font-mono text-sm hover:border-[#00A0E0] hover:text-[#00A0E0] transition-colors"
+                    className="px-4 py-2 border border-[#E01020]/30 text-[#E01020]/80 font-mono text-sm hover:border-[#E01020] hover:text-[#E01020] transition-colors"
                   >
                     {area}
                   </span>
@@ -501,7 +501,7 @@ export default function WindowTintingPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#E01020]/30">
         <div className="container mx-auto px-4 relative z-10">
           <AnimateOnScroll animation="fade-up">
             <div className="text-center mb-16">
@@ -511,7 +511,7 @@ export default function WindowTintingPage() {
               >
                 FREQUENTLY ASKED QUESTIONS
               </h2>
-              <p className="text-[#00A0E0]/80 max-w-2xl mx-auto text-lg font-mono">
+              <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
                 Everything you need to know about window tinting
               </p>
             </div>
@@ -520,16 +520,16 @@ export default function WindowTintingPage() {
           <div className="max-w-3xl mx-auto space-y-4">
             {faqs.map((faq, index) => (
               <AnimateOnScroll key={index} animation="fade-up" delay={index * 0.08}>
-                <details className="group border-2 border-[#00A0E0]/30 hover:border-[#00A0E0]/60 transition-colors bg-black">
+                <details className="group border-2 border-[#E01020]/30 hover:border-[#E01020]/60 transition-colors bg-black">
                   <summary
                     className="flex items-center justify-between px-6 py-5 cursor-pointer list-none"
                     style={{ fontFamily: 'var(--font-oxanium)' }}
                   >
-                    <span className="text-[#00A0E0] font-bold tracking-wide text-sm md:text-base pr-4">
+                    <span className="text-[#E01020] font-bold tracking-wide text-sm md:text-base pr-4">
                       {faq.question}
                     </span>
                     <svg
-                      className="w-5 h-5 text-[#00A0E0]/60 shrink-0 transition-transform group-open:rotate-180"
+                      className="w-5 h-5 text-[#E01020]/60 shrink-0 transition-transform group-open:rotate-180"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -537,8 +537,8 @@ export default function WindowTintingPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </summary>
-                  <div className="px-6 pb-6 border-t border-[#00A0E0]/10 pt-4">
-                    <p className="text-[#00A0E0]/70 font-mono text-sm leading-relaxed">
+                  <div className="px-6 pb-6 border-t border-[#E01020]/10 pt-4">
+                    <p className="text-[#E01020]/70 font-mono text-sm leading-relaxed">
                       {faq.answer}
                     </p>
                   </div>
@@ -550,7 +550,7 @@ export default function WindowTintingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 md:py-32 bg-black text-white relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      <section className="py-20 md:py-32 bg-black text-white relative overflow-hidden border-t-2 border-[#E01020]/30">
         <div className="absolute inset-0 cyber-grid opacity-30"></div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <AnimateOnScroll animation="scale-up">
@@ -560,20 +560,20 @@ export default function WindowTintingPage() {
             >
               READY TO TINT?
             </h2>
-            <p className="text-xl md:text-2xl text-[#00A0E0] mb-12 max-w-3xl mx-auto leading-relaxed font-mono">
+            <p className="text-xl md:text-2xl text-[#E01020] mb-12 max-w-3xl mx-auto leading-relaxed font-mono">
               Contact us today for a free quote on professional window tinting in Stroudsburg, PA.
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link
                 href="/contact"
-                className="inline-block bg-[#00A0E0]/20 text-[#00A0E0] border-2 border-[#00A0E0] px-10 py-5 font-semibold text-lg hover:bg-[#00A0E0]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
+                className="inline-block bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-10 py-5 font-semibold text-lg hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
                 GET A FREE QUOTE
               </Link>
               <Link
                 href="tel:+15707304433"
-                className="inline-block border-2 border-[#00A0E0]/50 bg-black/40 backdrop-blur-sm text-[#00A0E0] px-10 py-5 font-semibold text-lg hover:border-[#00A0E0] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button"
+                className="inline-block border-2 border-[#E01020]/50 bg-black/40 backdrop-blur-sm text-[#E01020] px-10 py-5 font-semibold text-lg hover:border-[#E01020] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button"
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
                 CALL (570) 730-4433

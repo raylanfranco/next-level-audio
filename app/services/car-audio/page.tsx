@@ -226,7 +226,7 @@ export default function CarAudioPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <p
-                className="text-[#00A0E0] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft"
+                className="text-[#E01020] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft"
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
                 STROUDSBURG, PA &bull; POCONO REGION
@@ -237,20 +237,20 @@ export default function CarAudioPage() {
               >
                 CUSTOM CAR AUDIO INSTALLATION
               </h1>
-              <p className="text-[#00A0E0]/80 text-lg md:text-xl max-w-xl font-mono leading-relaxed mb-8">
+              <p className="text-[#E01020]/80 text-lg md:text-xl max-w-xl font-mono leading-relaxed mb-8">
                 From basic speaker upgrades to full custom builds, our experienced technicians deliver premium sound tailored to your vehicle and your budget.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   href="/contact"
-                  className="inline-block bg-[#00A0E0]/20 text-[#00A0E0] border-2 border-[#00A0E0] px-8 py-4 font-semibold text-base hover:bg-[#00A0E0]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button text-center"
+                  className="inline-block bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-8 py-4 font-semibold text-base hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button text-center"
                   style={{ fontFamily: 'var(--font-oxanium)' }}
                 >
                   GET A FREE QUOTE
                 </Link>
                 <Link
                   href="tel:+15707304433"
-                  className="inline-block border-2 border-[#00A0E0]/50 bg-black/40 text-[#00A0E0] px-8 py-4 font-semibold text-base hover:border-[#00A0E0] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button text-center"
+                  className="inline-block border-2 border-[#E01020]/50 bg-black/40 text-[#E01020] px-8 py-4 font-semibold text-base hover:border-[#E01020] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button text-center"
                   style={{ fontFamily: 'var(--font-oxanium)' }}
                 >
                   CALL (570) 730-4433
@@ -258,7 +258,7 @@ export default function CarAudioPage() {
               </div>
             </div>
             <div className="relative hidden lg:block">
-              <div className="relative overflow-hidden border-2 border-[#00A0E0]/30 neon-border-soft">
+              <div className="relative overflow-hidden border-2 border-[#E01020]/30 neon-border-soft">
                 <img
                   src="/images/services/car-audio.png"
                   alt="Custom car audio installation in Stroudsburg, PA"
@@ -272,7 +272,7 @@ export default function CarAudioPage() {
       </section>
 
       {/* Services Breakdown */}
-      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#E01020]/30">
         <div className="absolute inset-0 cyber-grid opacity-10"></div>
         <div className="container mx-auto px-4 relative z-10">
           <AnimateOnScroll animation="fade-up">
@@ -283,7 +283,7 @@ export default function CarAudioPage() {
               >
                 WHAT WE INSTALL
               </h2>
-              <p className="text-[#00A0E0]/80 max-w-2xl mx-auto text-lg font-mono">
+              <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
                 A full range of car audio services — from simple upgrades to complete custom builds
               </p>
             </div>
@@ -292,17 +292,17 @@ export default function CarAudioPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, index) => (
               <AnimateOnScroll key={service.title} animation="fade-up" delay={index * 0.1}>
-                <div className="bg-black border-2 border-[#00A0E0]/30 p-8 hover:border-[#00A0E0] transition-all duration-300 transform hover:-translate-y-2 neon-border-soft h-full">
-                  <div className="text-[#00A0E0] mb-4 neon-glow-soft">
+                <div className="bg-black border-2 border-[#E01020]/30 p-8 hover:border-[#E01020] transition-all duration-300 transform hover:-translate-y-2 neon-border-soft h-full">
+                  <div className="text-[#E01020] mb-4 neon-glow-soft">
                     {service.icon}
                   </div>
                   <h3
-                    className="text-xl font-bold text-[#00A0E0] mb-3 neon-glow-soft"
+                    className="text-xl font-bold text-[#E01020] mb-3 neon-glow-soft"
                     style={{ fontFamily: 'var(--font-oxanium)' }}
                   >
                     {service.title}
                   </h3>
-                  <p className="text-[#00A0E0]/70 font-mono text-sm leading-relaxed">
+                  <p className="text-[#E01020]/70 font-mono text-sm leading-relaxed">
                     {service.description}
                   </p>
                 </div>
@@ -313,7 +313,7 @@ export default function CarAudioPage() {
       </section>
 
       {/* Brands Section */}
-      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#E01020]/30">
         <div className="container mx-auto px-4 relative z-10">
           <AnimateOnScroll animation="fade-up">
             <div className="text-center mb-16">
@@ -323,7 +323,7 @@ export default function CarAudioPage() {
               >
                 BRANDS WE TRUST
               </h2>
-              <p className="text-[#00A0E0]/80 max-w-2xl mx-auto text-lg font-mono">
+              <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
                 We only install products from brands known for quality, reliability, and performance
               </p>
             </div>
@@ -332,7 +332,7 @@ export default function CarAudioPage() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 max-w-5xl mx-auto">
             {brands.map((brand, index) => (
               <AnimateOnScroll key={brand.name} animation="scale-up" delay={index * 0.05}>
-                <div className="bg-black border-2 border-[#00A0E0]/30 p-4 flex items-center justify-center hover:border-[#00A0E0] hover:bg-[#00A0E0]/5 transition-all duration-300 neon-border-soft aspect-[3/2]">
+                <div className="bg-black border-2 border-[#E01020]/30 p-4 flex items-center justify-center hover:border-[#E01020] hover:bg-[#E01020]/5 transition-all duration-300 neon-border-soft aspect-[3/2]">
                   <img
                     src={brand.image}
                     alt={brand.name}
@@ -347,7 +347,7 @@ export default function CarAudioPage() {
       </section>
 
       {/* Why Professional Installation */}
-      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#E01020]/30">
         <div className="absolute inset-0 cyber-grid opacity-10"></div>
         <div className="container mx-auto px-4 relative z-10">
           <AnimateOnScroll animation="fade-up">
@@ -358,7 +358,7 @@ export default function CarAudioPage() {
               >
                 WHY PROFESSIONAL INSTALLATION?
               </h2>
-              <p className="text-[#00A0E0]/80 max-w-2xl mx-auto text-lg font-mono">
+              <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
                 Don&apos;t risk your vehicle or your investment with a DIY job
               </p>
             </div>
@@ -367,17 +367,17 @@ export default function CarAudioPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {whyPro.map((item, index) => (
               <AnimateOnScroll key={item.title} animation="fade-up" delay={index * 0.15}>
-                <div className="text-center p-8 border-2 border-[#00A0E0]/30 hover:border-[#00A0E0] transition-all duration-300 neon-border-soft h-full">
-                  <div className="text-[#00A0E0] mb-4 flex justify-center neon-glow-soft">
+                <div className="text-center p-8 border-2 border-[#E01020]/30 hover:border-[#E01020] transition-all duration-300 neon-border-soft h-full">
+                  <div className="text-[#E01020] mb-4 flex justify-center neon-glow-soft">
                     {item.icon}
                   </div>
                   <h3
-                    className="text-xl font-bold text-[#00A0E0] mb-4 neon-glow-soft"
+                    className="text-xl font-bold text-[#E01020] mb-4 neon-glow-soft"
                     style={{ fontFamily: 'var(--font-oxanium)' }}
                   >
                     {item.title}
                   </h3>
-                  <p className="text-[#00A0E0]/70 font-mono text-sm leading-relaxed">
+                  <p className="text-[#E01020]/70 font-mono text-sm leading-relaxed">
                     {item.description}
                   </p>
                 </div>
@@ -388,7 +388,7 @@ export default function CarAudioPage() {
       </section>
 
       {/* Service Area */}
-      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#E01020]/30">
         <div className="absolute inset-0 cyber-grid opacity-10"></div>
         <div className="container mx-auto px-4 relative z-10">
           <AnimateOnScroll animation="fade-up">
@@ -399,7 +399,7 @@ export default function CarAudioPage() {
               >
                 SERVING THE POCONO REGION
               </h2>
-              <p className="text-[#00A0E0]/80 text-lg font-mono leading-relaxed mb-8">
+              <p className="text-[#E01020]/80 text-lg font-mono leading-relaxed mb-8">
                 Next Level Audio is the Pocono region&apos;s go-to shop for professional car audio installation. Whether you&apos;re upgrading a daily driver or building a competition system, we&apos;ve got you covered. Located in Stroudsburg, PA and serving all of Monroe County and beyond.
               </p>
               <div className="flex flex-wrap justify-center gap-3">
@@ -419,7 +419,7 @@ export default function CarAudioPage() {
                 ].map((area) => (
                   <span
                     key={area}
-                    className="px-4 py-2 border border-[#00A0E0]/30 text-[#00A0E0]/80 font-mono text-sm hover:border-[#00A0E0] hover:text-[#00A0E0] transition-colors"
+                    className="px-4 py-2 border border-[#E01020]/30 text-[#E01020]/80 font-mono text-sm hover:border-[#E01020] hover:text-[#E01020] transition-colors"
                   >
                     {area}
                   </span>
@@ -431,7 +431,7 @@ export default function CarAudioPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#E01020]/30">
         <div className="container mx-auto px-4 relative z-10">
           <AnimateOnScroll animation="fade-up">
             <div className="text-center mb-16">
@@ -441,7 +441,7 @@ export default function CarAudioPage() {
               >
                 FREQUENTLY ASKED QUESTIONS
               </h2>
-              <p className="text-[#00A0E0]/80 max-w-2xl mx-auto text-lg font-mono">
+              <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
                 Common questions about car audio installation
               </p>
             </div>
@@ -450,16 +450,16 @@ export default function CarAudioPage() {
           <div className="max-w-3xl mx-auto space-y-4">
             {faqs.map((faq, index) => (
               <AnimateOnScroll key={index} animation="fade-up" delay={index * 0.08}>
-                <details className="group border-2 border-[#00A0E0]/30 hover:border-[#00A0E0]/60 transition-colors bg-black">
+                <details className="group border-2 border-[#E01020]/30 hover:border-[#E01020]/60 transition-colors bg-black">
                   <summary
                     className="flex items-center justify-between px-6 py-5 cursor-pointer list-none"
                     style={{ fontFamily: 'var(--font-oxanium)' }}
                   >
-                    <span className="text-[#00A0E0] font-bold tracking-wide text-sm md:text-base pr-4">
+                    <span className="text-[#E01020] font-bold tracking-wide text-sm md:text-base pr-4">
                       {faq.question}
                     </span>
                     <svg
-                      className="w-5 h-5 text-[#00A0E0]/60 shrink-0 transition-transform group-open:rotate-180"
+                      className="w-5 h-5 text-[#E01020]/60 shrink-0 transition-transform group-open:rotate-180"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -467,8 +467,8 @@ export default function CarAudioPage() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </summary>
-                  <div className="px-6 pb-6 border-t border-[#00A0E0]/10 pt-4">
-                    <p className="text-[#00A0E0]/70 font-mono text-sm leading-relaxed">
+                  <div className="px-6 pb-6 border-t border-[#E01020]/10 pt-4">
+                    <p className="text-[#E01020]/70 font-mono text-sm leading-relaxed">
                       {faq.answer}
                     </p>
                   </div>
@@ -480,7 +480,7 @@ export default function CarAudioPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 md:py-32 bg-black text-white relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      <section className="py-20 md:py-32 bg-black text-white relative overflow-hidden border-t-2 border-[#E01020]/30">
         <div className="absolute inset-0 cyber-grid opacity-30"></div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <AnimateOnScroll animation="scale-up">
@@ -490,20 +490,20 @@ export default function CarAudioPage() {
             >
               UPGRADE YOUR SOUND
             </h2>
-            <p className="text-xl md:text-2xl text-[#00A0E0] mb-12 max-w-3xl mx-auto leading-relaxed font-mono">
+            <p className="text-xl md:text-2xl text-[#E01020] mb-12 max-w-3xl mx-auto leading-relaxed font-mono">
               Ready for premium car audio? Contact us for a free consultation and quote.
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link
                 href="/contact"
-                className="inline-block bg-[#00A0E0]/20 text-[#00A0E0] border-2 border-[#00A0E0] px-10 py-5 font-semibold text-lg hover:bg-[#00A0E0]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
+                className="inline-block bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-10 py-5 font-semibold text-lg hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
                 GET A FREE QUOTE
               </Link>
               <Link
                 href="tel:+15707304433"
-                className="inline-block border-2 border-[#00A0E0]/50 bg-black/40 backdrop-blur-sm text-[#00A0E0] px-10 py-5 font-semibold text-lg hover:border-[#00A0E0] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button"
+                className="inline-block border-2 border-[#E01020]/50 bg-black/40 backdrop-blur-sm text-[#E01020] px-10 py-5 font-semibold text-lg hover:border-[#E01020] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button"
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
                 CALL (570) 730-4433

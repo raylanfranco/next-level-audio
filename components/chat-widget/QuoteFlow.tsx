@@ -56,10 +56,10 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
             <div
               className={`w-6 h-6 flex items-center justify-center text-xs font-bold ${
                 step === s
-                  ? 'bg-[#00A0E0] text-black'
+                  ? 'bg-[#E01020] text-black'
                   : i < ['select-service', 'vehicle-info', 'customer-info'].indexOf(step)
-                    ? 'bg-[#00A0E0]/30 text-[#00A0E0]'
-                    : 'bg-[#00A0E0]/10 text-[#00A0E0]/40'
+                    ? 'bg-[#E01020]/30 text-[#E01020]'
+                    : 'bg-[#E01020]/10 text-[#E01020]/40'
               }`}
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
@@ -68,8 +68,8 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
             {i < 2 && (
               <div className={`w-6 h-px ${
                 i < ['select-service', 'vehicle-info', 'customer-info'].indexOf(step)
-                  ? 'bg-[#00A0E0]/30'
-                  : 'bg-[#00A0E0]/10'
+                  ? 'bg-[#E01020]/30'
+                  : 'bg-[#E01020]/10'
               }`} />
             )}
           </div>
@@ -77,7 +77,7 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
       </div>
 
       <p
-        className="text-[#00A0E0]/70 text-sm mb-4"
+        className="text-[#E01020]/70 text-sm mb-4"
         style={{ fontFamily: 'var(--font-geist-mono)' }}
       >
         {stepTitle}
@@ -93,8 +93,8 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
                 onClick={() => setForm({ ...form, service: s.label })}
                 className={`w-full text-left px-3 py-2.5 text-sm border transition-all cursor-pointer ${
                   form.service === s.label
-                    ? 'border-[#00A0E0] bg-[#00A0E0]/15 text-[#00A0E0]'
-                    : 'border-[#00A0E0]/15 bg-[#0a0a0a] text-[#00A0E0]/70 hover:border-[#00A0E0]/40'
+                    ? 'border-[#E01020] bg-[#E01020]/15 text-[#E01020]'
+                    : 'border-[#E01020]/15 bg-[#0a0a0a] text-[#E01020]/70 hover:border-[#E01020]/40'
                 }`}
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
@@ -105,7 +105,7 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
           <button
             onClick={() => setStep('vehicle-info')}
             disabled={!form.service}
-            className="mt-4 w-full py-2.5 bg-[#00A0E0] text-black text-sm font-bold tracking-wider disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#00A0E0]/90 transition-colors cursor-pointer"
+            className="mt-4 w-full py-2.5 bg-[#E01020] text-black text-sm font-bold tracking-wider disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#E01020]/90 transition-colors cursor-pointer"
             style={{ fontFamily: 'var(--font-oxanium)' }}
           >
             NEXT
@@ -118,13 +118,13 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
         <div className="flex-1 flex flex-col">
           <div className="space-y-3 flex-1">
             <div>
-              <label className="block text-[10px] text-[#00A0E0]/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <label className="block text-[10px] text-[#E01020]/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
                 Year
               </label>
               <select
                 value={form.vehicleYear}
                 onChange={(e) => setForm({ ...form, vehicleYear: e.target.value })}
-                className="w-full bg-black border border-[#00A0E0]/30 px-3 py-2 text-sm text-[#00A0E0] font-mono focus:outline-none focus:border-[#00A0E0]"
+                className="w-full bg-black border border-[#E01020]/30 px-3 py-2 text-sm text-[#E01020] font-mono focus:outline-none focus:border-[#E01020]"
               >
                 <option value="">Select year</option>
                 {YEARS.map((y) => (
@@ -133,29 +133,29 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
               </select>
             </div>
             <div>
-              <label className="block text-[10px] text-[#00A0E0]/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <label className="block text-[10px] text-[#E01020]/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
                 Make
               </label>
               <input
                 value={form.vehicleMake}
                 onChange={(e) => setForm({ ...form, vehicleMake: e.target.value })}
                 placeholder="e.g. Honda"
-                className="w-full bg-black border border-[#00A0E0]/30 px-3 py-2 text-sm text-[#00A0E0] font-mono placeholder:text-[#00A0E0]/20 focus:outline-none focus:border-[#00A0E0]"
+                className="w-full bg-black border border-[#E01020]/30 px-3 py-2 text-sm text-[#E01020] font-mono placeholder:text-[#E01020]/20 focus:outline-none focus:border-[#E01020]"
               />
             </div>
             <div>
-              <label className="block text-[10px] text-[#00A0E0]/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <label className="block text-[10px] text-[#E01020]/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
                 Model
               </label>
               <input
                 value={form.vehicleModel}
                 onChange={(e) => setForm({ ...form, vehicleModel: e.target.value })}
                 placeholder="e.g. Civic"
-                className="w-full bg-black border border-[#00A0E0]/30 px-3 py-2 text-sm text-[#00A0E0] font-mono placeholder:text-[#00A0E0]/20 focus:outline-none focus:border-[#00A0E0]"
+                className="w-full bg-black border border-[#E01020]/30 px-3 py-2 text-sm text-[#E01020] font-mono placeholder:text-[#E01020]/20 focus:outline-none focus:border-[#E01020]"
               />
             </div>
             <div>
-              <label className="block text-[10px] text-[#00A0E0]/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <label className="block text-[10px] text-[#E01020]/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
                 Notes (optional)
               </label>
               <textarea
@@ -163,21 +163,21 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
                 onChange={(e) => setForm({ ...form, vehicleNotes: e.target.value })}
                 placeholder="Any details about what you're looking for..."
                 rows={2}
-                className="w-full bg-black border border-[#00A0E0]/30 px-3 py-2 text-sm text-[#00A0E0] font-mono placeholder:text-[#00A0E0]/20 focus:outline-none focus:border-[#00A0E0] resize-none"
+                className="w-full bg-black border border-[#E01020]/30 px-3 py-2 text-sm text-[#E01020] font-mono placeholder:text-[#E01020]/20 focus:outline-none focus:border-[#E01020] resize-none"
               />
             </div>
           </div>
           <div className="flex gap-2 mt-4">
             <button
               onClick={handleBack}
-              className="flex-1 py-2.5 border border-[#00A0E0]/30 text-[#00A0E0]/60 text-sm tracking-wider hover:border-[#00A0E0]/60 hover:text-[#00A0E0] transition-colors cursor-pointer"
+              className="flex-1 py-2.5 border border-[#E01020]/30 text-[#E01020]/60 text-sm tracking-wider hover:border-[#E01020]/60 hover:text-[#E01020] transition-colors cursor-pointer"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               BACK
             </button>
             <button
               onClick={() => setStep('customer-info')}
-              className="flex-1 py-2.5 bg-[#00A0E0] text-black text-sm font-bold tracking-wider hover:bg-[#00A0E0]/90 transition-colors cursor-pointer"
+              className="flex-1 py-2.5 bg-[#E01020] text-black text-sm font-bold tracking-wider hover:bg-[#E01020]/90 transition-colors cursor-pointer"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               NEXT
@@ -190,8 +190,8 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
       {step === 'customer-info' && (
         <div className="flex-1 flex flex-col">
           {/* Summary */}
-          <div className="border border-[#00A0E0]/15 bg-[#00A0E0]/5 px-3 py-2 mb-4 text-xs font-mono text-[#00A0E0]/60">
-            <span className="text-[#00A0E0]">{form.service}</span>
+          <div className="border border-[#E01020]/15 bg-[#E01020]/5 px-3 py-2 mb-4 text-xs font-mono text-[#E01020]/60">
+            <span className="text-[#E01020]">{form.service}</span>
             {form.vehicleYear && (
               <span> &mdash; {[form.vehicleYear, form.vehicleMake, form.vehicleModel].filter(Boolean).join(' ')}</span>
             )}
@@ -199,18 +199,18 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
 
           <div className="space-y-3 flex-1">
             <div>
-              <label className="block text-[10px] text-[#00A0E0]/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <label className="block text-[10px] text-[#E01020]/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
                 Name *
               </label>
               <input
                 value={form.customerName}
                 onChange={(e) => setForm({ ...form, customerName: e.target.value })}
                 placeholder="Your name"
-                className="w-full bg-black border border-[#00A0E0]/30 px-3 py-2 text-sm text-[#00A0E0] font-mono placeholder:text-[#00A0E0]/20 focus:outline-none focus:border-[#00A0E0]"
+                className="w-full bg-black border border-[#E01020]/30 px-3 py-2 text-sm text-[#E01020] font-mono placeholder:text-[#E01020]/20 focus:outline-none focus:border-[#E01020]"
               />
             </div>
             <div>
-              <label className="block text-[10px] text-[#00A0E0]/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <label className="block text-[10px] text-[#E01020]/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
                 Email *
               </label>
               <input
@@ -218,11 +218,11 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
                 value={form.customerEmail}
                 onChange={(e) => setForm({ ...form, customerEmail: e.target.value })}
                 placeholder="your@email.com"
-                className="w-full bg-black border border-[#00A0E0]/30 px-3 py-2 text-sm text-[#00A0E0] font-mono placeholder:text-[#00A0E0]/20 focus:outline-none focus:border-[#00A0E0]"
+                className="w-full bg-black border border-[#E01020]/30 px-3 py-2 text-sm text-[#E01020] font-mono placeholder:text-[#E01020]/20 focus:outline-none focus:border-[#E01020]"
               />
             </div>
             <div>
-              <label className="block text-[10px] text-[#00A0E0]/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <label className="block text-[10px] text-[#E01020]/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
                 Phone *
               </label>
               <input
@@ -230,7 +230,7 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
                 value={form.customerPhone}
                 onChange={(e) => setForm({ ...form, customerPhone: e.target.value })}
                 placeholder="(555) 123-4567"
-                className="w-full bg-black border border-[#00A0E0]/30 px-3 py-2 text-sm text-[#00A0E0] font-mono placeholder:text-[#00A0E0]/20 focus:outline-none focus:border-[#00A0E0]"
+                className="w-full bg-black border border-[#E01020]/30 px-3 py-2 text-sm text-[#E01020] font-mono placeholder:text-[#E01020]/20 focus:outline-none focus:border-[#E01020]"
               />
             </div>
           </div>
@@ -242,7 +242,7 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
           <div className="flex gap-2 mt-4">
             <button
               onClick={handleBack}
-              className="flex-1 py-2.5 border border-[#00A0E0]/30 text-[#00A0E0]/60 text-sm tracking-wider hover:border-[#00A0E0]/60 hover:text-[#00A0E0] transition-colors cursor-pointer"
+              className="flex-1 py-2.5 border border-[#E01020]/30 text-[#E01020]/60 text-sm tracking-wider hover:border-[#E01020]/60 hover:text-[#E01020] transition-colors cursor-pointer"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               BACK
@@ -250,7 +250,7 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
             <button
               onClick={handleSubmit}
               disabled={submitting || !form.customerName || !form.customerEmail || !form.customerPhone}
-              className="flex-1 py-2.5 bg-[#00A0E0] text-black text-sm font-bold tracking-wider disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#00A0E0]/90 transition-colors cursor-pointer"
+              className="flex-1 py-2.5 bg-[#E01020] text-black text-sm font-bold tracking-wider disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#E01020]/90 transition-colors cursor-pointer"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               {submitting ? 'SENDING...' : 'SUBMIT REQUEST'}

@@ -103,11 +103,11 @@ export default function ChatWidget() {
       {!isOpen && (
         <button
           onClick={toggleChat}
-          className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-black border-2 border-[#00A0E0] flex items-center justify-center hover:bg-[#00A0E0]/20 transition-all duration-300 pulse-glow cursor-pointer"
+          className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-black border-2 border-[#E01020] flex items-center justify-center hover:bg-[#E01020]/20 transition-all duration-300 pulse-glow cursor-pointer"
           aria-label="Open chat"
         >
           <svg
-            className="w-7 h-7 text-[#00A0E0]"
+            className="w-7 h-7 text-[#E01020]"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -124,14 +124,14 @@ export default function ChatWidget() {
 
       {/* Widget panel */}
       {isOpen && (
-        <div className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 w-full sm:w-[400px] h-full sm:h-[520px] flex flex-col bg-black border-2 border-[#00A0E0]/50 neon-border-soft chat-panel-enter">
+        <div className="fixed bottom-0 right-0 sm:bottom-6 sm:right-6 z-50 w-full sm:w-[400px] h-full sm:h-[520px] flex flex-col bg-black border-2 border-[#E01020]/50 neon-border-soft chat-panel-enter">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b-2 border-[#00A0E0]/30 bg-[#00A0E0]/5 shrink-0">
+          <div className="flex items-center justify-between px-4 py-3 border-b-2 border-[#E01020]/30 bg-[#E01020]/5 shrink-0">
             <div className="flex items-center gap-3">
               {screen !== 'welcome' && (
                 <button
                   onClick={handleBack}
-                  className="text-[#00A0E0]/60 hover:text-[#00A0E0] transition-colors cursor-pointer"
+                  className="text-[#E01020]/60 hover:text-[#E01020] transition-colors cursor-pointer"
                   aria-label="Go back"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -141,13 +141,13 @@ export default function ChatWidget() {
               )}
               <div>
                 <h3
-                  className="text-[#00A0E0] text-sm font-bold tracking-wider neon-glow-soft"
+                  className="text-[#E01020] text-sm font-bold tracking-wider neon-glow-soft"
                   style={{ fontFamily: 'var(--font-oxanium)' }}
                 >
                   {chatbotConfig.business.name.toUpperCase()}
                 </h3>
                 <p
-                  className="text-[#00A0E0]/60 text-xs tracking-widest"
+                  className="text-[#E01020]/60 text-xs tracking-widest"
                   style={{ fontFamily: 'var(--font-oxanium)' }}
                 >
                   {SCREEN_TITLES[screen]}
@@ -156,7 +156,7 @@ export default function ChatWidget() {
             </div>
             <button
               onClick={resetAndClose}
-              className="w-8 h-8 flex items-center justify-center text-[#00A0E0]/60 hover:text-[#00A0E0] hover:bg-[#00A0E0]/10 transition-colors cursor-pointer"
+              className="w-8 h-8 flex items-center justify-center text-[#E01020]/60 hover:text-[#E01020] hover:bg-[#E01020]/10 transition-colors cursor-pointer"
               aria-label="Close chat"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

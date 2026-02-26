@@ -50,8 +50,8 @@ export default function ChatScreen({ messages, sendMessage, status }: ChatScreen
               <div
                 className={`max-w-[80%] px-3 py-2 text-sm font-mono leading-relaxed ${
                   isUser
-                    ? 'bg-[#00A0E0]/20 text-[#00A0E0] border border-[#00A0E0]/30'
-                    : 'bg-[#0a0a0a] text-[#00A0E0]/90 border border-[#00A0E0]/15'
+                    ? 'bg-[#E01020]/20 text-[#E01020] border border-[#E01020]/30'
+                    : 'bg-[#0a0a0a] text-[#E01020]/90 border border-[#E01020]/15'
                 }`}
               >
                 {text}
@@ -63,11 +63,11 @@ export default function ChatScreen({ messages, sendMessage, status }: ChatScreen
         {/* Typing indicator */}
         {isLoading && (
           <div className="flex justify-start">
-            <div className="bg-[#0a0a0a] border border-[#00A0E0]/15 px-4 py-2">
+            <div className="bg-[#0a0a0a] border border-[#E01020]/15 px-4 py-2">
               <div className="flex space-x-1.5">
-                <span className="w-1.5 h-1.5 bg-[#00A0E0] typing-dot" />
-                <span className="w-1.5 h-1.5 bg-[#00A0E0] typing-dot" style={{ animationDelay: '0.2s' }} />
-                <span className="w-1.5 h-1.5 bg-[#00A0E0] typing-dot" style={{ animationDelay: '0.4s' }} />
+                <span className="w-1.5 h-1.5 bg-[#E01020] typing-dot" />
+                <span className="w-1.5 h-1.5 bg-[#E01020] typing-dot" style={{ animationDelay: '0.2s' }} />
+                <span className="w-1.5 h-1.5 bg-[#E01020] typing-dot" style={{ animationDelay: '0.4s' }} />
               </div>
             </div>
           </div>
@@ -78,19 +78,19 @@ export default function ChatScreen({ messages, sendMessage, status }: ChatScreen
       {/* Input */}
       <form
         onSubmit={handleSubmit}
-        className="shrink-0 border-t-2 border-[#00A0E0]/30 p-3 flex gap-2 bg-[#00A0E0]/5"
+        className="shrink-0 border-t-2 border-[#E01020]/30 p-3 flex gap-2 bg-[#E01020]/5"
       >
         <input
           ref={inputRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type your question..."
-          className="flex-1 bg-black border border-[#00A0E0]/30 px-3 py-2 text-sm text-[#00A0E0] font-mono placeholder:text-[#00A0E0]/30 focus:outline-none focus:border-[#00A0E0]"
+          className="flex-1 bg-black border border-[#E01020]/30 px-3 py-2 text-sm text-[#E01020] font-mono placeholder:text-[#E01020]/30 focus:outline-none focus:border-[#E01020]"
         />
         <button
           type="submit"
           disabled={isLoading || !input.trim()}
-          className="px-3 py-2 bg-[#00A0E0]/20 border border-[#00A0E0]/50 text-[#00A0E0] hover:bg-[#00A0E0]/30 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
+          className="px-3 py-2 bg-[#E01020]/20 border border-[#E01020]/50 text-[#E01020] hover:bg-[#E01020]/30 transition-colors disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer"
           aria-label="Send message"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

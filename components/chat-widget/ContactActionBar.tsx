@@ -36,14 +36,14 @@ function ContactIcon({ name, className }: { name: string; className?: string }) 
 
 export default function ContactActionBar() {
   return (
-    <div className="shrink-0 border-t-2 border-[#00A0E0]/30 bg-[#00A0E0]/5 px-4 py-2 flex items-center justify-around">
+    <div className="shrink-0 border-t-2 border-[#E01020]/30 bg-[#E01020]/5 px-4 py-2 flex items-center justify-around">
       {chatbotConfig.contactActions.map((action) => (
         <a
           key={action.id}
           href={action.href}
           target={'external' in action && action.external ? '_blank' : undefined}
           rel={'external' in action && action.external ? 'noopener noreferrer' : undefined}
-          className="flex flex-col items-center gap-1 text-[#00A0E0]/50 hover:text-[#00A0E0] transition-colors py-1 px-2"
+          className="flex flex-col items-center gap-1 text-[#E01020]/50 hover:text-[#E01020] transition-colors py-1 px-2"
         >
           <ContactIcon name={action.icon} />
           <span

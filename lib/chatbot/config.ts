@@ -92,7 +92,7 @@ export const chatbotConfig = {
     ],
   },
   theme: {
-    primaryColor: '#00A0E0',
+    primaryColor: '#E01020',
     bgColor: '#000000',
     fontFamily: 'var(--font-oxanium)',
     monoFont: 'var(--font-geist-mono)',

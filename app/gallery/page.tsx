@@ -122,13 +122,13 @@ export default function GalleryPage() {
         <div className="absolute inset-0 cyber-grid opacity-20"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
-            <p className="text-[#00A0E0] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+            <p className="text-[#E01020] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
               OUR PORTFOLIO
             </p>
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
               GALLERY
             </h1>
-            <p className="text-[#00A0E0]/80 text-lg md:text-xl max-w-2xl mx-auto font-mono">
+            <p className="text-[#E01020]/80 text-lg md:text-xl max-w-2xl mx-auto font-mono">
               Browse our recent work and see the quality craftsmanship we deliver on every project.
             </p>
           </div>
@@ -136,7 +136,7 @@ export default function GalleryPage() {
       </section>
 
       {/* Category Filters */}
-      <section className="py-8 bg-black border-t-2 border-b-2 border-[#00A0E0]/30">
+      <section className="py-8 bg-black border-t-2 border-b-2 border-[#E01020]/30">
         <div className="container mx-auto px-4">
           <div className="flex flex-wrap gap-4 justify-center">
             {categories.map((category) => (
@@ -145,8 +145,8 @@ export default function GalleryPage() {
                 onClick={() => setActiveCategory(category.id)}
                 className={`px-6 py-2 border-2 font-semibold text-sm transition-all duration-300 cyber-button ${
                   activeCategory === category.id
-                    ? 'bg-[#00A0E0]/20 text-[#00A0E0] border-[#00A0E0] neon-border-soft'
-                    : 'bg-transparent text-[#00A0E0]/60 border-[#00A0E0]/30 hover:border-[#00A0E0]/60 hover:text-[#00A0E0]'
+                    ? 'bg-[#E01020]/20 text-[#E01020] border-[#E01020] neon-border-soft'
+                    : 'bg-transparent text-[#E01020]/60 border-[#E01020]/30 hover:border-[#E01020]/60 hover:text-[#E01020]'
                 }`}
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
@@ -166,7 +166,7 @@ export default function GalleryPage() {
               <div
                 key={item.id}
                 onClick={() => setSelectedImage(item)}
-                className="bg-black border-2 border-[#00A0E0]/30 overflow-hidden hover:border-[#00A0E0] transition-all duration-300 transform hover:-translate-y-2 group cursor-pointer neon-border-soft"
+                className="bg-black border-2 border-[#E01020]/30 overflow-hidden hover:border-[#E01020] transition-all duration-300 transform hover:-translate-y-2 group cursor-pointer neon-border-soft"
               >
                 {/* Image */}
                 <div className="relative h-64 overflow-hidden">
@@ -175,26 +175,26 @@ export default function GalleryPage() {
                     alt={item.title}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-[#00A0E0]/10 group-hover:bg-[#00A0E0]/20 transition-colors"></div>
-                  <div className="absolute inset-0 border-b-2 border-[#00A0E0]/50"></div>
+                  <div className="absolute inset-0 bg-[#E01020]/10 group-hover:bg-[#E01020]/20 transition-colors"></div>
+                  <div className="absolute inset-0 border-b-2 border-[#E01020]/50"></div>
                   
                   {/* Overlay on hover */}
                   <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <div className="text-center p-4">
-                      <svg className="w-12 h-12 text-[#00A0E0] mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-12 h-12 text-[#E01020] mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
                       </svg>
-                      <p className="text-[#00A0E0] font-mono text-sm">VIEW DETAILS</p>
+                      <p className="text-[#E01020] font-mono text-sm">VIEW DETAILS</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Info */}
                 <div className="p-4">
-                  <h3 className="text-lg font-bold text-[#00A0E0] mb-1 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                  <h3 className="text-lg font-bold text-[#E01020] mb-1 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
                     {item.title.toUpperCase()}
                   </h3>
-                  <p className="text-[#00A0E0]/60 text-sm font-mono line-clamp-2">
+                  <p className="text-[#E01020]/60 text-sm font-mono line-clamp-2">
                     {item.description}
                   </p>
                 </div>
@@ -204,7 +204,7 @@ export default function GalleryPage() {
 
           {filteredItems.length === 0 && (
             <div className="text-center py-20">
-              <p className="text-[#00A0E0]/60 font-mono text-lg">No items found in this category.</p>
+              <p className="text-[#E01020]/60 font-mono text-lg">No items found in this category.</p>
             </div>
           )}
         </div>
@@ -217,13 +217,13 @@ export default function GalleryPage() {
           onClick={() => setSelectedImage(null)}
         >
           <div
-            className="relative max-w-5xl w-full bg-black border-2 border-[#00A0E0] neon-border-soft"
+            className="relative max-w-5xl w-full bg-black border-2 border-[#E01020] neon-border-soft"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Button */}
             <button
               onClick={() => setSelectedImage(null)}
-              className="absolute -top-12 right-0 text-[#00A0E0] hover:text-[#00B8FF] transition-colors"
+              className="absolute -top-12 right-0 text-[#E01020] hover:text-[#FF2A3A] transition-colors"
             >
               <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -240,15 +240,15 @@ export default function GalleryPage() {
             </div>
 
             {/* Info */}
-            <div className="p-6 border-t-2 border-[#00A0E0]/30">
-              <h3 className="text-2xl font-bold text-[#00A0E0] mb-2 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+            <div className="p-6 border-t-2 border-[#E01020]/30">
+              <h3 className="text-2xl font-bold text-[#E01020] mb-2 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
                 {selectedImage.title.toUpperCase()}
               </h3>
-              <p className="text-[#00A0E0]/70 font-mono">
+              <p className="text-[#E01020]/70 font-mono">
                 {selectedImage.description}
               </p>
               <div className="mt-4">
-                <span className="inline-block px-4 py-1 bg-[#00A0E0]/20 text-[#00A0E0] border border-[#00A0E0]/50 text-sm font-mono uppercase">
+                <span className="inline-block px-4 py-1 bg-[#E01020]/20 text-[#E01020] border border-[#E01020]/50 text-sm font-mono uppercase">
                   {categories.find((c) => c.id === selectedImage.category)?.name || selectedImage.category}
                 </span>
               </div>
@@ -258,26 +258,26 @@ export default function GalleryPage() {
       )}
 
       {/* CTA Section */}
-      <section className="py-20 md:py-32 bg-black text-white relative overflow-hidden border-t-2 border-[#00A0E0]/30">
+      <section className="py-20 md:py-32 bg-black text-white relative overflow-hidden border-t-2 border-[#E01020]/30">
         <div className="absolute inset-0 cyber-grid opacity-30"></div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <h2 className="text-4xl md:text-6xl font-bold mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
             LIKE WHAT YOU SEE?
           </h2>
-          <p className="text-xl md:text-2xl text-[#00A0E0] mb-12 max-w-3xl mx-auto leading-relaxed font-mono">
+          <p className="text-xl md:text-2xl text-[#E01020] mb-12 max-w-3xl mx-auto leading-relaxed font-mono">
             Let us transform your vehicle with the same quality craftsmanship. Get in touch today!
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link
               href="/book-appointment"
-              className="inline-block bg-[#00A0E0]/20 text-[#00A0E0] border-2 border-[#00A0E0] px-10 py-5 font-semibold text-lg hover:bg-[#00A0E0]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
+              className="inline-block bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-10 py-5 font-semibold text-lg hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               BOOK APPOINTMENT
             </Link>
             <Link
               href="/contact"
-              className="inline-block border-2 border-[#00A0E0]/50 bg-black/40 backdrop-blur-sm text-[#00A0E0] px-10 py-5 font-semibold text-lg hover:border-[#00A0E0] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button"
+              className="inline-block border-2 border-[#E01020]/50 bg-black/40 backdrop-blur-sm text-[#E01020] px-10 py-5 font-semibold text-lg hover:border-[#E01020] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               CONTACT US
