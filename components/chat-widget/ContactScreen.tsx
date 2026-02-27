@@ -59,9 +59,9 @@ export default function ContactScreen() {
           className="block border border-[#E01020]/20 bg-[#0a0a0a] p-4 hover:border-[#E01020]/60 hover:bg-[#E01020]/5 transition-all group"
         >
           <div className="flex items-center gap-3 mb-2">
-            <method.icon className="w-5 h-5 text-[#E01020]/60 group-hover:text-[#E01020] transition-colors" />
+            <method.icon className="w-5 h-5 text-white/60 group-hover:text-[#E01020] transition-colors" />
             <span
-              className="text-xs text-[#E01020]/60 tracking-widest font-bold"
+              className="text-xs text-white/60 tracking-widest font-bold"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               {method.title}
@@ -69,7 +69,7 @@ export default function ContactScreen() {
           </div>
           <div className="text-[#E01020] text-sm font-mono mb-2">{method.detail}</div>
           <div
-            className="text-[10px] text-[#E01020]/40 tracking-wider group-hover:text-[#E01020]/70 transition-colors"
+            className="text-[10px] text-white/40 tracking-wider group-hover:text-white/70 transition-colors"
             style={{ fontFamily: 'var(--font-oxanium)' }}
           >
             {method.cta}
@@ -80,7 +80,7 @@ export default function ContactScreen() {
       {/* Business Hours */}
       <div className="border border-[#E01020]/10 bg-[#0a0a0a] p-4 mt-4">
         <h4
-          className="text-xs text-[#E01020]/60 tracking-widest font-bold mb-3"
+          className="text-xs text-white/60 tracking-widest font-bold mb-3"
           style={{ fontFamily: 'var(--font-oxanium)' }}
         >
           BUSINESS HOURS
@@ -88,8 +88,8 @@ export default function ContactScreen() {
         <div className="space-y-1.5">
           {Object.entries(chatbotConfig.business.hours).map(([day, hours]) => (
             <div key={day} className="flex justify-between text-xs font-mono">
-              <span className="text-[#E01020]/50">{day}</span>
-              <span className="text-[#E01020]/80">{hours}</span>
+              <span className="text-white/50">{day}</span>
+              <span className="text-white/80">{hours}</span>
             </div>
           ))}
         </div>

@@ -70,7 +70,7 @@ export default function StatsCounter() {
               >
                 <AnimatedNumber target={stat.value} suffix={stat.suffix} started={isInView} />
               </div>
-              <div className="text-[#E01020]/60 font-mono text-sm md:text-base uppercase tracking-wider">
+              <div className="text-white/60 font-mono text-sm md:text-base uppercase tracking-wider">
                 {stat.label}
               </div>
             </div>

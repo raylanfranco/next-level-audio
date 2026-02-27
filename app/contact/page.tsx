@@ -58,7 +58,7 @@ export default function ContactPage() {
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
               CONTACT US
             </h1>
-            <p className="text-[#E01020]/80 text-lg md:text-xl max-w-2xl mx-auto font-mono">
+            <p className="text-white/80 text-lg md:text-xl max-w-2xl mx-auto font-mono">
               Have questions or ready to start your project? We&apos;re here to help. Reach out today!
             </p>
           </div>
@@ -84,7 +84,7 @@ export default function ContactPage() {
                   <h3 className="text-2xl font-bold text-[#E01020] mb-4 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
                     MESSAGE SENT!
                   </h3>
-                  <p className="text-[#E01020]/70 font-mono mb-6">
+                  <p className="text-white/70 font-mono mb-6">
                     Thank you for reaching out. We&apos;ll get back to you as soon as possible.
                   </p>
                   <button
@@ -225,7 +225,7 @@ export default function ContactPage() {
                     <h3 className="text-xl font-bold text-[#E01020] mb-2 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
                       LOCATION
                     </h3>
-                    <p className="text-[#E01020]/70 font-mono">
+                    <p className="text-white/70 font-mono">
                       944 North 9th Street<br />
                       Stroudsburg, PA 18360
                     </p>
@@ -258,7 +258,7 @@ export default function ContactPage() {
                     </h3>
                     <a
                       href="tel:+15707304433"
-                      className="text-[#E01020]/70 hover:text-[#E01020] font-mono text-lg transition-colors"
+                      className="text-white/70 hover:text-[#E01020] font-mono text-lg transition-colors"
                     >
                       (570) 730-4433
                     </a>
@@ -278,7 +278,7 @@ export default function ContactPage() {
                     <h3 className="text-xl font-bold text-[#E01020] mb-2 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
                       BUSINESS HOURS
                     </h3>
-                    <ul className="text-[#E01020]/70 font-mono space-y-1">
+                    <ul className="text-white/70 font-mono space-y-1">
                       <li className="flex justify-between">
                         <span>Monday - Friday:</span>
                         <span className="text-[#E01020]">9AM - 7PM</span>
@@ -289,7 +289,7 @@ export default function ContactPage() {
                       </li>
                       <li className="flex justify-between">
                         <span>Sunday:</span>
-                        <span className="text-[#E01020]/50">Closed</span>
+                        <span className="text-white/50">Closed</span>
                       </li>
                     </ul>
                   </div>
@@ -327,7 +327,7 @@ export default function ContactPage() {
               <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
                 FIND US
               </h2>
-              <p className="text-[#E01020]/80 font-mono text-sm md:text-base max-w-xl mx-auto">
+              <p className="text-white/80 font-mono text-sm md:text-base max-w-xl mx-auto">
                 Located in Stroudsburg, PA — easily accessible from the Pocono Mountains and surrounding areas.
               </p>
             </div>

@@ -48,14 +48,14 @@ export default function AdminLoginPage() {
           >
             NEXT LEVEL AUDIO
           </h1>
-          <p className="text-[#E01020]/50 font-mono text-sm">Admin Dashboard</p>
+          <p className="text-white/50 font-mono text-sm">Admin Dashboard</p>
         </div>
 
         {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
             <label
-              className="block text-[#E01020]/70 text-xs uppercase tracking-wider mb-2 font-mono"
+              className="block text-white/70 text-xs uppercase tracking-wider mb-2 font-mono"
               htmlFor="email"
             >
               Email
@@ -74,7 +74,7 @@ export default function AdminLoginPage() {
 
           <div>
             <label
-              className="block text-[#E01020]/70 text-xs uppercase tracking-wider mb-2 font-mono"
+              className="block text-white/70 text-xs uppercase tracking-wider mb-2 font-mono"
               htmlFor="password"
             >
               Password
@@ -110,7 +110,7 @@ export default function AdminLoginPage() {
         <div className="mt-8 text-center">
           <a
             href="/"
-            className="text-[#E01020]/40 hover:text-[#E01020]/70 text-xs font-mono transition-colors"
+            className="text-white/40 hover:text-white/70 text-xs font-mono transition-colors"
           >
             &larr; Back to site
           </a>

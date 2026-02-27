@@ -131,7 +131,7 @@ export default function ChatWidget() {
               {screen !== 'welcome' && (
                 <button
                   onClick={handleBack}
-                  className="text-[#E01020]/60 hover:text-[#E01020] transition-colors cursor-pointer"
+                  className="text-white/60 hover:text-[#E01020] transition-colors cursor-pointer"
                   aria-label="Go back"
                 >
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -147,7 +147,7 @@ export default function ChatWidget() {
                   {chatbotConfig.business.name.toUpperCase()}
                 </h3>
                 <p
-                  className="text-[#E01020]/60 text-xs tracking-widest"
+                  className="text-white/60 text-xs tracking-widest"
                   style={{ fontFamily: 'var(--font-oxanium)' }}
                 >
                   {SCREEN_TITLES[screen]}
@@ -156,7 +156,7 @@ export default function ChatWidget() {
             </div>
             <button
               onClick={resetAndClose}
-              className="w-8 h-8 flex items-center justify-center text-[#E01020]/60 hover:text-[#E01020] hover:bg-[#E01020]/10 transition-colors cursor-pointer"
+              className="w-8 h-8 flex items-center justify-center text-white/60 hover:text-[#E01020] hover:bg-[#E01020]/10 transition-colors cursor-pointer"
               aria-label="Close chat"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

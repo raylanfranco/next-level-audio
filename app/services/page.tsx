@@ -137,7 +137,7 @@ export default function ServicesPage() {
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
               OUR SERVICES
             </h1>
-            <p className="text-[#E01020]/80 text-lg md:text-xl max-w-2xl mx-auto font-mono">
+            <p className="text-white/80 text-lg md:text-xl max-w-2xl mx-auto font-mono">
               Professional automotive services tailored to your needs. Quality craftsmanship, competitive prices, and customer satisfaction guaranteed.
             </p>
           </div>
@@ -174,19 +174,19 @@ export default function ServicesPage() {
                   <h2 className="text-2xl font-bold text-[#E01020] mb-4 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
                     {service.title}
                   </h2>
-                  <p className="text-[#E01020]/70 leading-relaxed font-mono text-sm">
+                  <p className="text-white/70 leading-relaxed font-mono text-sm">
                     {service.description}
                   </p>
                 </div>
 
                 {/* Features List */}
                 <div className="p-8">
-                  <h3 className="text-sm font-bold text-[#E01020]/60 mb-4 uppercase tracking-wider font-mono">
+                  <h3 className="text-sm font-bold text-white/60 mb-4 uppercase tracking-wider font-mono">
                     Features
                   </h3>
                   <ul className="space-y-3">
                     {service.features.map((feature, index) => (
-                      <li key={index} className="flex items-center text-[#E01020]/80 font-mono text-sm">
+                      <li key={index} className="flex items-center text-white/80 font-mono text-sm">
                         <svg className="w-4 h-4 mr-3 text-[#E01020] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
@@ -212,7 +212,7 @@ export default function ServicesPage() {
             <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
               WHY CHOOSE US
             </h2>
-            <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
+            <p className="text-white/80 max-w-2xl mx-auto text-lg font-mono">
               We&apos;re committed to delivering exceptional quality and service on every project
             </p>
           </div>
@@ -231,7 +231,7 @@ export default function ServicesPage() {
                 <h3 className="text-xl font-bold text-[#E01020] mb-3 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
                   {item.title}
                 </h3>
-                <p className="text-[#E01020]/70 font-mono text-sm">
+                <p className="text-white/70 font-mono text-sm">
                   {item.desc}
                 </p>
               </div>

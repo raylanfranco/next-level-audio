@@ -47,7 +47,7 @@ export default function Home() {
               <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow hover-glitch" style={{ fontFamily: 'var(--font-oxanium)' }}>
                 OUR SERVICES
               </h2>
-              <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
+              <p className="text-white/80 max-w-2xl mx-auto text-lg font-mono">
                 We specialize in professional car audio installation, window tinting, and auto accessories
                 in the Stroudsburg area.
               </p>
@@ -78,7 +78,7 @@ export default function Home() {
                     <h3 className="text-2xl font-bold text-[#E01020] mb-4 neon-glow-soft group-hover:text-[#FF2A3A] transition-colors duration-300" style={{ fontFamily: 'var(--font-oxanium)' }}>
                       {service.title}
                     </h3>
-                    <p className="text-[#E01020]/70 mb-6 leading-relaxed font-mono text-sm">
+                    <p className="text-white/70 mb-6 leading-relaxed font-mono text-sm">
                       {service.desc}
                     </p>
                     <Link
@@ -111,7 +111,7 @@ export default function Home() {
                 <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
                   PREMIUM BRANDS YOU CAN TRUST
                 </h2>
-                <p className="text-[#E01020]/70 font-mono text-sm md:text-base">
+                <p className="text-white/70 font-mono text-sm md:text-base">
                   Expert installation with quality parts from the industry&apos;s leading manufacturers.
                 </p>
               </div>
@@ -128,12 +128,12 @@ export default function Home() {
                 ].map((brand) => (
                   <div
                     key={brand.name}
-                    className="flex items-center justify-center p-6 border border-[#E01020]/20 bg-[#E01020]/5 hover:border-[#E01020]/50 hover:bg-[#E01020]/10 transition-all duration-300 aspect-[3/2]"
+                    className="flex items-center justify-center border border-[#E01020]/20 bg-[#E01020]/5 hover:border-[#E01020]/50 hover:bg-[#E01020]/10 transition-all duration-300 aspect-[3/2] overflow-hidden"
                   >
                     <img
                       src={brand.image}
                       alt={brand.name}
-                      className="max-h-20 w-full object-contain opacity-80 hover:opacity-100 transition-opacity duration-300"
+                      className="w-full h-full object-contain p-4 opacity-80 hover:opacity-100 transition-opacity duration-300"
                       loading="lazy"
                     />
                   </div>
@@ -160,15 +160,15 @@ export default function Home() {
                 <h2 className="text-4xl md:text-6xl font-bold text-white mb-8 neon-glow hover-glitch" style={{ fontFamily: 'var(--font-oxanium)' }}>
                   ABOUT NEXT LEVEL AUDIO
                 </h2>
-                <p className="text-[#E01020]/80 mb-6 text-lg leading-relaxed font-mono">
+                <p className="text-white/80 mb-6 text-lg leading-relaxed font-mono">
                   We are the top choice in Stroudsburg, PA for window tinting services and car audio installation.
                   We understand the importance of sticking to a budget while still providing high-quality craftsmanship.
                 </p>
-                <p className="text-[#E01020]/80 mb-6 text-lg leading-relaxed font-mono">
+                <p className="text-white/80 mb-6 text-lg leading-relaxed font-mono">
                   Our team will work closely with you throughout the project to ensure that the results exceed
                   your expectations while staying within your budget constraints.
                 </p>
-                <p className="text-[#E01020]/80 text-lg leading-relaxed font-mono">
+                <p className="text-white/80 text-lg leading-relaxed font-mono">
                   We strive for excellence in everything we do - no matter how big or small the job may be -
                   because your satisfaction is our top priority!
                 </p>
@@ -199,7 +199,7 @@ export default function Home() {
               >
                 FINANCING AVAILABLE
               </h2>
-              <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
+              <p className="text-white/80 max-w-2xl mx-auto text-lg font-mono">
                 Upgrade your ride now and pay over time. We partner with trusted financing providers to make it easy.
               </p>
             </div>
@@ -219,7 +219,7 @@ export default function Home() {
                 >
                   EASYPAY
                 </div>
-                <p className="text-[#E01020]/60 font-mono text-sm mb-6">
+                <p className="text-white/60 font-mono text-sm mb-6">
                   Flexible lease-to-own financing
                 </p>
                 <span className="text-[#E01020] font-semibold font-mono text-sm group-hover:text-[#FF2A3A] transition-colors inline-flex items-center">
@@ -239,15 +239,15 @@ export default function Home() {
                 >
                   ACIMA
                 </div>
-                <p className="text-[#E01020]/60 font-mono text-sm mb-6">
+                <p className="text-white/60 font-mono text-sm mb-6">
                   Lease-to-own — no credit needed
                 </p>
                 <div className="flex justify-center mb-4">
-                  <div className="bg-white p-3 inline-block" style={{ width: 120, height: 120 }}>
+                  <div className="bg-white p-4 inline-block" style={{ width: 200, height: 200 }}>
                     <svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 61 61" shapeRendering="crispEdges"><path fill="#ffffff" d="M0 0h61v61H0z"></path><path stroke="#000000" d="M4 4.5h7m3 0h1m1 0h2m1 0h1m1 0h1m1 0h3m1 0h1m1 0h4m1 0h4m1 0h3m4 0h1m3 0h7M4 5.5h1m5 0h1m4 0h2m3 0h1m3 0h1m1 0h1m3 0h1m2 0h1m3 0h2m1 0h3m3 0h2m2 0h1m5 0h1M4 6.5h1m1 0h3m1 0h1m1 0h2m1 0h1m2 0h2m1 0h1m1 0h1m1 0h1m1 0h1m1 0h2m3 0h3m2 0h1m1 0h4m2 0h1m2 0h1m1 0h3m1 0h1M4 7.5h1m1 0h3m1 0h1m1 0h1m1 0h2m1 0h1m1 0h2m1 0h2m8 0h2m3 0h1m1 0h2m1 0h1m2 0h2m1 0h1m1 0h1m1 0h3m1 0h1M4 8.5h1m1 0h3m1 0h1m1 0h6m1 0h4m1 0h14m1 0h3m3 0h2m3 0h1m1 0h3m1 0h1M4 9.5h1m5 0h1m1 0h1m1 0h1m2 0h1m1 0h1m1 0h2m1 0h1m3 0h1m3 0h1m2 0h2m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m3 0h1m5 0h1M4 10.5h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7M12 11.5h2m1 0h2m1 0h1m1 0h2m1 0h1m1 0h1m1 0h2m3 0h4m5 0h2m1 0h1m1 0h2M4 12.5h1m1 0h5m2 0h4m1 0h1m9 0h7m2 0h4m2 0h1m1 0h4m1 0h5M4 13.5h1m3 0h2m3 0h2m2 0h1m1 0h2m3 0h12m5 0h1m3 0h3m1 0h1m1 0h1m1 0h2m1 0h1M4 14.5h1m2 0h2m1 0h2m1 0h3m1 0h1m2 0h5m4 0h2m2 0h1m4 0h1m1 0h1m1 0h4m1 0h2m1 0h1m1 0h3M5 15.5h2m1 0h1m4 0h1m1 0h3m1 0h2m1 0h1m1 0h2m1 0h3m3 0h1m1 0h2m1 0h1m4 0h9m1 0h1m1 0h1M6 16.5h2m1 0h2m2 0h1m3 0h1m2 0h1m6 0h2m1 0h2m3 0h1m2 0h1m1 0h3m2 0h1m1 0h2m2 0h2m1 0h3M6 17.5h2m5 0h3m2 0h1m1 0h1m3 0h1m1 0h2m3 0h3m2 0h1m4 0h1m3 0h2m6 0h4M5 18.5h1m3 0h4m1 0h2m1 0h3m1 0h1m4 0h2m2 0h1m3 0h2m1 0h4m1 0h1m1 0h2m1 0h1m1 0h3m1 0h1M11 19.5h1m1 0h2m2 0h1m3 0h2m5 0h1m2 0h1m1 0h1m2 0h2m3 0h1m1 0h2m4 0h2m4 0h2M4 20.5h1m2 0h1m2 0h1m5 0h1m3 0h3m2 0h1m1 0h4m2 0h1m1 0h1m1 0h4m2 0h1m1 0h2m1 0h2m1 0h5M4 21.5h1m4 0h1m2 0h1m3 0h2m1 0h2m2 0h1m2 0h2m2 0h1m2 0h5m1 0h3m4 0h2m1 0h1m1 0h2m2 0h2M6 22.5h1m2 0h3m2 0h2m1 0h1m1 0h2m1 0h2m1 0h1m3 0h1m5 0h3m1 0h1m2 0h4m1 0h5m1 0h1M4 23.5h4m4 0h2m2 0h2m2 0h5m2 0h3m1 0h1m1 0h4m1 0h1m5 0h1m1 0h4m1 0h1m1 0h1M7 24.5h1m2 0h4m2 0h1m1 0h1m2 0h2m1 0h2m1 0h2m1 0h2m5 0h4m1 0h1m3 0h1m1 0h1m3 0h1m1 0h1m1 0h1M7 25.5h3m2 0h2m2 0h1m1 0h3m1 0h1m1 0h1m2 0h1m1 0h1m4 0h1m4 0h3m2 0h1m1 0h2m1 0h1m1 0h1m3 0h2M4 26.5h2m1 0h1m1 0h2m2 0h4m1 0h2m1 0h1m1 0h2m1 0h4m1 0h1m1 0h1m1 0h1m1 0h3m2 0h1m1 0h1m2 0h4m1 0h4M5 27.5h4m2 0h1m4 0h1m1 0h1m1 0h4m2 0h1m1 0h2m4 0h1m1 0h1m2 0h1m3 0h3m1 0h2m4 0h1M6 28.5h8m2 0h1m1 0h1m3 0h1m2 0h1m1 0h8m3 0h4m1 0h1m1 0h8m1 0h3M4 29.5h1m1 0h3m3 0h1m1 0h1m2 0h2m2 0h3m1 0h2m1 0h1m3 0h4m1 0h1m1 0h3m1 0h1m1 0h4m3 0h2m1 0h2M8 30.5h1m1 0h1m1 0h2m1 0h1m1 0h1m7 0h1m2 0h1m1 0h1m1 0h1m2 0h2m1 0h2m2 0h2m1 0h4m1 0h1m1 0h1M4 31.5h1m1 0h1m1 0h1m3 0h2m1 0h1m1 0h4m2 0h4m1 0h1m3 0h3m6 0h2m1 0h1m1 0h1m1 0h1m3 0h2m1 0h1M4 32.5h12m3 0h4m1 0h1m2 0h6m1 0h3m2 0h5m2 0h9m1 0h1M4 33.5h4m4 0h1m2 0h1m2 0h1m2 0h3m1 0h3m2 0h2m1 0h2m1 0h1m3 0h2m1 0h4m1 0h2m1 0h2m2 0h2M5 34.5h1m1 0h4m3 0h1m2 0h2m3 0h1m1 0h3m4 0h2m2 0h2m1 0h1m3 0h2m1 0h1m3 0h1m2 0h3M5 35.5h1m6 0h1m3 0h1m1 0h3m1 0h3m3 0h2m4 0h1m1 0h2m1 0h1m4 0h10m1 0h1M6 36.5h1m2 0h3m1 0h1m3 0h1m2 0h2m1 0h1m3 0h1m4 0h3m5 0h2m1 0h1m1 0h2m2 0h3m2 0h1M4 37.5h2m2 0h1m2 0h1m3 0h1m1 0h2m1 0h2m1 0h7m2 0h1m1 0h1m4 0h1m3 0h1m1 0h2m2 0h4m1 0h1m1 0h1M9 38.5h2m1 0h2m2 0h3m1 0h5m1 0h1m1 0h1m1 0h6m2 0h1m1 0h3m6 0h1m2 0h2M7 39.5h1m3 0h2m1 0h1m3 0h2m1 0h1m2 0h1m2 0h1m1 0h1m4 0h2m2 0h1m5 0h1m1 0h5m1 0h1M4 40.5h2m3 0h3m1 0h1m2 0h1m1 0h4m1 0h1m3 0h3m1 0h1m1 0h3m1 0h2m1 0h2m8 0h1m2 0h2M7 41.5h1m5 0h1m1 0h1m1 0h1m1 0h1m5 0h4m1 0h2m1 0h3m2 0h4m1 0h1m2 0h3m1 0h3m2 0h2M5 42.5h1m2 0h3m1 0h1m1 0h1m3 0h2m2 0h1m3 0h1m2 0h1m2 0h2m1 0h3m2 0h3m1 0h2m2 0h1m2 0h5M4 43.5h2m1 0h3m1 0h3m2 0h1m1 0h3m2 0h6m1 0h2m2 0h4m5 0h3m2 0h3m1 0h2m1 0h2M5 44.5h1m3 0h2m1 0h1m1 0h1m2 0h1m4 0h2m2 0h1m11 0h5m2 0h2m3 0h1m3 0h1m1 0h1M4 45.5h3m1 0h1m6 0h2m5 0h4m1 0h4m1 0h1m1 0h2m3 0h3m2 0h5m2 0h2m1 0h1m1 0h1M4 46.5h2m1 0h4m1 0h1m2 0h1m2 0h1m2 0h2m1 0h1m1 0h1m1 0h2m2 0h1m3 0h3m3 0h2m3 0h1m3 0h2m2 0h1M5 47.5h2m4 0h3m2 0h2m1 0h1m4 0h1m4 0h2m2 0h1m2 0h1m2 0h1m4 0h2m1 0h1m1 0h2m2 0h1M7 48.5h1m2 0h1m3 0h2m1 0h2m2 0h2m1 0h1m3 0h8m1 0h2m1 0h3m2 0h1m2 0h5m1 0h2M12 49.5h5m1 0h1m1 0h1m1 0h5m1 0h1m3 0h6m1 0h3m3 0h4m3 0h2m1 0h2M4 50.5h7m2 0h2m1 0h1m1 0h1m2 0h1m1 0h3m2 0h1m1 0h1m1 0h2m1 0h2m1 0h3m1 0h1m1 0h2m1 0h2m1 0h1m1 0h1M4 51.5h1m5 0h1m1 0h1m3 0h1m4 0h3m3 0h2m3 0h2m1 0h1m7 0h2m1 0h3m3 0h2m1 0h2M4 52.5h1m1 0h3m1 0h1m1 0h3m1 0h1m1 0h1m2 0h1m1 0h1m1 0h1m1 0h8m2 0h1m1 0h4m3 0h9M4 53.5h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h3m1 0h1m2 0h2m4 0h1m1 0h1m1 0h3m3 0h1m1 0h1m2 0h5m1 0h1m4 0h2M4 54.5h1m1 0h3m1 0h1m1 0h3m2 0h1m7 0h3m2 0h2m1 0h2m2 0h2m1 0h1m1 0h1m4 0h1m3 0h3m1 0h2M4 55.5h1m5 0h1m5 0h2m4 0h4m3 0h1m1 0h1m1 0h1m2 0h2m4 0h3m3 0h1m2 0h1m1 0h1m1 0h1M4 56.5h7m1 0h1m2 0h3m5 0h1m1 0h4m3 0h1m2 0h1m1 0h5m3 0h3m2 0h1m1 0h3"></path></svg>
                   </div>
                 </div>
-                <p className="text-[#E01020]/40 font-mono text-xs">Scan in-store to apply</p>
+                <p className="text-white/40 font-mono text-xs">Scan in-store to apply</p>
               </div>
             </AnimateOnScroll>
 
@@ -264,7 +264,7 @@ export default function Home() {
                 >
                   SNAP
                 </div>
-                <p className="text-[#E01020]/60 font-mono text-sm mb-6">
+                <p className="text-white/60 font-mono text-sm mb-6">
                   Easy approval financing
                 </p>
                 <span className="text-[#E01020] font-semibold font-mono text-sm group-hover:text-[#FF2A3A] transition-colors inline-flex items-center">

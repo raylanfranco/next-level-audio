@@ -43,7 +43,7 @@ export default function ContactActionBar() {
           href={action.href}
           target={'external' in action && action.external ? '_blank' : undefined}
           rel={'external' in action && action.external ? 'noopener noreferrer' : undefined}
-          className="flex flex-col items-center gap-1 text-[#E01020]/50 hover:text-[#E01020] transition-colors py-1 px-2"
+          className="flex flex-col items-center gap-1 text-white/50 hover:text-[#E01020] transition-colors py-1 px-2"
         >
           <ContactIcon name={action.icon} />
           <span

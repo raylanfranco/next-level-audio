@@ -9,7 +9,7 @@ export default function Footer() {
           {/* About */}
           <div>
             <h3 className="text-[#E01020] text-xl font-bold mb-6 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>NEXT LEVEL AUDIO</h3>
-            <p className="text-[#E01020]/70 leading-relaxed font-mono text-sm">
+            <p className="text-white/70 leading-relaxed font-mono text-sm">
               Your trusted partner for car audio installation, window tinting, and auto accessories in Stroudsburg, PA.
             </p>
           </div>
@@ -19,32 +19,32 @@ export default function Footer() {
             <h3 className="text-[#E01020] text-xl font-bold mb-6 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>QUICK LINKS</h3>
             <ul className="space-y-3 font-mono text-sm">
               <li>
-                <Link href="/about" className="text-[#E01020]/70 hover:text-[#E01020] transition-colors neon-glow-soft">
+                <Link href="/about" className="text-white/70 hover:text-[#E01020] transition-colors neon-glow-soft">
                   ABOUT US
                 </Link>
               </li>
               <li>
-                <Link href="/services" className="text-[#E01020]/70 hover:text-[#E01020] transition-colors neon-glow-soft">
+                <Link href="/services" className="text-white/70 hover:text-[#E01020] transition-colors neon-glow-soft">
                   SERVICES
                 </Link>
               </li>
               <li>
-                <Link href="/products" className="text-[#E01020]/70 hover:text-[#E01020] transition-colors neon-glow-soft">
+                <Link href="/products" className="text-white/70 hover:text-[#E01020] transition-colors neon-glow-soft">
                   PRODUCTS
                 </Link>
               </li>
               <li>
-                <Link href="/careers" className="text-[#E01020]/70 hover:text-[#E01020] transition-colors neon-glow-soft">
+                <Link href="/careers" className="text-white/70 hover:text-[#E01020] transition-colors neon-glow-soft">
                   CAREERS
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-[#E01020]/70 hover:text-[#E01020] transition-colors neon-glow-soft">
+                <Link href="/contact" className="text-white/70 hover:text-[#E01020] transition-colors neon-glow-soft">
                   CONTACT
                 </Link>
               </li>
               <li>
-                <Link href="/#financing" className="text-[#E01020]/70 hover:text-[#E01020] transition-colors neon-glow-soft">
+                <Link href="/#financing" className="text-white/70 hover:text-[#E01020] transition-colors neon-glow-soft">
                   FINANCING
                 </Link>
               </li>
@@ -54,7 +54,7 @@ export default function Footer() {
           {/* Contact Info */}
           <div>
             <h3 className="text-[#E01020] text-xl font-bold mb-6 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>CONTACT INFO</h3>
-            <ul className="space-y-3 text-[#E01020]/70 font-mono text-sm">
+            <ul className="space-y-3 text-white/70 font-mono text-sm">
               <li>
                 <a href="tel:+15707304433" className="hover:text-[#E01020] transition-colors neon-glow-soft">
                   (570) 730-4433
@@ -70,7 +70,7 @@ export default function Footer() {
           {/* Hours */}
           <div>
             <h3 className="text-[#E01020] text-xl font-bold mb-6 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>HOURS</h3>
-            <ul className="space-y-3 text-[#E01020]/70 font-mono text-sm">
+            <ul className="space-y-3 text-white/70 font-mono text-sm">
               <li>Monday - Friday: 9AM - 7PM</li>
               <li>Saturday: 9AM - 2PM</li>
               <li>Sunday: Closed</li>
@@ -79,7 +79,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t-2 border-[#E01020]/30 mt-12 pt-8 text-center">
-          <p className="text-[#E01020]/60 text-sm font-mono">
+          <p className="text-white/60 text-sm font-mono">
             © {new Date().getFullYear()} Next Level Audio. All rights reserved.
           </p>
         </div>

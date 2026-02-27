@@ -187,7 +187,7 @@ export default function ProductsPage() {
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
               PRODUCTS
             </h1>
-            <p className="text-[#E01020]/80 text-lg md:text-xl max-w-2xl mx-auto font-mono">
+            <p className="text-white/80 text-lg md:text-xl max-w-2xl mx-auto font-mono">
               1,300+ items from our Clover POS inventory. Premium car audio equipment and auto accessories.
             </p>
           </div>
@@ -203,7 +203,7 @@ export default function ProductsPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
               </svg>
-              <p className="text-[#E01020]/80 font-mono text-sm">
+              <p className="text-white/80 font-mono text-sm">
                 <span className="font-bold text-[#E01020]">IN-STORE PICKUP ONLY</span> — Online ordering is available for convenience, but all orders must be picked up at our Stroudsburg, PA location.
               </p>
             </div>
@@ -238,7 +238,7 @@ export default function ProductsPage() {
                   placeholder="Search by name or barcode..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-4 py-2.5 bg-black border border-[#E01020]/30 text-white placeholder-[#E01020]/30 font-mono text-sm focus:outline-none focus:border-[#E01020] transition-colors"
+                  className="w-full px-4 py-2.5 bg-black border border-[#E01020]/30 text-white placeholder-white/30 font-mono text-sm focus:outline-none focus:border-[#E01020] transition-colors"
                 />
               </div>
 
@@ -252,7 +252,7 @@ export default function ProductsPage() {
                       className={`w-full text-left px-3 py-2 font-mono text-sm transition-colors ${
                         selectedCategory === null
                           ? 'bg-[#E01020]/10 text-[#E01020] border-l-2 border-[#E01020]'
-                          : 'text-[#E01020]/60 hover:text-[#E01020] hover:bg-[#E01020]/5'
+                          : 'text-white/60 hover:text-[#E01020] hover:bg-[#E01020]/5'
                       }`}
                     >
                       All Products
@@ -265,7 +265,7 @@ export default function ProductsPage() {
                         className={`w-full text-left px-3 py-2 font-mono text-sm transition-colors ${
                           selectedCategory === cat.id
                             ? 'bg-[#E01020]/10 text-[#E01020] border-l-2 border-[#E01020]'
-                            : 'text-[#E01020]/60 hover:text-[#E01020] hover:bg-[#E01020]/5'
+                            : 'text-white/60 hover:text-[#E01020] hover:bg-[#E01020]/5'
                         }`}
                       >
                         {cat.name}
@@ -292,7 +292,7 @@ export default function ProductsPage() {
                             : filter === 'low-stock'
                             ? 'bg-yellow-400/10 text-yellow-400 border-l-2 border-yellow-400'
                             : 'bg-red-400/10 text-red-400 border-l-2 border-red-400'
-                          : 'text-[#E01020]/60 hover:text-[#E01020] hover:bg-[#E01020]/5'
+                          : 'text-white/60 hover:text-[#E01020] hover:bg-[#E01020]/5'
                       }`}
                     >
                       {filter === 'all' ? 'All' : filter === 'in-stock' ? 'In Stock' : filter === 'low-stock' ? 'Low Stock' : 'Out of Stock'}
@@ -320,7 +320,7 @@ export default function ProductsPage() {
             <div className="flex-1 min-w-0">
               {/* Results count */}
               <div className="mb-6 flex items-center justify-between">
-                <p className="text-[#E01020]/60 font-mono text-sm">
+                <p className="text-white/60 font-mono text-sm">
                   {loading ? 'Loading...' : `${inStockItems.length} products${outOfStockItems.length > 0 ? ` (${outOfStockItems.length} out of stock)` : ''}`}
                   {selectedCategory && categories.length > 0 && (
                     <span className="text-[#E01020]">
@@ -333,11 +333,11 @@ export default function ProductsPage() {
               {loading ? (
                 <div className="text-center py-20">
                   <div className="inline-block w-12 h-12 border-4 border-[#E01020]/30 border-t-[#E01020] animate-spin"></div>
-                  <p className="text-[#E01020]/60 mt-4 font-mono">Loading inventory from Clover...</p>
+                  <p className="text-white/60 mt-4 font-mono">Loading inventory from Clover...</p>
                 </div>
               ) : filteredItems.length === 0 ? (
                 <div className="text-center py-20">
-                  <p className="text-[#E01020]/60 font-mono text-lg mb-4">No products found.</p>
+                  <p className="text-white/60 font-mono text-lg mb-4">No products found.</p>
                   <button
                     onClick={() => {
                       setSearchQuery('');
@@ -396,7 +396,7 @@ export default function ProductsPage() {
                               {item.onlineName || item.name}
                             </h3>
                             {item.description && (
-                              <p className="text-[#E01020]/60 text-xs font-mono mb-4 line-clamp-2">
+                              <p className="text-white/60 text-xs font-mono mb-4 line-clamp-2">
                                 {item.description}
                               </p>
                             )}
@@ -517,13 +517,13 @@ export default function ProductsPage() {
                                   {item.onlineName || item.name}
                                 </h3>
                                 {item.description && (
-                                  <p className="text-[#E01020]/40 text-xs font-mono mb-4 line-clamp-2">
+                                  <p className="text-white/40 text-xs font-mono mb-4 line-clamp-2">
                                     {item.description}
                                   </p>
                                 )}
 
                                 <div className="flex items-center justify-between">
-                                  <span className="text-xl font-bold text-[#E01020]/50 font-mono">
+                                  <span className="text-xl font-bold text-white/50 font-mono">
                                     {formatCents(item.price)}
                                   </span>
                                   <button

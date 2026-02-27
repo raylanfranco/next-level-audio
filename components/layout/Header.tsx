@@ -38,7 +38,7 @@ export default function Header() {
 
   const navLinkClass = `relative transition-all duration-300 font-medium text-sm group/link ${
     isScrolled
-      ? 'text-[#E01020]/80 hover:text-[#FF2A3A] neon-glow-soft cursor-pointer'
+      ? 'text-white/80 hover:text-[#FF2A3A] neon-glow-soft cursor-pointer'
       : 'text-[#E01020] hover:text-[#FF2A3A] neon-glow-soft cursor-pointer'
   }`;
 
@@ -92,7 +92,7 @@ export default function Header() {
                 <div className="bg-black/95 backdrop-blur-md border-2 border-[#E01020]/30 min-w-[200px] py-2 shadow-[0_0_20px_rgba(224,16,32,0.15)]">
                   <Link
                     href="/services"
-                    className="block px-5 py-2.5 text-[#E01020]/60 hover:text-[#E01020] hover:bg-[#E01020]/5 transition-colors text-xs tracking-widest"
+                    className="block px-5 py-2.5 text-white/60 hover:text-[#E01020] hover:bg-[#E01020]/5 transition-colors text-xs tracking-widest"
                     style={{ fontFamily: 'var(--font-oxanium)' }}
                   >
                     ALL SERVICES
@@ -102,7 +102,7 @@ export default function Header() {
                     <Link
                       key={sub.href}
                       href={sub.href}
-                      className="block px-5 py-2.5 text-[#E01020]/80 hover:text-[#FF2A3A] hover:bg-[#E01020]/5 transition-colors text-xs tracking-widest"
+                      className="block px-5 py-2.5 text-white/80 hover:text-[#FF2A3A] hover:bg-[#E01020]/5 transition-colors text-xs tracking-widest"
                       style={{ fontFamily: 'var(--font-oxanium)' }}
                     >
                       {sub.label.toUpperCase()}
@@ -124,7 +124,7 @@ export default function Header() {
 
           <Link href="/" className="flex items-center justify-center flex-shrink-0 mx-8 mt-8">
             <Image
-              src="/images/logo-new.png"
+              src="/images/logo.png"
               alt="Next Level Audio"
               width={360}
               height={100}
@@ -195,7 +195,7 @@ export default function Header() {
         <div className="flex lg:hidden items-center justify-between h-16">
           <Link href="/" className="flex items-center">
             <Image
-              src="/images/logo-new.png"
+              src="/images/logo.png"
               alt="Next Level Audio"
               width={180}
               height={50}
@@ -238,7 +238,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-16 px-4">
           <Link href="/" className="flex items-center" onClick={() => setIsMenuOpen(false)}>
             <Image
-              src="/images/logo-new.png"
+              src="/images/logo.png"
               alt="Next Level Audio"
               width={180}
               height={50}
@@ -292,7 +292,7 @@ export default function Header() {
                   key={sub.href}
                   href={sub.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className="text-[#E01020]/50 hover:text-[#FF2A3A] text-sm tracking-widest transition-colors"
+                  className="text-white/50 hover:text-[#FF2A3A] text-sm tracking-widest transition-colors"
                   style={{ fontFamily: 'var(--font-oxanium)' }}
                 >
                   {sub.label.toUpperCase()}

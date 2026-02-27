@@ -128,7 +128,7 @@ export default function GalleryPage() {
             <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
               GALLERY
             </h1>
-            <p className="text-[#E01020]/80 text-lg md:text-xl max-w-2xl mx-auto font-mono">
+            <p className="text-white/80 text-lg md:text-xl max-w-2xl mx-auto font-mono">
               Browse our recent work and see the quality craftsmanship we deliver on every project.
             </p>
           </div>
@@ -146,7 +146,7 @@ export default function GalleryPage() {
                 className={`px-6 py-2 border-2 font-semibold text-sm transition-all duration-300 cyber-button ${
                   activeCategory === category.id
                     ? 'bg-[#E01020]/20 text-[#E01020] border-[#E01020] neon-border-soft'
-                    : 'bg-transparent text-[#E01020]/60 border-[#E01020]/30 hover:border-[#E01020]/60 hover:text-[#E01020]'
+                    : 'bg-transparent text-white/60 border-[#E01020]/30 hover:border-[#E01020]/60 hover:text-[#E01020]'
                 }`}
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
@@ -194,7 +194,7 @@ export default function GalleryPage() {
                   <h3 className="text-lg font-bold text-[#E01020] mb-1 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
                     {item.title.toUpperCase()}
                   </h3>
-                  <p className="text-[#E01020]/60 text-sm font-mono line-clamp-2">
+                  <p className="text-white/60 text-sm font-mono line-clamp-2">
                     {item.description}
                   </p>
                 </div>
@@ -204,7 +204,7 @@ export default function GalleryPage() {
 
           {filteredItems.length === 0 && (
             <div className="text-center py-20">
-              <p className="text-[#E01020]/60 font-mono text-lg">No items found in this category.</p>
+              <p className="text-white/60 font-mono text-lg">No items found in this category.</p>
             </div>
           )}
         </div>
@@ -244,7 +244,7 @@ export default function GalleryPage() {
               <h3 className="text-2xl font-bold text-[#E01020] mb-2 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
                 {selectedImage.title.toUpperCase()}
               </h3>
-              <p className="text-[#E01020]/70 font-mono">
+              <p className="text-white/70 font-mono">
                 {selectedImage.description}
               </p>
               <div className="mt-4">

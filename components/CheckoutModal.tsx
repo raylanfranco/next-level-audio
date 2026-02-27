@@ -201,7 +201,7 @@ export default function CheckoutModal() {
             <div>
               {items.length === 0 ? (
                 <div className="text-center py-12">
-                  <p className="text-[#E01020]/60 font-mono text-sm">Your cart is empty.</p>
+                  <p className="text-white/60 font-mono text-sm">Your cart is empty.</p>
                 </div>
               ) : (
                 <>
@@ -212,7 +212,7 @@ export default function CheckoutModal() {
                           <img src={item.imageUrl} alt={item.name} className="w-16 h-16 object-cover border border-[#E01020]/30" />
                         ) : (
                           <div className="w-16 h-16 bg-white/5 border border-[#E01020]/30 flex items-center justify-center">
-                            <span className="text-[#E01020]/30 text-[10px] font-mono">NO IMG</span>
+                            <span className="text-white/30 text-[10px] font-mono">NO IMG</span>
                           </div>
                         )}
                         <div className="flex-1 min-w-0">
@@ -257,7 +257,7 @@ export default function CheckoutModal() {
                   </div>
 
                   <div className="bg-[#E01020]/5 border border-[#E01020]/20 p-3 mb-4">
-                    <p className="text-[#E01020]/70 font-mono text-xs">
+                    <p className="text-white/70 font-mono text-xs">
                       <span className="font-bold text-[#E01020]">PICKUP ONLY:</span> Orders are available for in-store pickup at 944 N 9th St, Stroudsburg, PA.
                     </p>
                   </div>
@@ -279,7 +279,7 @@ export default function CheckoutModal() {
             <form onSubmit={handlePayment} className="space-y-4">
               {/* Order Summary */}
               <div className="border-b border-[#E01020]/20 pb-4 mb-4">
-                <p className="text-[#E01020]/60 font-mono text-xs uppercase mb-2">Order Summary</p>
+                <p className="text-white/60 font-mono text-xs uppercase mb-2">Order Summary</p>
                 {items.map((item) => (
                   <div key={item.id} className="flex justify-between text-sm mb-1">
                     <span className="text-white/80 font-mono truncate mr-2">{item.name} x{item.quantity}</span>
@@ -340,7 +340,7 @@ export default function CheckoutModal() {
                 ) : (
                   <div className="space-y-3">
                     <div>
-                      <label className="block text-[#E01020]/60 font-mono text-xs mb-1">Card Number</label>
+                      <label className="block text-white/60 font-mono text-xs mb-1">Card Number</label>
                       <div
                         id="card-number"
                         className="w-full h-11 px-4 bg-black border-2 border-[#E01020]/30 flex items-center focus-within:border-[#E01020] transition-colors"
@@ -348,21 +348,21 @@ export default function CheckoutModal() {
                     </div>
                     <div className="grid grid-cols-3 gap-3">
                       <div>
-                        <label className="block text-[#E01020]/60 font-mono text-xs mb-1">Exp Date</label>
+                        <label className="block text-white/60 font-mono text-xs mb-1">Exp Date</label>
                         <div
                           id="card-date"
                           className="w-full h-11 px-4 bg-black border-2 border-[#E01020]/30 flex items-center focus-within:border-[#E01020] transition-colors"
                         />
                       </div>
                       <div>
-                        <label className="block text-[#E01020]/60 font-mono text-xs mb-1">CVV</label>
+                        <label className="block text-white/60 font-mono text-xs mb-1">CVV</label>
                         <div
                           id="card-cvv"
                           className="w-full h-11 px-4 bg-black border-2 border-[#E01020]/30 flex items-center focus-within:border-[#E01020] transition-colors"
                         />
                       </div>
                       <div>
-                        <label className="block text-[#E01020]/60 font-mono text-xs mb-1">ZIP</label>
+                        <label className="block text-white/60 font-mono text-xs mb-1">ZIP</label>
                         <div
                           id="card-postal-code"
                           className="w-full h-11 px-4 bg-black border-2 border-[#E01020]/30 flex items-center focus-within:border-[#E01020] transition-colors"
@@ -411,22 +411,22 @@ export default function CheckoutModal() {
               <h3 className="text-xl font-bold text-green-400 mb-2" style={{ fontFamily: 'var(--font-oxanium)' }}>
                 PAYMENT SUCCESSFUL
               </h3>
-              <p className="text-[#E01020]/70 font-mono text-sm mb-2">
+              <p className="text-white/70 font-mono text-sm mb-2">
                 Your order has been placed!
               </p>
               {chargeId && (
-                <p className="text-[#E01020]/50 font-mono text-xs mb-4">
+                <p className="text-white/50 font-mono text-xs mb-4">
                   Reference: {chargeId}
                 </p>
               )}
-              <p className="text-[#E01020]/60 font-mono text-xs mb-2">
+              <p className="text-white/60 font-mono text-xs mb-2">
                 A receipt has been sent to your email.
               </p>
               <div className="bg-[#E01020]/5 border border-[#E01020]/20 p-3 mb-6">
-                <p className="text-[#E01020]/70 font-mono text-xs">
+                <p className="text-white/70 font-mono text-xs">
                   <span className="font-bold text-[#E01020]">PICKUP LOCATION:</span> 944 N 9th St, Stroudsburg, PA 18360
                 </p>
-                <p className="text-[#E01020]/50 font-mono text-xs mt-1">
+                <p className="text-white/50 font-mono text-xs mt-1">
                   We&apos;ll notify you when your order is ready.
                 </p>
               </div>
@@ -448,7 +448,7 @@ export default function CheckoutModal() {
               <h3 className="text-xl font-bold text-red-400 mb-2" style={{ fontFamily: 'var(--font-oxanium)' }}>
                 PAYMENT FAILED
               </h3>
-              <p className="text-[#E01020]/70 font-mono text-sm mb-4">
+              <p className="text-white/70 font-mono text-sm mb-4">
                 {errorMessage || 'Something went wrong. Please try again or call (570) 730-4433.'}
               </p>
               <button

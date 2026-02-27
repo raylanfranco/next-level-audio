@@ -33,7 +33,7 @@ export default function QuoteCalculator() {
           <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
             QUOTE CALCULATOR
           </h2>
-          <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
+          <p className="text-white/80 max-w-2xl mx-auto text-lg font-mono">
             Get an instant estimate for your automotive needs. Select the services you're interested in below.
           </p>
         </div>
@@ -55,7 +55,7 @@ export default function QuoteCalculator() {
                     <h3 className="text-xl font-bold text-[#E01020] mb-2" style={{ fontFamily: 'var(--font-oxanium)' }}>
                       {service.title}
                     </h3>
-                    <p className="text-[#E01020]/70 font-mono">${service.price}</p>
+                    <p className="text-white/70 font-mono">${service.price}</p>
                   </div>
                   <div className={`w-6 h-6 border-2 border-[#E01020] flex items-center justify-center ${
                     selectedServices.includes(service.id) ? 'bg-[#E01020]' : ''
@@ -79,7 +79,7 @@ export default function QuoteCalculator() {
               <p className="text-4xl font-bold text-white neon-glow">
                 ${total.toLocaleString()}
               </p>
-              <p className="text-[#E01020]/60 mt-4 font-mono">
+              <p className="text-white/60 mt-4 font-mono">
                 * This is a placeholder estimate. Actual prices may vary based on specific requirements.
               </p>
             </div>

@@ -123,7 +123,7 @@ export default function CareersPage() {
                     <h3 className="text-2xl font-bold text-[#E01020] mb-4 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
                       APPLICATION SUBMITTED!
                     </h3>
-                    <p className="text-[#E01020]/70 font-mono mb-6">
+                    <p className="text-white/70 font-mono mb-6">
                       Thank you for your interest! We&apos;ll review your application and get back to you.
                     </p>
                     <button
@@ -342,7 +342,7 @@ export default function CareersPage() {
               <h1 className="text-5xl xl:text-6xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
                 START YOUR CAREER WITH US
               </h1>
-              <p className="text-[#E01020]/80 text-lg font-mono">
+              <p className="text-white/80 text-lg font-mono">
                 Be part of Stroudsburg&apos;s premier car audio and automotive customization team.
               </p>
             </div>
@@ -377,7 +377,7 @@ export default function CareersPage() {
             <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
               WHY NEXT LEVEL?
             </h2>
-            <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono mb-12">
+            <p className="text-white/80 max-w-2xl mx-auto text-lg font-mono mb-12">
               We offer competitive pay, hands-on training, and the chance to work with cutting-edge automotive technology. Join a team that values quality craftsmanship and customer satisfaction.
             </p>
           </AnimateOnScroll>
@@ -391,7 +391,7 @@ export default function CareersPage() {
                 <h3 className="text-xl font-bold text-[#E01020] mb-2 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
                   COMPETITIVE PAY
                 </h3>
-                <p className="text-[#E01020]/60 font-mono text-sm">
+                <p className="text-white/60 font-mono text-sm">
                   Fair compensation that reflects your skills and experience.
                 </p>
               </div>
@@ -404,7 +404,7 @@ export default function CareersPage() {
                 <h3 className="text-xl font-bold text-[#E01020] mb-2 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
                   HANDS-ON TRAINING
                 </h3>
-                <p className="text-[#E01020]/60 font-mono text-sm">
+                <p className="text-white/60 font-mono text-sm">
                   Learn the latest in car audio and automotive tech from industry experts.
                 </p>
               </div>
@@ -417,7 +417,7 @@ export default function CareersPage() {
                 <h3 className="text-xl font-bold text-[#E01020] mb-2 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
                   GREAT TEAM
                 </h3>
-                <p className="text-[#E01020]/60 font-mono text-sm">
+                <p className="text-white/60 font-mono text-sm">
                   Work alongside passionate professionals who love what they do.
                 </p>
               </div>
@@ -434,7 +434,7 @@ export default function CareersPage() {
               <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
                 FIND US
               </h2>
-              <p className="text-[#E01020]/80 font-mono text-sm md:text-base max-w-xl mx-auto">
+              <p className="text-white/80 font-mono text-sm md:text-base max-w-xl mx-auto">
                 Visit our shop in Stroudsburg, PA — serving the Pocono Mountains and Monroe County area.
               </p>
             </div>

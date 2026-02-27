@@ -1344,7 +1344,7 @@
     "fetchedAt": "2026-02-05T17:28:45.778Z"
   },
   "4RTXZBFNM207A": {
-    "imageUrl": null,
+    "imageUrl": "https://dbdrive.net/cdn/shop/files/Maxkore-Red-RCAs.jpg?v=1727278108&width=550",
     "source": "not_found",
     "name": "ME 1.5 Db Link",
     "upc": "810219025844",
@@ -1848,14 +1848,14 @@
     "fetchedAt": "2026-02-09T14:27:40.705Z"
   },
   "BV8YGC34QCYYR": {
-    "imageUrl": null,
+    "imageUrl": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/6377/6377962_sd.jpg;maxHeight=1080;maxWidth=900?format=webp",
     "source": "not_found",
     "name": "THNIN6 T-harness",
     "upc": null,
     "fetchedAt": "2026-02-09T14:27:47.471Z"
   },
   "KT241PHNGAPPJ": {
-    "imageUrl": null,
+    "imageUrl": "https://alphasonik.com/cdn/shop/products/Main_47541e9b-3251-4c55-9cbf-1f0581552c56.jpg?v=1579820838",
     "source": "skipped",
     "name": "Alphasonik Dual 12\" Sub/amp Combo With Installation",
     "upc": null,
@@ -9436,7 +9436,7 @@
     "fetchedAt": "2026-02-24T00:03:55.333Z"
   },
   "TVB3NAS4TJXAA": {
-    "imageUrl": "https://hifonics.com/wp-content/uploads/sites/3/2021/08/0010_hifonics-compact-powersports-waterproof-mono-amplifier-tps-a500.1-1.jpg",
+    "imageUrl": "https://rockvilleaudio.com/cdn/shop/files/1444014.jpg?v=1760131777",
     "source": "google_upc",
     "name": "TPS-A500.1 MONO COMPACT AMP",
     "upc": "806576227397",
@@ -9644,5 +9644,68 @@
     "name": "HDK2 INTERGRATION HARNESS FOR COMPUSTAR REMOTE START SYSTEM 2008-2019 HONDA ACURA",
     "upc": "829543013755",
     "fetchedAt": "2026-02-24T00:07:27.074Z"
+  },
+  "9ND39JQ7D3RSM": {
+    "imageUrl": "https://cdn.powered-by-nitrosell.com/product_images/29/7026/large-md-8200.JPG",
+    "source": "google_upc",
+    "name": "MOMENTO M8 PRO DASH CAM SYSYEM",
+    "upc": "840127790190",
+    "fetchedAt": "2026-02-27T18:12:21.730Z"
+  },
+  "RJ0KKHG8WPTDE": {
+    "imageUrl": "https://cdn11.bigcommerce.com/s-oqfwjl/images/stencil/1280x1280/products/43745/290582/link2-01__1__16562.1706141356.jpg?c=2",
+    "source": "google_upc",
+    "name": "Link2 2 Channel Loc Wavtech Hi Low Converter",
+    "upc": "700987201383",
+    "fetchedAt": "2026-02-27T18:12:28.532Z"
+  },
+  "F64QSMZXBWMNM": {
+    "imageUrl": "https://m.media-amazon.com/images/I/61anLQSNjhL.jpg",
+    "source": "google_upc",
+    "name": "AXDIS-CL2 GM CLASS 2 2000-2014 RADIO REPLACEMENT WIRE HARNESS",
+    "upc": "086429384136",
+    "fetchedAt": "2026-02-27T18:12:35.352Z"
+  },
+  "RX2MB6D427Z6E": {
+    "imageUrl": "https://content.abt.com/image.php/alpine-6x9in-car-speakers-S2S69-woofer-rear.jpg?image=/images/products/BDP_Images/alpine-6x9in-car-speakers-S2S69-woofer-rear.jpg&canvas=1&width=750&height=550",
+    "source": "google_upc",
+    "name": "ALPINE S2-S69 SPEAKER 6X9",
+    "upc": "793276085061",
+    "fetchedAt": "2026-02-27T18:12:42.154Z"
+  },
+  "K1QWVK6HT2WSC": {
+    "imageUrl": "https://www.worldwidestereo.com/cdn/shop/files/5_cd26cdfd-e285-4472-82e7-4c3f96de39c9_1946x.jpg?v=1769808886",
+    "source": "google_upc",
+    "name": "ALPINE S2-S50 SPEAKER",
+    "upc": "793276085092",
+    "fetchedAt": "2026-02-27T18:12:48.945Z"
+  },
+  "9W7MQ0YXB8X5M": {
+    "imageUrl": "https://pisces.bbystatic.com/image2/BestBuy_US/images/products/49a6a648-4e67-4ed5-99d3-c3886f76e06c.jpg;maxHeight=828;maxWidth=400?format=webp",
+    "source": "google_upc",
+    "name": "S2-S10TW ALPINE TWEETER 1\" ( 2.5 CM )",
+    "upc": "793276001771",
+    "fetchedAt": "2026-02-27T18:12:55.762Z"
+  },
+  "SC1FC700TPNMR": {
+    "imageUrl": "https://m.media-amazon.com/images/I/81vCVdpHwOS._AC_UF894,1000_QL80_.jpg",
+    "source": "google_upc",
+    "name": "CONVERTIBLE SPEAKERS 6.5 MS62V MEMPHIS AUDIO",
+    "upc": "702588008378",
+    "fetchedAt": "2026-02-27T18:13:02.592Z"
+  },
+  "1DK48S19H2HGA": {
+    "imageUrl": "https://images.crutchfieldonline.com/ImageHandler/trim/869/652/products/2024/20/136/g13699058-M.jpg",
+    "source": "skipped",
+    "name": "CF-350MT CUSTOM FIT 3.50 SPEAKER JL AUDIO",
+    "upc": "699440990585",
+    "fetchedAt": "2026-02-27T18:13:02.592Z"
+  },
+  "WHG1CM3MXEGB4": {
+    "imageUrl": "https://i.ytimg.com/vi/nl7jsHnKnbY/maxresdefault.jpg",
+    "source": "google_upc",
+    "name": "Clover Discount",
+    "upc": "pqr://1?u=0dde0099f97d440c9b3cd7e52dd2a7ab&p=7bbc8",
+    "fetchedAt": "2026-02-27T18:13:09.357Z"
   }
 }

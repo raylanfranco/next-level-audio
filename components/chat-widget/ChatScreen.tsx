@@ -85,7 +85,7 @@ export default function ChatScreen({ messages, sendMessage, status }: ChatScreen
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Type your question..."
-          className="flex-1 bg-black border border-[#E01020]/30 px-3 py-2 text-sm text-[#E01020] font-mono placeholder:text-[#E01020]/30 focus:outline-none focus:border-[#E01020]"
+          className="flex-1 bg-black border border-[#E01020]/30 px-3 py-2 text-sm text-[#E01020] font-mono placeholder:text-white/30 focus:outline-none focus:border-[#E01020]"
         />
         <button
           type="submit"

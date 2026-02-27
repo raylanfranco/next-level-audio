@@ -27,7 +27,7 @@ export default function SubmittedScreen({ quoteData, onStartOver, onClose }: Sub
         REQUEST RECEIVED
       </h3>
 
-      <p className="text-[#E01020]/60 text-sm font-mono leading-relaxed mb-6">
+      <p className="text-white/60 text-sm font-mono leading-relaxed mb-6">
         Thanks! We&apos;ll get back to you ASAP about your{' '}
         <span className="text-[#E01020]">{quoteData.service}</span>
         {vehicleStr && (
@@ -39,7 +39,7 @@ export default function SubmittedScreen({ quoteData, onStartOver, onClose }: Sub
       <div className="flex gap-3 w-full">
         <button
           onClick={onStartOver}
-          className="flex-1 py-2.5 border border-[#E01020]/30 text-[#E01020]/60 text-sm tracking-wider hover:border-[#E01020]/60 hover:text-[#E01020] transition-colors cursor-pointer"
+          className="flex-1 py-2.5 border border-[#E01020]/30 text-white/60 text-sm tracking-wider hover:border-[#E01020]/60 hover:text-[#E01020] transition-colors cursor-pointer"
           style={{ fontFamily: 'var(--font-oxanium)' }}
         >
           START OVER

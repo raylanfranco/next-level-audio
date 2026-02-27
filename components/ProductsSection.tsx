@@ -140,10 +140,10 @@ export default function ProductsSection() {
             >
               SHOP BY CATEGORY
             </h2>
-            <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
+            <p className="text-white/80 max-w-2xl mx-auto text-lg font-mono">
               Browse our inventory by category — find exactly what your ride needs
             </p>
-            <p className="text-[#E01020]/50 max-w-xl mx-auto text-sm font-mono mt-2">
+            <p className="text-white/50 max-w-xl mx-auto text-sm font-mono mt-2">
               All products available for in-store pickup
             </p>
           </div>
@@ -163,7 +163,7 @@ export default function ProductsSection() {
                 className={`flex-shrink-0 px-5 py-2.5 border-2 font-mono text-xs font-semibold uppercase tracking-wider transition-all duration-300 cursor-pointer whitespace-nowrap ${
                   activeTab === tab.key
                     ? 'bg-[#E01020]/20 text-[#E01020] border-[#E01020] neon-border-soft'
-                    : 'bg-transparent text-[#E01020]/50 border-[#E01020]/20 hover:border-[#E01020]/50 hover:text-[#E01020]/80'
+                    : 'bg-transparent text-white/50 border-[#E01020]/20 hover:border-[#E01020]/50 hover:text-white/80'
                 }`}
               >
                 {tab.label}
@@ -188,7 +188,7 @@ export default function ProductsSection() {
             </div>
           ) : items.length === 0 ? (
             <div className="text-center py-16">
-              <p className="text-[#E01020]/40 font-mono text-lg">No products found in this category.</p>
+              <p className="text-white/40 font-mono text-lg">No products found in this category.</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
@@ -217,7 +217,7 @@ export default function ProductsSection() {
                         </svg>
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-[#E01020]/10 group-hover:bg-[#E01020]/20 transition-colors duration-500"></div>
+                    {/* no overlay — keep product images clean */}
                   </div>
 
                   <div className="p-6">

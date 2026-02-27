@@ -47,7 +47,7 @@ export default function WelcomeScreen({ onBook, onNavigate, aiEnabled }: Welcome
   return (
     <div className="flex-1 flex flex-col p-4 overflow-y-auto scrollbar-hide">
       <p
-        className="text-[#E01020]/80 text-sm mb-6 text-center"
+        className="text-white/80 text-sm mb-6 text-center"
         style={{ fontFamily: 'var(--font-geist-mono)' }}
       >
         {chatbotConfig.ui.welcomeMessage}
@@ -66,7 +66,7 @@ export default function WelcomeScreen({ onBook, onNavigate, aiEnabled }: Welcome
             }}
             className="w-full flex items-center gap-3 px-4 py-3 bg-[#0a0a0a] border border-[#E01020]/20 text-[#E01020] hover:border-[#E01020]/60 hover:bg-[#E01020]/10 transition-all text-left cursor-pointer group"
           >
-            <span className="text-[#E01020]/60 group-hover:text-[#E01020] transition-colors shrink-0">
+            <span className="text-white/60 group-hover:text-[#E01020] transition-colors shrink-0">
               <ActionIcon name={action.icon} className="w-5 h-5" />
             </span>
             <span
@@ -83,7 +83,7 @@ export default function WelcomeScreen({ onBook, onNavigate, aiEnabled }: Welcome
             onClick={() => onNavigate('chat')}
             className="w-full flex items-center gap-3 px-4 py-3 bg-[#0a0a0a] border border-[#E01020]/20 text-[#E01020] hover:border-[#E01020]/60 hover:bg-[#E01020]/10 transition-all text-left cursor-pointer group"
           >
-            <span className="text-[#E01020]/60 group-hover:text-[#E01020] transition-colors shrink-0">
+            <span className="text-white/60 group-hover:text-[#E01020] transition-colors shrink-0">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
               </svg>

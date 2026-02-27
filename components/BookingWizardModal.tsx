@@ -44,7 +44,7 @@ export default function BookingWizardModal({ isOpen, onClose }: BookingWizardMod
             <div className="absolute inset-0 flex items-center justify-center bg-black">
               <div className="text-center">
                 <div className="w-8 h-8 border-2 border-[#E01020]/30 border-t-[#E01020] rounded-full animate-spin mx-auto mb-4" />
-                <p className="text-[#E01020]/60 font-mono text-sm">Loading booking system...</p>
+                <p className="text-white/60 font-mono text-sm">Loading booking system...</p>
               </div>
             </div>
           )}
@@ -53,7 +53,7 @@ export default function BookingWizardModal({ isOpen, onClose }: BookingWizardMod
           {iframeError && (
             <div className="absolute inset-0 flex items-center justify-center bg-black">
               <div className="text-center px-6">
-                <p className="text-[#E01020]/80 font-mono text-sm mb-4">
+                <p className="text-white/80 font-mono text-sm mb-4">
                   The booking system couldn&apos;t be loaded inline.
                 </p>
                 <a
@@ -73,6 +73,7 @@ export default function BookingWizardModal({ isOpen, onClose }: BookingWizardMod
             src={BOOKING_URL}
             title="Book an Appointment"
             className={`w-full h-full border-0 ${iframeError ? 'hidden' : ''}`}
+            style={{ filter: 'hue-rotate(145deg)' }}
             onLoad={() => setIframeLoaded(true)}
             onError={() => setIframeError(true)}
             allow="payment"

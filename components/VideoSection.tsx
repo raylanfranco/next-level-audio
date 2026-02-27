@@ -56,7 +56,7 @@ export default function VideoSection() {
               >
                 SEE US IN ACTION
               </h2>
-              <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono px-4">
+              <p className="text-white/80 max-w-2xl mx-auto text-lg font-mono px-4">
                 Watch our expert technicians transform vehicles with premium installations and services
               </p>
             </div>

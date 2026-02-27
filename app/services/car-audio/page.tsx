@@ -237,7 +237,7 @@ export default function CarAudioPage() {
               >
                 CUSTOM CAR AUDIO INSTALLATION
               </h1>
-              <p className="text-[#E01020]/80 text-lg md:text-xl max-w-xl font-mono leading-relaxed mb-8">
+              <p className="text-white/80 text-lg md:text-xl max-w-xl font-mono leading-relaxed mb-8">
                 From basic speaker upgrades to full custom builds, our experienced technicians deliver premium sound tailored to your vehicle and your budget.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
@@ -283,7 +283,7 @@ export default function CarAudioPage() {
               >
                 WHAT WE INSTALL
               </h2>
-              <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
+              <p className="text-white/80 max-w-2xl mx-auto text-lg font-mono">
                 A full range of car audio services — from simple upgrades to complete custom builds
               </p>
             </div>
@@ -302,7 +302,7 @@ export default function CarAudioPage() {
                   >
                     {service.title}
                   </h3>
-                  <p className="text-[#E01020]/70 font-mono text-sm leading-relaxed">
+                  <p className="text-white/70 font-mono text-sm leading-relaxed">
                     {service.description}
                   </p>
                 </div>
@@ -323,7 +323,7 @@ export default function CarAudioPage() {
               >
                 BRANDS WE TRUST
               </h2>
-              <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
+              <p className="text-white/80 max-w-2xl mx-auto text-lg font-mono">
                 We only install products from brands known for quality, reliability, and performance
               </p>
             </div>
@@ -358,7 +358,7 @@ export default function CarAudioPage() {
               >
                 WHY PROFESSIONAL INSTALLATION?
               </h2>
-              <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
+              <p className="text-white/80 max-w-2xl mx-auto text-lg font-mono">
                 Don&apos;t risk your vehicle or your investment with a DIY job
               </p>
             </div>
@@ -377,7 +377,7 @@ export default function CarAudioPage() {
                   >
                     {item.title}
                   </h3>
-                  <p className="text-[#E01020]/70 font-mono text-sm leading-relaxed">
+                  <p className="text-white/70 font-mono text-sm leading-relaxed">
                     {item.description}
                   </p>
                 </div>
@@ -399,7 +399,7 @@ export default function CarAudioPage() {
               >
                 SERVING THE POCONO REGION
               </h2>
-              <p className="text-[#E01020]/80 text-lg font-mono leading-relaxed mb-8">
+              <p className="text-white/80 text-lg font-mono leading-relaxed mb-8">
                 Next Level Audio is the Pocono region&apos;s go-to shop for professional car audio installation. Whether you&apos;re upgrading a daily driver or building a competition system, we&apos;ve got you covered. Located in Stroudsburg, PA and serving all of Monroe County and beyond.
               </p>
               <div className="flex flex-wrap justify-center gap-3">
@@ -419,7 +419,7 @@ export default function CarAudioPage() {
                 ].map((area) => (
                   <span
                     key={area}
-                    className="px-4 py-2 border border-[#E01020]/30 text-[#E01020]/80 font-mono text-sm hover:border-[#E01020] hover:text-[#E01020] transition-colors"
+                    className="px-4 py-2 border border-[#E01020]/30 text-white/80 font-mono text-sm hover:border-[#E01020] hover:text-[#E01020] transition-colors"
                   >
                     {area}
                   </span>
@@ -441,7 +441,7 @@ export default function CarAudioPage() {
               >
                 FREQUENTLY ASKED QUESTIONS
               </h2>
-              <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
+              <p className="text-white/80 max-w-2xl mx-auto text-lg font-mono">
                 Common questions about car audio installation
               </p>
             </div>
@@ -459,7 +459,7 @@ export default function CarAudioPage() {
                       {faq.question}
                     </span>
                     <svg
-                      className="w-5 h-5 text-[#E01020]/60 shrink-0 transition-transform group-open:rotate-180"
+                      className="w-5 h-5 text-white/60 shrink-0 transition-transform group-open:rotate-180"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -468,7 +468,7 @@ export default function CarAudioPage() {
                     </svg>
                   </summary>
                   <div className="px-6 pb-6 border-t border-[#E01020]/10 pt-4">
-                    <p className="text-[#E01020]/70 font-mono text-sm leading-relaxed">
+                    <p className="text-white/70 font-mono text-sm leading-relaxed">
                       {faq.answer}
                     </p>
                   </div>

@@ -208,7 +208,7 @@ export default function WindowTintingPage() {
               >
                 PROFESSIONAL WINDOW TINTING
               </h1>
-              <p className="text-[#E01020]/80 text-lg md:text-xl max-w-xl font-mono leading-relaxed mb-8">
+              <p className="text-white/80 text-lg md:text-xl max-w-xl font-mono leading-relaxed mb-8">
                 Premium ceramic and carbon window films installed by experienced technicians.
                 Protect your interior, reduce heat, and upgrade your vehicle&apos;s look — right here in Stroudsburg.
               </p>
@@ -255,7 +255,7 @@ export default function WindowTintingPage() {
               >
                 WHY TINT YOUR WINDOWS?
               </h2>
-              <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
+              <p className="text-white/80 max-w-2xl mx-auto text-lg font-mono">
                 More than just aesthetics — professional window tinting protects you, your passengers, and your vehicle
               </p>
             </div>
@@ -280,7 +280,7 @@ export default function WindowTintingPage() {
                   >
                     {benefit.title}
                   </h3>
-                  <p className="text-[#E01020]/70 font-mono text-sm leading-relaxed">
+                  <p className="text-white/70 font-mono text-sm leading-relaxed">
                     {benefit.description}
                   </p>
                 </div>
@@ -302,7 +302,7 @@ export default function WindowTintingPage() {
               >
                 FILM OPTIONS
               </h2>
-              <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
+              <p className="text-white/80 max-w-2xl mx-auto text-lg font-mono">
                 We carry multiple tiers of window film to match every budget and performance need
               </p>
             </div>
@@ -329,22 +329,22 @@ export default function WindowTintingPage() {
                     >
                       {film.name}
                     </h3>
-                    <p className="text-[#E01020]/70 font-mono text-sm leading-relaxed mb-6">
+                    <p className="text-white/70 font-mono text-sm leading-relaxed mb-6">
                       {film.description}
                     </p>
 
                     {/* Specs */}
                     <div className="space-y-3 mb-6">
                       <div className="flex justify-between items-center border-b border-[#E01020]/10 pb-2">
-                        <span className="text-[#E01020]/60 font-mono text-xs uppercase tracking-wider">Heat Rejection</span>
+                        <span className="text-white/60 font-mono text-xs uppercase tracking-wider">Heat Rejection</span>
                         <span className="text-[#E01020] font-mono text-sm font-bold">{film.heatRejection}</span>
                       </div>
                       <div className="flex justify-between items-center border-b border-[#E01020]/10 pb-2">
-                        <span className="text-[#E01020]/60 font-mono text-xs uppercase tracking-wider">UV Block</span>
+                        <span className="text-white/60 font-mono text-xs uppercase tracking-wider">UV Block</span>
                         <span className="text-[#E01020] font-mono text-sm font-bold">{film.uvBlock}</span>
                       </div>
                       <div className="flex justify-between items-center">
-                        <span className="text-[#E01020]/60 font-mono text-xs uppercase tracking-wider">Warranty</span>
+                        <span className="text-white/60 font-mono text-xs uppercase tracking-wider">Warranty</span>
                         <span className="text-[#E01020] font-mono text-sm font-bold">{film.warranty}</span>
                       </div>
                     </div>
@@ -352,7 +352,7 @@ export default function WindowTintingPage() {
                     {/* Features */}
                     <ul className="space-y-2 mt-auto">
                       {film.features.map((feature) => (
-                        <li key={feature} className="flex items-center text-[#E01020]/80 font-mono text-sm">
+                        <li key={feature} className="flex items-center text-white/80 font-mono text-sm">
                           <svg className="w-4 h-4 mr-2 text-[#E01020] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                           </svg>
@@ -387,7 +387,7 @@ export default function WindowTintingPage() {
                     >
                       PENNSYLVANIA TINT LAWS
                     </h2>
-                    <p className="text-[#E01020]/60 font-mono text-sm">
+                    <p className="text-white/60 font-mono text-sm">
                       Know the rules before you tint — we&apos;ll help you stay legal
                     </p>
                   </div>
@@ -401,7 +401,7 @@ export default function WindowTintingPage() {
                     >
                       SEDANS
                     </h3>
-                    <ul className="space-y-2 text-[#E01020]/80 font-mono text-sm">
+                    <ul className="space-y-2 text-white/80 font-mono text-sm">
                       <li className="flex items-start gap-2">
                         <span className="text-[#E01020] shrink-0">&#9656;</span>
                         <span>Windshield: Non-reflective tint on top 3 inches</span>
@@ -427,7 +427,7 @@ export default function WindowTintingPage() {
                     >
                       SUVs, VANS & TRUCKS
                     </h3>
-                    <ul className="space-y-2 text-[#E01020]/80 font-mono text-sm">
+                    <ul className="space-y-2 text-white/80 font-mono text-sm">
                       <li className="flex items-start gap-2">
                         <span className="text-[#E01020] shrink-0">&#9656;</span>
                         <span>Windshield: Non-reflective tint on top 3 inches</span>
@@ -448,7 +448,7 @@ export default function WindowTintingPage() {
                   </div>
                 </div>
 
-                <p className="text-[#E01020]/50 font-mono text-xs">
+                <p className="text-white/50 font-mono text-xs">
                   Medical exemptions are available for certain conditions. We&apos;ll help you navigate the regulations and choose the right tint level for your vehicle type. Not sure what&apos;s legal? Give us a call.
                 </p>
               </div>
@@ -469,7 +469,7 @@ export default function WindowTintingPage() {
               >
                 SERVING THE POCONO REGION
               </h2>
-              <p className="text-[#E01020]/80 text-lg font-mono leading-relaxed mb-8">
+              <p className="text-white/80 text-lg font-mono leading-relaxed mb-8">
                 Next Level Audio is proud to serve Stroudsburg and the surrounding Pocono Mountain communities with professional window tinting services. Our shop is conveniently located and easily accessible from throughout Monroe County and beyond.
               </p>
               <div className="flex flex-wrap justify-center gap-3">
@@ -489,7 +489,7 @@ export default function WindowTintingPage() {
                 ].map((area) => (
                   <span
                     key={area}
-                    className="px-4 py-2 border border-[#E01020]/30 text-[#E01020]/80 font-mono text-sm hover:border-[#E01020] hover:text-[#E01020] transition-colors"
+                    className="px-4 py-2 border border-[#E01020]/30 text-white/80 font-mono text-sm hover:border-[#E01020] hover:text-[#E01020] transition-colors"
                   >
                     {area}
                   </span>
@@ -511,7 +511,7 @@ export default function WindowTintingPage() {
               >
                 FREQUENTLY ASKED QUESTIONS
               </h2>
-              <p className="text-[#E01020]/80 max-w-2xl mx-auto text-lg font-mono">
+              <p className="text-white/80 max-w-2xl mx-auto text-lg font-mono">
                 Everything you need to know about window tinting
               </p>
             </div>
@@ -529,7 +529,7 @@ export default function WindowTintingPage() {
                       {faq.question}
                     </span>
                     <svg
-                      className="w-5 h-5 text-[#E01020]/60 shrink-0 transition-transform group-open:rotate-180"
+                      className="w-5 h-5 text-white/60 shrink-0 transition-transform group-open:rotate-180"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -538,7 +538,7 @@ export default function WindowTintingPage() {
                     </svg>
                   </summary>
                   <div className="px-6 pb-6 border-t border-[#E01020]/10 pt-4">
-                    <p className="text-[#E01020]/70 font-mono text-sm leading-relaxed">
+                    <p className="text-white/70 font-mono text-sm leading-relaxed">
                       {faq.answer}
                     </p>
                   </div>
