@@ -58,7 +58,15 @@
       "WebFetch(domain:axxessinterfaces.com)",
       "WebFetch(domain:metradealer.com)",
       "WebFetch(domain:www.kriswindowtintde.com)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(echo:*)",
+      "Bash(git revert:*)",
+      "Bash(git restore:*)",
+      "Bash(tasklist:*)",
+      "Bash(npm run start:dev:*)",
+      "Bash(PORT=3002 npm run start:dev:*)",
+      "Bash(git stash:*)",
+      "Bash(git rm:*)"
     ]
   }
 }
