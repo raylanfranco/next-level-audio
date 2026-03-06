@@ -1,12 +1,11 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { useRef, useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { useBookingModal } from './BookingModalContext';
 
 const DEFAULT_VIDEO_URL = '/videos/hero-video.mp4';
-
-const TYPEWRITER_TEXT = 'WITH OUR EXPERT TOUCH';
 
 interface HeroSectionProps {
   videoSrc?: string;
@@ -49,6 +48,8 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
   const videoRef = useRef<HTMLVideoElement>(null);
   const { openModal } = useBookingModal();
   const [scrollY, setScrollY] = useState(0);
+  const t = useTranslations('hero');
+  const tc = useTranslations('common');
 
   useEffect(() => {
     if (videoRef.current) {
@@ -107,21 +108,21 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
             className="hero-stagger hero-stagger-1 text-[#E01020] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft"
             style={{ fontFamily: 'var(--font-oxanium)' }}
           >
-            WELCOME TO NEXT LEVEL AUDIO
+            {t('welcome')}
           </p>
           <h1
             className="hero-stagger hero-stagger-2 text-5xl md:text-7xl lg:text-8xl font-bold mb-6 text-white leading-tight neon-glow"
             style={{ fontFamily: 'var(--font-oxanium)' }}
           >
-            ELEVATE
-            <span className="block text-[#E01020] neon-glow-soft">YOUR JOURNEY</span>
+            {t('elevate')}
+            <span className="block text-[#E01020] neon-glow-soft">{t('yourJourney')}</span>
             <span className="block text-sm md:text-lg text-white font-normal mt-2">
-              <TypewriterText text={TYPEWRITER_TEXT} />
+              <TypewriterText text={t('typewriter')} />
             </span>
           </h1>
           <p className="hero-stagger hero-stagger-3 text-lg md:text-xl text-white mb-10 max-w-2xl mx-auto leading-relaxed font-mono">
-            Indulge your vehicle with our meticulous car audio installation and window tinting services.<br />
-            Experience premium quality that turns heads on every road adventure.
+            {t('description')}<br />
+            {t('description2')}
           </p>
           <div className="hero-stagger hero-stagger-4 flex flex-col sm:flex-row gap-4 justify-center items-center">
             <button
@@ -129,14 +130,14 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
               className="px-8 py-4 bg-[#E01020]/20 text-white border-2 border-[#E01020] font-semibold text-lg hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button cursor-pointer"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
-              BOOK APPOINTMENT
+              {tc('bookAppointment')}
             </button>
             <Link
               href="/services"
               className="px-8 py-4 bg-black/40 backdrop-blur-sm text-white border-2 border-[#E01020]/50 font-semibold text-lg hover:border-[#E01020] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
-              OUR SERVICES
+              {tc('ourServices')}
             </Link>
           </div>
         </div>

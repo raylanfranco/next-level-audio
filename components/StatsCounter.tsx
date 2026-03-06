@@ -2,17 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { useInView } from '@/hooks/useInView';
-
-interface Stat {
-  value: number;
-  suffix: string;
-  label: string;
-}
-
-const stats: Stat[] = [
-  { value: 20, suffix: '+', label: 'Years Experience' },
-  { value: 5, suffix: '★', label: 'Average Rating' },
-];
+import { useTranslations } from 'next-intl';
 
 function AnimatedNumber({ target, suffix, started }: { target: number; suffix: string; started: boolean }) {
   const [count, setCount] = useState(0);
@@ -52,6 +42,12 @@ function AnimatedNumber({ target, suffix, started }: { target: number; suffix: s
 
 export default function StatsCounter() {
   const { ref, isInView } = useInView({ threshold: 0.3 });
+  const t = useTranslations('stats');
+
+  const stats = [
+    { value: 20, suffix: '+', label: t('yearsExperience') },
+    { value: 5, suffix: '★', label: t('averageRating') },
+  ];
 
   return (
     <section className="py-16 md:py-24 bg-black relative overflow-hidden border-t-2 border-b-2 border-[#E01020]/20">

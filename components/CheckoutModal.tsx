@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useCart } from './CartContext';
+import { useAuth } from './AuthContext';
 
 declare global {
   interface Window {
@@ -22,23 +23,53 @@ interface CloverElement {
   mount: (selector: string) => void;
 }
 
+interface AppliedCoupon {
+  id: string;
+  code: string;
+  type: 'percent' | 'fixed';
+  value: number;
+  discountCents: number;
+}
+
 function formatCents(cents: number) {
   return `$${(cents / 100).toFixed(2)}`;
 }
 
 export default function CheckoutModal() {
   const { items, removeItem, updateQuantity, clearCart, total, isCheckoutOpen, closeCheckout } = useCart();
+  const { user, profile } = useAuth();
   const [step, setStep] = useState<'cart' | 'payment' | 'success' | 'error'>('cart');
   const [customerInfo, setCustomerInfo] = useState({ name: '', email: '', phone: '' });
   const [isProcessing, setIsProcessing] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [chargeId, setChargeId] = useState('');
+  const [pointsEarned, setPointsEarned] = useState(0);
   const [sdkLoaded, setSdkLoaded] = useState(false);
   const [sdkError, setSdkError] = useState(false);
   const cloverRef = useRef<CloverInstance | null>(null);
   const elementsRef = useRef<{ mounted: boolean }>({ mounted: false });
 
+  // Coupon state
+  const [couponCode, setCouponCode] = useState('');
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponError, setCouponError] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
+
   const merchantId = process.env.NEXT_PUBLIC_CLOVER_MERCHANT_ID || '';
+
+  const discountCents = appliedCoupon?.discountCents || 0;
+  const finalTotal = Math.max(total - discountCents, 0);
+
+  // Auto-fill customer info from profile when stepping to payment
+  useEffect(() => {
+    if (step === 'payment' && profile && !customerInfo.name) {
+      setCustomerInfo({
+        name: profile.full_name || '',
+        email: profile.email || '',
+        phone: profile.phone || '',
+      });
+    }
+  }, [step, profile, customerInfo.name]);
 
   // Load Clover SDK script
   useEffect(() => {
@@ -113,9 +144,46 @@ export default function CheckoutModal() {
       setIsProcessing(false);
       setErrorMessage('');
       setChargeId('');
+      setPointsEarned(0);
+      setCouponCode('');
+      setCouponError('');
+      setAppliedCoupon(null);
       elementsRef.current.mounted = false;
       cloverRef.current = null;
     }, 200);
+  };
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) return;
+    setCouponLoading(true);
+    setCouponError('');
+
+    try {
+      const res = await fetch('/api/coupons/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: couponCode.trim(), subtotalCents: total }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setCouponError(data.error || 'Invalid coupon');
+        return;
+      }
+
+      setAppliedCoupon(data.coupon);
+    } catch {
+      setCouponError('Failed to validate coupon');
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode('');
+    setCouponError('');
   };
 
   const handlePayment = async (e: React.FormEvent) => {
@@ -147,10 +215,20 @@ export default function CheckoutModal() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           token: result.token,
-          amount: total,
+          amount: finalTotal,
           currency: 'usd',
           description,
           receipt_email: customerInfo.email,
+          // Order metadata for saving
+          orderData: {
+            items: items.map((i) => ({ name: i.name, quantity: i.quantity, price: i.price })),
+            subtotal_cents: total,
+            discount_cents: discountCents,
+            total_cents: finalTotal,
+            coupon_id: appliedCoupon?.id || null,
+            customer_name: customerInfo.name,
+            customer_email: customerInfo.email,
+          },
         }),
       });
 
@@ -163,6 +241,7 @@ export default function CheckoutModal() {
       }
 
       setChargeId(chargeData.charge?.id || '');
+      setPointsEarned(chargeData.pointsEarned || 0);
       clearCart();
       setStep('success');
     } catch {
@@ -248,11 +327,63 @@ export default function CheckoutModal() {
                     ))}
                   </div>
 
+                  {/* Coupon Input */}
+                  <div className="mb-4">
+                    {appliedCoupon ? (
+                      <div className="flex items-center justify-between bg-green-400/5 border border-green-400/30 px-3 py-2">
+                        <div>
+                          <span className="text-green-400 font-mono text-xs font-bold">{appliedCoupon.code}</span>
+                          <span className="text-green-400/60 font-mono text-xs ml-2">
+                            (-{formatCents(appliedCoupon.discountCents)})
+                          </span>
+                        </div>
+                        <button
+                          onClick={handleRemoveCoupon}
+                          className="text-red-400/60 hover:text-red-400 text-xs font-mono cursor-pointer"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={couponCode}
+                          onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                          placeholder="Coupon code"
+                          className="flex-1 px-3 py-2 bg-black border-2 border-[#E01020]/20 text-white font-mono text-xs focus:outline-none focus:border-[#E01020]/50 transition-colors placeholder:text-white/20 uppercase"
+                        />
+                        <button
+                          onClick={handleApplyCoupon}
+                          disabled={couponLoading || !couponCode.trim()}
+                          className="px-4 py-2 border-2 border-[#E01020]/30 text-[#E01020] font-mono text-xs hover:border-[#E01020] transition-colors disabled:opacity-30 cursor-pointer"
+                        >
+                          {couponLoading ? '...' : 'APPLY'}
+                        </button>
+                      </div>
+                    )}
+                    {couponError && (
+                      <p className="text-red-400 font-mono text-[10px] mt-1">{couponError}</p>
+                    )}
+                  </div>
+
                   {/* Total */}
                   <div className="border-t-2 border-[#E01020]/30 pt-4 mb-6">
+                    {discountCents > 0 && (
+                      <>
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="text-white/50 font-mono text-sm">Subtotal</span>
+                          <span className="text-white/50 font-mono text-sm">{formatCents(total)}</span>
+                        </div>
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-green-400 font-mono text-sm">Discount</span>
+                          <span className="text-green-400 font-mono text-sm">-{formatCents(discountCents)}</span>
+                        </div>
+                      </>
+                    )}
                     <div className="flex justify-between items-center">
                       <span className="text-white font-semibold" style={{ fontFamily: 'var(--font-oxanium)' }}>TOTAL</span>
-                      <span className="text-[#E01020] font-mono text-xl font-bold neon-glow">{formatCents(total)}</span>
+                      <span className="text-[#E01020] font-mono text-xl font-bold neon-glow">{formatCents(finalTotal)}</span>
                     </div>
                   </div>
 
@@ -286,9 +417,15 @@ export default function CheckoutModal() {
                     <span className="text-[#E01020] font-mono">{formatCents(item.price * item.quantity)}</span>
                   </div>
                 ))}
+                {discountCents > 0 && (
+                  <div className="flex justify-between text-sm mt-1">
+                    <span className="text-green-400 font-mono">Coupon ({appliedCoupon?.code})</span>
+                    <span className="text-green-400 font-mono">-{formatCents(discountCents)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between text-sm mt-2 pt-2 border-t border-[#E01020]/10">
                   <span className="text-white font-bold" style={{ fontFamily: 'var(--font-oxanium)' }}>TOTAL</span>
-                  <span className="text-[#E01020] font-bold font-mono">{formatCents(total)}</span>
+                  <span className="text-[#E01020] font-bold font-mono">{formatCents(finalTotal)}</span>
                 </div>
               </div>
 
@@ -373,6 +510,15 @@ export default function CheckoutModal() {
                 )}
               </div>
 
+              {/* Points info for logged-in users */}
+              {user && (
+                <div className="bg-[#FFD700]/5 border border-[#FFD700]/20 px-3 py-2">
+                  <p className="text-[#FFD700] font-mono text-xs">
+                    You&apos;ll earn <span className="font-bold">{Math.floor(finalTotal / 100)}</span> reward points with this purchase!
+                  </p>
+                </div>
+              )}
+
               {errorMessage && (
                 <p className="text-red-400 font-mono text-xs text-center">{errorMessage}</p>
               )}
@@ -396,7 +542,7 @@ export default function CheckoutModal() {
                   className="flex-1 bg-[#E01020]/20 border-2 border-[#E01020] text-[#E01020] px-6 py-3 font-semibold text-sm hover:bg-[#E01020]/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                   style={{ fontFamily: 'var(--font-oxanium)' }}
                 >
-                  {isProcessing ? 'PROCESSING...' : `PAY ${formatCents(total)}`}
+                  {isProcessing ? 'PROCESSING...' : `PAY ${formatCents(finalTotal)}`}
                 </button>
               </div>
             </form>
@@ -418,6 +564,13 @@ export default function CheckoutModal() {
                 <p className="text-white/50 font-mono text-xs mb-4">
                   Reference: {chargeId}
                 </p>
+              )}
+              {pointsEarned > 0 && (
+                <div className="bg-[#FFD700]/5 border border-[#FFD700]/20 px-3 py-2 mb-4">
+                  <p className="text-[#FFD700] font-mono text-xs">
+                    You earned <span className="font-bold">+{pointsEarned}</span> reward points!
+                  </p>
+                </div>
               )}
               <p className="text-white/60 font-mono text-xs mb-2">
                 A receipt has been sent to your email.

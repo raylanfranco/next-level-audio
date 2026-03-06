@@ -1,24 +1,23 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { useTranslations } from 'next-intl';
 import type { CloverItem, CloverCategory } from '@/types/clover';
 import { useCart } from '@/components/CartContext';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
 
-// Curated categories with friendly names.
-// The `match` field is a case-insensitive substring matched against Clover category names.
-// This lets us decouple the display from whatever the merchant named them in Clover.
-const CURATED_TABS = [
-  { key: 'all', label: 'ALL', match: null },
-  { key: 'audio', label: 'SOUND SYSTEMS', match: 'audio' },
-  { key: 'subwoofers', label: 'SUBWOOFERS', match: 'sub' },
-  { key: 'speakers', label: 'SPEAKERS', match: 'speaker' },
-  { key: 'lighting', label: 'LIGHTING', match: 'light' },
-  { key: 'remote', label: 'REMOTE START', match: 'remote' },
-  { key: 'security', label: 'SECURITY', match: 'secur' },
-  { key: 'accessories', label: 'ACCESSORIES', match: 'accessor' },
-];
+// Tab keys mapped to Clover category match strings
+const TAB_MATCHES: Record<string, string | null> = {
+  all: null,
+  audio: 'audio',
+  subwoofers: 'sub',
+  speakers: 'speaker',
+  lighting: 'light',
+  remote: 'remote',
+  security: 'secur',
+  accessories: 'accessor',
+};
 
 function formatCents(cents: number) {
   return `$${(cents / 100).toFixed(2)}`;
@@ -31,18 +30,45 @@ export default function ProductsSection() {
   const [activeTab, setActiveTab] = useState('all');
   const [productImages, setProductImages] = useState<Record<string, string | null>>({});
   const [animKey, setAnimKey] = useState(0);
+  const [bestSellerIds, setBestSellerIds] = useState<Set<string>>(new Set());
+  const t = useTranslations('products');
+  const tc = useTranslations('common');
 
   const { addItem } = useCart();
   const [addedItemId, setAddedItemId] = useState<string | null>(null);
   const tabsRef = useRef<HTMLDivElement>(null);
 
+  // Build curated tabs with translated labels
+  const CURATED_TABS = [
+    { key: 'all', label: t('all'), match: TAB_MATCHES.all },
+    { key: 'audio', label: t('soundSystems'), match: TAB_MATCHES.audio },
+    { key: 'subwoofers', label: t('subwoofers'), match: TAB_MATCHES.subwoofers },
+    { key: 'speakers', label: t('speakers'), match: TAB_MATCHES.speakers },
+    { key: 'lighting', label: t('lighting'), match: TAB_MATCHES.lighting },
+    { key: 'remote', label: t('remoteStart'), match: TAB_MATCHES.remote },
+    { key: 'security', label: t('security'), match: TAB_MATCHES.security },
+    { key: 'accessories', label: t('accessories'), match: TAB_MATCHES.accessories },
+  ];
+
+  // Fetch best seller IDs on mount
+  useEffect(() => {
+    fetch('/api/best-sellers?limit=20')
+      .then(res => res.ok ? res.json() : null)
+      .then(data => {
+        if (data?.items?.length > 0) {
+          setBestSellerIds(new Set(data.items.map((bs: { clover_item_id: string }) => bs.clover_item_id)));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
   // Resolve a curated tab key to a Clover category ID
   const resolveCategoryId = useCallback((tabKey: string): string | null => {
     if (tabKey === 'all') return null;
-    const tab = CURATED_TABS.find(t => t.key === tabKey);
-    if (!tab?.match) return null;
+    const matchStr = TAB_MATCHES[tabKey];
+    if (!matchStr) return null;
     const cat = categories.find(c =>
-      c.name.toLowerCase().includes(tab.match!)
+      c.name.toLowerCase().includes(matchStr)
     );
     return cat?.id ?? null;
   }, [categories]);
@@ -138,13 +164,15 @@ export default function ProductsSection() {
               className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow hover-glitch"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
-              SHOP BY CATEGORY
+              {activeTab === 'all' && bestSellerIds.size > 0 ? t('bestSellers') : t('shopByCategory')}
             </h2>
             <p className="text-white/80 max-w-2xl mx-auto text-lg font-mono">
-              Browse our inventory by category — find exactly what your ride needs
+              {activeTab === 'all' && bestSellerIds.size > 0
+                ? t('bestSellersDesc')
+                : t('shopByCategoryDesc')}
             </p>
             <p className="text-white/50 max-w-xl mx-auto text-sm font-mono mt-2">
-              All products available for in-store pickup
+              {t('inStorePickup')}
             </p>
           </div>
         </AnimateOnScroll>
@@ -188,7 +216,7 @@ export default function ProductsSection() {
             </div>
           ) : items.length === 0 ? (
             <div className="text-center py-16">
-              <p className="text-white/40 font-mono text-lg">No products found in this category.</p>
+              <p className="text-white/40 font-mono text-lg">{t('noProducts')}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
@@ -217,7 +245,15 @@ export default function ProductsSection() {
                         </svg>
                       </div>
                     )}
-                    {/* no overlay — keep product images clean */}
+                    {/* Best seller badge */}
+                    {bestSellerIds.has(item.id) && (
+                      <div className="absolute top-3 left-3 z-10 flex items-center gap-1 px-2 py-1 bg-[#FFD700]/90 text-black text-[10px] font-bold font-mono uppercase tracking-wider">
+                        <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                        </svg>
+                        {t('bestSeller')}
+                      </div>
+                    )}
                   </div>
 
                   <div className="p-6">
@@ -239,7 +275,7 @@ export default function ProductsSection() {
                             : 'bg-[#E01020]/20 text-[#E01020] border-[#E01020] hover:bg-[#E01020]/30 neon-border-soft cyber-button'
                         }`}
                       >
-                        {addedItemId === item.id ? 'ADDED!' : 'ADD TO CART'}
+                        {addedItemId === item.id ? t('added') : t('addToCart')}
                       </button>
                     </div>
                   </div>
@@ -258,7 +294,7 @@ export default function ProductsSection() {
                 className="inline-block px-8 py-4 bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] font-semibold text-lg font-mono hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
-                VIEW ALL PRODUCTS
+                {tc('viewAll')}
               </Link>
             </div>
           </AnimateOnScroll>

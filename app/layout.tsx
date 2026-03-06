@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Oxanium } from "next/font/google";
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
 import ClientLayout from "@/components/ClientLayout";
 import ConditionalLayout from "@/components/ConditionalLayout";
@@ -38,13 +40,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+  const messages = await getMessages();
+
   return (
-    <html lang="en" className="dark">
+    <html lang={locale} className="dark">
       <head>
         <script
           type="application/ld+json"
@@ -100,11 +105,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${oxanium.variable} antialiased bg-black`}
       >
-        <ClientLayout>
-          <ConditionalLayout>
-            {children}
-          </ConditionalLayout>
-        </ClientLayout>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <ClientLayout>
+            <ConditionalLayout>
+              {children}
+            </ConditionalLayout>
+          </ClientLayout>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

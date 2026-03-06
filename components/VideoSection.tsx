@@ -1,9 +1,11 @@
 'use client';
 
 import { useRef, useState, useEffect, useCallback } from 'react';
+import { useTranslations } from 'next-intl';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
 
 export default function VideoSection() {
+  const t = useTranslations('home');
   const previewRef = useRef<HTMLVideoElement>(null);
   const lightboxRef = useRef<HTMLVideoElement>(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -54,10 +56,10 @@ export default function VideoSection() {
                 className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow hover-glitch"
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
-                SEE US IN ACTION
+                {t('videoHeading')}
               </h2>
               <p className="text-white/80 max-w-2xl mx-auto text-lg font-mono px-4">
-                Watch our expert technicians transform vehicles with premium installations and services
+                {t('videoDescription')}
               </p>
             </div>
           </AnimateOnScroll>
@@ -108,7 +110,7 @@ export default function VideoSection() {
               <p
                 className="mt-4 text-white/80 text-sm md:text-base font-mono uppercase tracking-widest group-hover:text-[#E01020] transition-colors duration-300"
               >
-                Watch the Full Video
+                {t('watchFullVideo')}
               </p>
             </div>
 
@@ -128,7 +130,7 @@ export default function VideoSection() {
           <button
             onClick={closeLightbox}
             className="absolute top-6 right-6 text-[#E01020] hover:text-white transition-colors z-10 cursor-pointer"
-            aria-label="Close video"
+            aria-label={t('closeVideo')}
           >
             <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />

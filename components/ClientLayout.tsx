@@ -1,6 +1,7 @@
 'use client';
 
 import { ReactNode } from 'react';
+import { AuthProvider } from './AuthContext';
 import { BookingModalProvider } from './BookingModalContext';
 import BookingWizardModal from './BookingWizardModal';
 import { useBookingModal } from './BookingModalContext';
@@ -16,15 +17,17 @@ function ModalRenderer() {
 
 export default function ClientLayout({ children }: { children: ReactNode }) {
   return (
-    <CartProvider>
-      <BookingModalProvider>
-        <ChatProvider>
-          {children}
-          <ModalRenderer />
-          <CheckoutModal />
-          <ChatWidget />
-        </ChatProvider>
-      </BookingModalProvider>
-    </CartProvider>
+    <AuthProvider>
+      <CartProvider>
+        <BookingModalProvider>
+          <ChatProvider>
+            {children}
+            <ModalRenderer />
+            <CheckoutModal />
+            <ChatWidget />
+          </ChatProvider>
+        </BookingModalProvider>
+      </CartProvider>
+    </AuthProvider>
   );
 }

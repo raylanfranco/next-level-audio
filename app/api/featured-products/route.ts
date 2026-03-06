@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cloverFetch, isCloverConfigured } from "@/lib/clover/client";
+import { createServerClient } from "@/lib/supabase/client";
 import type { CloverItemsResponse } from "@/types/clover";
 import * as fs from "fs";
 import * as path from "path";
@@ -62,8 +63,38 @@ export async function GET(request: NextRequest) {
       (item) => !item.hidden && !item.deleted && idsWithImages.has(item.id)
     );
 
-    // Shuffle and pick the requested count
-    const selected = shuffle(allItems).slice(0, count);
+    // Try to order by best sellers from Supabase cache
+    let selected: typeof allItems;
+    try {
+      const supabase = createServerClient();
+      const { data: bestSellers } = await supabase
+        .from("best_sellers")
+        .select("clover_item_id, total_quantity_sold")
+        .order("total_quantity_sold", { ascending: false })
+        .limit(count * 3);
+
+      if (bestSellers && bestSellers.length > 0) {
+        // Build a rank map from best sellers data
+        const rankMap = new Map<string, number>();
+        bestSellers.forEach((bs, idx) => rankMap.set(bs.clover_item_id, idx));
+
+        // Sort items: best sellers first (by rank), then the rest shuffled
+        const bestSellerItems = allItems
+          .filter((item) => rankMap.has(item.id))
+          .sort((a, b) => (rankMap.get(a.id) ?? 999) - (rankMap.get(b.id) ?? 999));
+        const otherItems = shuffle(
+          allItems.filter((item) => !rankMap.has(item.id))
+        );
+
+        selected = [...bestSellerItems, ...otherItems].slice(0, count);
+      } else {
+        // No best sellers data yet — fall back to random
+        selected = shuffle(allItems).slice(0, count);
+      }
+    } catch {
+      // Supabase error — fall back to random
+      selected = shuffle(allItems).slice(0, count);
+    }
 
     return NextResponse.json({
       items: selected.map((item) => ({

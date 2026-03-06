@@ -67,7 +67,7 @@ const serviceNames: Record<string, string> = {
   'accessories': 'Auto Accessories',
 };
 
-type NavItem = 'overview' | 'inventory' | 'orders' | 'payments' | 'customers' | 'bookings' | 'requests' | 'jobs' | 'applications';
+type NavItem = 'overview' | 'inventory' | 'orders' | 'payments' | 'customers' | 'bookings' | 'requests' | 'jobs' | 'applications' | 'best-sellers' | 'coupons';
 
 function formatCents(cents: number) {
   return `$${(cents / 100).toFixed(2)}`;
@@ -116,6 +116,145 @@ function AdminDashboard() {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [jobListings, setJobListings] = useState<JobListing[]>([]);
   const [applications, setApplications] = useState<CareerApplication[]>([]);
+
+  // Best sellers state
+  interface BestSellerRow {
+    id: string;
+    clover_item_id: string;
+    item_name: string;
+    total_quantity_sold: number;
+    total_revenue_cents: number;
+    order_count: number;
+    last_sold_at: string | null;
+    updated_at: string;
+  }
+  const [bestSellers, setBestSellers] = useState<BestSellerRow[]>([]);
+  const [bestSellersLoading, setBestSellersLoading] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const [lastRefreshed, setLastRefreshed] = useState<string | null>(null);
+
+  const fetchBestSellers = useCallback(async () => {
+    setBestSellersLoading(true);
+    try {
+      const res = await fetch('/api/best-sellers?limit=50&sort=quantity');
+      if (res.ok) {
+        const data = await res.json();
+        setBestSellers(data.items || []);
+        if (data.items?.length > 0 && data.items[0].updated_at) {
+          setLastRefreshed(data.items[0].updated_at);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching best sellers:', error);
+    } finally {
+      setBestSellersLoading(false);
+    }
+  }, []);
+
+  const refreshBestSellers = async () => {
+    setRefreshing(true);
+    try {
+      const res = await fetch('/api/best-sellers/refresh', { method: 'POST' });
+      if (res.ok) {
+        await fetchBestSellers();
+      }
+    } catch (error) {
+      console.error('Error refreshing best sellers:', error);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
+  // Coupons state
+  interface CouponRow {
+    id: string;
+    code: string;
+    type: 'percent' | 'fixed';
+    value: number;
+    min_order_cents: number | null;
+    max_uses: number | null;
+    used_count: number;
+    points_cost: number;
+    expires_at: string | null;
+    is_active: boolean;
+    created_at: string;
+  }
+  const [coupons, setCoupons] = useState<CouponRow[]>([]);
+  const [couponsLoading, setCouponsLoading] = useState(false);
+  const [showCouponForm, setShowCouponForm] = useState(false);
+  const [couponForm, setCouponForm] = useState({
+    code: '',
+    type: 'percent' as 'percent' | 'fixed',
+    value: '',
+    min_order_cents: '',
+    max_uses: '',
+    points_cost: '',
+    expires_at: '',
+  });
+  const [couponSaving, setCouponSaving] = useState(false);
+  const [couponError, setCouponError] = useState('');
+
+  const fetchCoupons = useCallback(async () => {
+    setCouponsLoading(true);
+    try {
+      const res = await fetch('/api/admin/coupons');
+      if (res.ok) {
+        const data = await res.json();
+        setCoupons(data.coupons || []);
+      }
+    } catch (error) {
+      console.error('Error fetching coupons:', error);
+    } finally {
+      setCouponsLoading(false);
+    }
+  }, []);
+
+  const handleCreateCoupon = async () => {
+    setCouponSaving(true);
+    setCouponError('');
+    try {
+      const res = await fetch('/api/admin/coupons', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          code: couponForm.code,
+          type: couponForm.type,
+          value: couponForm.type === 'fixed' ? Number(couponForm.value) * 100 : Number(couponForm.value),
+          min_order_cents: couponForm.min_order_cents ? Number(couponForm.min_order_cents) * 100 : null,
+          max_uses: couponForm.max_uses ? Number(couponForm.max_uses) : null,
+          points_cost: couponForm.points_cost ? Number(couponForm.points_cost) : 0,
+          expires_at: couponForm.expires_at || null,
+        }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        setCouponError(data.error || 'Failed to create coupon');
+        return;
+      }
+
+      setShowCouponForm(false);
+      setCouponForm({ code: '', type: 'percent', value: '', min_order_cents: '', max_uses: '', points_cost: '', expires_at: '' });
+      await fetchCoupons();
+    } catch {
+      setCouponError('Failed to create coupon');
+    } finally {
+      setCouponSaving(false);
+    }
+  };
+
+  const handleToggleCoupon = async (couponId: string, isActive: boolean) => {
+    try {
+      await fetch('/api/admin/coupons', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: couponId, is_active: !isActive }),
+      });
+      await fetchCoupons();
+    } catch (error) {
+      console.error('Error toggling coupon:', error);
+    }
+  };
 
   // Job form state
   const [showJobForm, setShowJobForm] = useState(false);
@@ -203,6 +342,20 @@ function AdminDashboard() {
   useEffect(() => {
     fetchOverviewData();
   }, [fetchOverviewData]);
+
+  // Load best sellers when tab is selected
+  useEffect(() => {
+    if (activeNav === 'best-sellers' && bestSellers.length === 0) {
+      fetchBestSellers();
+    }
+  }, [activeNav, bestSellers.length, fetchBestSellers]);
+
+  // Load coupons when tab is selected
+  useEffect(() => {
+    if (activeNav === 'coupons' && coupons.length === 0) {
+      fetchCoupons();
+    }
+  }, [activeNav, coupons.length, fetchCoupons]);
 
   const fetchInventoryPage = async (offset: number, search?: string) => {
     try {
@@ -504,6 +657,8 @@ function AdminDashboard() {
     { key: 'requests', label: 'Requests', badge: pendingInquiries || undefined },
     { key: 'jobs', label: 'Jobs' },
     { key: 'applications', label: 'Applications', badge: pendingApplications || undefined },
+    { key: 'best-sellers', label: 'Best Sellers' },
+    { key: 'coupons', label: 'Coupons' },
   ];
 
   const getStatusClasses = (status: string) => {
@@ -1537,6 +1692,134 @@ function AdminDashboard() {
           )}
 
           {/* ==================== REQUESTS ==================== */}
+          {activeNav === 'best-sellers' && (
+            <div>
+              <div className="mb-8 flex items-center justify-between">
+                <div>
+                  <h2 className={`text-3xl font-bold ${textPrimary} mb-1`}>Best Sellers</h2>
+                  <p className={textSecondary}>
+                    Products ranked by sales volume from Clover order history
+                    {lastRefreshed && (
+                      <span className={`${textMuted} ml-2`}>
+                        — Last refreshed {new Date(lastRefreshed).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                      </span>
+                    )}
+                  </p>
+                </div>
+                <button
+                  onClick={refreshBestSellers}
+                  disabled={refreshing}
+                  className={`px-5 py-2.5 border ${borderColor} ${textAccent} text-sm ${btnHover} transition-colors disabled:opacity-50 flex items-center gap-2`}
+                >
+                  {refreshing ? (
+                    <>
+                      <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span>
+                      Refreshing...
+                    </>
+                  ) : (
+                    'Refresh Data'
+                  )}
+                </button>
+              </div>
+
+              {bestSellersLoading ? (
+                <div className={`text-center ${textMuted} py-12`}>Loading best sellers...</div>
+              ) : bestSellers.length === 0 ? (
+                <div className={`${bgCard} border ${borderColor} rounded-lg p-12 text-center`}>
+                  <p className={`${textMuted} text-sm mb-4`}>No best sellers data yet. Click &ldquo;Refresh Data&rdquo; to aggregate sales from Clover orders.</p>
+                  <button
+                    onClick={refreshBestSellers}
+                    disabled={refreshing}
+                    className={`px-5 py-2.5 border ${borderColor} ${textAccent} text-sm ${btnHover} transition-colors disabled:opacity-50`}
+                  >
+                    {refreshing ? 'Refreshing...' : 'Refresh Now'}
+                  </button>
+                </div>
+              ) : (
+                <>
+                  {/* Summary stats */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    <div className={`${bgCard} border ${borderColor} rounded-lg p-5`}>
+                      <p className={`${textMuted} text-xs uppercase tracking-wide mb-1`}>Total Products Sold</p>
+                      <p className={`${textPrimary} text-2xl font-bold`}>
+                        {bestSellers.reduce((sum, bs) => sum + bs.total_quantity_sold, 0).toLocaleString()}
+                      </p>
+                    </div>
+                    <div className={`${bgCard} border ${borderColor} rounded-lg p-5`}>
+                      <p className={`${textMuted} text-xs uppercase tracking-wide mb-1`}>Total Revenue</p>
+                      <p className={`${textPrimary} text-2xl font-bold`}>
+                        {formatCents(bestSellers.reduce((sum, bs) => sum + bs.total_revenue_cents, 0))}
+                      </p>
+                    </div>
+                    <div className={`${bgCard} border ${borderColor} rounded-lg p-5`}>
+                      <p className={`${textMuted} text-xs uppercase tracking-wide mb-1`}>Unique Products</p>
+                      <p className={`${textPrimary} text-2xl font-bold`}>
+                        {bestSellers.length}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Rankings table */}
+                  <div className={`${bgCard} border ${borderColor} rounded-lg overflow-hidden`}>
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className={`border-b ${borderColor} ${isDark ? 'bg-slate-800/50' : 'bg-slate-50'}`}>
+                            <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>#</th>
+                            <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Product</th>
+                            <th className={`px-6 py-3 text-right ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Qty Sold</th>
+                            <th className={`px-6 py-3 text-right ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Revenue</th>
+                            <th className={`px-6 py-3 text-right ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Orders</th>
+                            <th className={`px-6 py-3 text-right ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Last Sold</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {bestSellers.map((bs, idx) => (
+                            <tr key={bs.id} className={`border-b ${borderColor} ${bgHover} transition-colors`}>
+                              <td className={`px-6 py-3 ${textMuted} text-sm font-mono`}>
+                                {idx + 1}
+                              </td>
+                              <td className="px-6 py-3">
+                                <div className="flex items-center gap-2">
+                                  {idx < 3 && (
+                                    <span className={`px-1.5 py-0.5 text-[10px] font-bold rounded ${
+                                      idx === 0
+                                        ? 'bg-yellow-400/20 text-yellow-400'
+                                        : idx === 1
+                                        ? 'bg-slate-300/20 text-slate-300'
+                                        : 'bg-amber-600/20 text-amber-600'
+                                    }`}>
+                                      {idx === 0 ? '1ST' : idx === 1 ? '2ND' : '3RD'}
+                                    </span>
+                                  )}
+                                  <span className={`${textPrimary} text-sm font-medium`}>{bs.item_name}</span>
+                                </div>
+                              </td>
+                              <td className={`px-6 py-3 text-right ${textPrimary} text-sm font-mono font-bold`}>
+                                {bs.total_quantity_sold.toLocaleString()}
+                              </td>
+                              <td className={`px-6 py-3 text-right ${isDark ? 'text-emerald-400' : 'text-emerald-600'} text-sm font-mono`}>
+                                {formatCents(bs.total_revenue_cents)}
+                              </td>
+                              <td className={`px-6 py-3 text-right ${textSecondary} text-sm font-mono`}>
+                                {bs.order_count.toLocaleString()}
+                              </td>
+                              <td className={`px-6 py-3 text-right ${textMuted} text-sm`}>
+                                {bs.last_sold_at
+                                  ? new Date(bs.last_sold_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                                  : '—'}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+
           {activeNav === 'requests' && (
             <div>
               <div className="mb-8">
@@ -1618,6 +1901,169 @@ function AdminDashboard() {
                   </div>
                 )}
               </div>
+            </div>
+          )}
+
+          {activeNav === 'coupons' && (
+            <div>
+              <div className="mb-8 flex items-center justify-between">
+                <div>
+                  <h2 className={`text-3xl font-bold ${textPrimary} mb-1`}>Coupons</h2>
+                  <p className={textSecondary}>Create and manage discount coupons</p>
+                </div>
+                <button
+                  onClick={() => setShowCouponForm(!showCouponForm)}
+                  className={`px-4 py-2 border ${borderColor} ${textAccent} text-sm ${btnHover} transition-colors`}
+                >
+                  {showCouponForm ? 'CANCEL' : '+ NEW COUPON'}
+                </button>
+              </div>
+
+              {/* Create Coupon Form */}
+              {showCouponForm && (
+                <div className={`${bgCard} border ${borderColor} p-6 mb-6`}>
+                  <h3 className={`text-lg font-bold ${textPrimary} mb-4`}>Create Coupon</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+                    <div>
+                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Code *</label>
+                      <input
+                        type="text"
+                        value={couponForm.code}
+                        onChange={(e) => setCouponForm(p => ({ ...p, code: e.target.value.toUpperCase() }))}
+                        placeholder="e.g. SAVE20"
+                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-3 py-2 text-sm focus:border-blue-500 focus:outline-none uppercase`}
+                      />
+                    </div>
+                    <div>
+                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Type *</label>
+                      <select
+                        value={couponForm.type}
+                        onChange={(e) => setCouponForm(p => ({ ...p, type: e.target.value as 'percent' | 'fixed' }))}
+                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-3 py-2 text-sm focus:border-blue-500 focus:outline-none`}
+                      >
+                        <option value="percent">Percent Off (%)</option>
+                        <option value="fixed">Fixed Amount ($)</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>
+                        Value * {couponForm.type === 'percent' ? '(%)' : '($)'}
+                      </label>
+                      <input
+                        type="number"
+                        value={couponForm.value}
+                        onChange={(e) => setCouponForm(p => ({ ...p, value: e.target.value }))}
+                        placeholder={couponForm.type === 'percent' ? '20' : '10.00'}
+                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-3 py-2 text-sm focus:border-blue-500 focus:outline-none`}
+                      />
+                    </div>
+                    <div>
+                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Min Order ($)</label>
+                      <input
+                        type="number"
+                        value={couponForm.min_order_cents}
+                        onChange={(e) => setCouponForm(p => ({ ...p, min_order_cents: e.target.value }))}
+                        placeholder="Optional"
+                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-3 py-2 text-sm focus:border-blue-500 focus:outline-none`}
+                      />
+                    </div>
+                    <div>
+                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Max Uses</label>
+                      <input
+                        type="number"
+                        value={couponForm.max_uses}
+                        onChange={(e) => setCouponForm(p => ({ ...p, max_uses: e.target.value }))}
+                        placeholder="Unlimited"
+                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-3 py-2 text-sm focus:border-blue-500 focus:outline-none`}
+                      />
+                    </div>
+                    <div>
+                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Expires At</label>
+                      <input
+                        type="date"
+                        value={couponForm.expires_at}
+                        onChange={(e) => setCouponForm(p => ({ ...p, expires_at: e.target.value }))}
+                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-3 py-2 text-sm focus:border-blue-500 focus:outline-none`}
+                      />
+                    </div>
+                  </div>
+                  {couponError && (
+                    <p className="text-red-400 text-sm mb-3">{couponError}</p>
+                  )}
+                  <button
+                    onClick={handleCreateCoupon}
+                    disabled={couponSaving || !couponForm.code || !couponForm.value}
+                    className={`px-6 py-2 border ${borderColor} ${textAccent} text-sm ${btnHover} transition-colors disabled:opacity-30`}
+                  >
+                    {couponSaving ? 'CREATING...' : 'CREATE COUPON'}
+                  </button>
+                </div>
+              )}
+
+              {/* Coupons Table */}
+              {couponsLoading ? (
+                <div className={`text-center ${textMuted} py-12`}>Loading coupons...</div>
+              ) : coupons.length === 0 ? (
+                <div className={`${bgCard} border ${borderColor} text-center ${textMuted} py-12 text-sm`}>
+                  No coupons yet. Create one to get started.
+                </div>
+              ) : (
+                <div className={`${bgCard} border ${borderColor} overflow-hidden`}>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className={`border-b ${borderColor} ${isDark ? 'bg-slate-800/50' : 'bg-slate-50'}`}>
+                          <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Code</th>
+                          <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Discount</th>
+                          <th className={`px-6 py-3 text-right ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Min Order</th>
+                          <th className={`px-6 py-3 text-right ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Usage</th>
+                          <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Expires</th>
+                          <th className={`px-6 py-3 text-center ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Status</th>
+                          <th className={`px-6 py-3 text-center ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {coupons.map((c) => (
+                          <tr key={c.id} className={`border-b ${borderColor} ${isDark ? 'hover:bg-white/5' : 'hover:bg-slate-50'} transition-colors`}>
+                            <td className={`px-6 py-3 ${textPrimary} font-mono font-bold text-sm`}>{c.code}</td>
+                            <td className={`px-6 py-3 ${textPrimary} text-sm`}>
+                              {c.type === 'percent' ? `${c.value}%` : formatCents(c.value)}
+                            </td>
+                            <td className={`px-6 py-3 text-right ${textSecondary} text-sm font-mono`}>
+                              {c.min_order_cents ? formatCents(c.min_order_cents) : '—'}
+                            </td>
+                            <td className={`px-6 py-3 text-right ${textPrimary} text-sm font-mono`}>
+                              {c.used_count}{c.max_uses ? ` / ${c.max_uses}` : ''}
+                            </td>
+                            <td className={`px-6 py-3 ${textSecondary} text-sm`}>
+                              {c.expires_at
+                                ? new Date(c.expires_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                                : 'Never'}
+                            </td>
+                            <td className="px-6 py-3 text-center">
+                              <span className={`px-2 py-0.5 border text-xs font-mono uppercase ${
+                                c.is_active
+                                  ? (isDark ? 'text-emerald-400 bg-emerald-400/10 border-emerald-400/30' : 'text-emerald-600 bg-emerald-50 border-emerald-200')
+                                  : (isDark ? 'text-red-400 bg-red-400/10 border-red-400/30' : 'text-red-600 bg-red-50 border-red-200')
+                              }`}>
+                                {c.is_active ? 'ACTIVE' : 'INACTIVE'}
+                              </span>
+                            </td>
+                            <td className="px-6 py-3 text-center">
+                              <button
+                                onClick={() => handleToggleCoupon(c.id, c.is_active)}
+                                className={`text-xs ${textAccent} ${btnHover} transition-colors px-3 py-1 border ${borderColor}`}
+                              >
+                                {c.is_active ? 'DISABLE' : 'ENABLE'}
+                              </button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

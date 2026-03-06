@@ -1,21 +1,27 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 import Image from 'next/image';
 import { useState, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import { useBookingModal } from '@/components/BookingModalContext';
 import { useCart } from '@/components/CartContext';
-
-const serviceSubLinks = [
-  { href: '/services/window-tinting', label: 'Window Tinting' },
-  { href: '/services/car-audio', label: 'Car Audio' },
-];
+import { useAuth } from '@/components/AuthContext';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { openModal } = useBookingModal();
   const { itemCount, openCheckout } = useCart();
+  const { user } = useAuth();
+  const t = useTranslations('header');
+  const tc = useTranslations('common');
+
+  const serviceSubLinks = [
+    { href: '/services/window-tinting' as const, label: t('windowTinting') },
+    { href: '/services/car-audio' as const, label: t('carAudio') },
+  ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,7 +70,7 @@ export default function Header() {
               className={navLinkClass}
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
-              HOME
+              {t('home')}
               {navUnderline}
             </Link>
 
@@ -75,7 +81,7 @@ export default function Header() {
                 className={`${navLinkClass} flex items-center gap-1`}
                 style={{ fontFamily: 'var(--font-oxanium)' }}
               >
-                SERVICES
+                {t('services')}
                 <svg
                   className="w-3.5 h-3.5 transition-transform duration-200 group-hover/dropdown:rotate-180"
                   fill="none"
@@ -95,7 +101,7 @@ export default function Header() {
                     className="block px-5 py-2.5 text-white/60 hover:text-[#E01020] hover:bg-[#E01020]/5 transition-colors text-xs tracking-widest"
                     style={{ fontFamily: 'var(--font-oxanium)' }}
                   >
-                    ALL SERVICES
+                    {t('allServices')}
                   </Link>
                   <div className="border-t border-[#E01020]/10 mx-3 my-1" />
                   {serviceSubLinks.map((sub) => (
@@ -117,7 +123,7 @@ export default function Header() {
               className={navLinkClass}
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
-              PRODUCTS
+              {t('products')}
               {navUnderline}
             </Link>
           </nav>
@@ -139,7 +145,7 @@ export default function Header() {
               className={navLinkClass}
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
-              GALLERY
+              {t('gallery')}
               {navUnderline}
             </Link>
             <Link
@@ -147,7 +153,7 @@ export default function Header() {
               className={navLinkClass}
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
-              CAREERS
+              {t('careers')}
               {navUnderline}
             </Link>
             <button
@@ -155,18 +161,28 @@ export default function Header() {
               className={navLinkClass}
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
-              BOOK
+              {t('book')}
               {navUnderline}
             </button>
           </nav>
 
-          {/* Cart + Contact — absolute so they don't shift the centered group */}
+          {/* Account + Cart + Contact — absolute so they don't shift the centered group */}
           <div className="absolute right-0 flex items-center space-x-6">
+            <Link
+              href={user ? '/account' : '/account/login'}
+              className={`${navLinkClass} relative`}
+              style={{ fontFamily: 'var(--font-oxanium)' }}
+              aria-label={user ? t('myAccount') : tc('signIn')}
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+              </svg>
+            </Link>
             <button
               onClick={openCheckout}
               className={`${navLinkClass} relative`}
               style={{ fontFamily: 'var(--font-oxanium)' }}
-              aria-label="Shopping cart"
+              aria-label={t('shoppingCart')}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
@@ -186,8 +202,9 @@ export default function Header() {
               }`}
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
-              CONTACT
+              {t('contact')}
             </Link>
+            <LanguageSwitcher />
           </div>
         </div>
 
@@ -208,7 +225,7 @@ export default function Header() {
               isScrolled ? 'text-[#E01020]' : 'text-[#E01020] drop-shadow-lg'
             }`}
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
+            aria-label={t('toggleMenu')}
           >
             <svg
               className="w-6 h-6"
@@ -249,7 +266,7 @@ export default function Header() {
           <button
             className="p-2 text-[#E01020] cursor-pointer"
             onClick={() => setIsMenuOpen(false)}
-            aria-label="Close menu"
+            aria-label={t('closeMenu')}
           >
             <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -260,10 +277,10 @@ export default function Header() {
         {/* Nav links — centered vertically */}
         <nav className="flex-1 flex flex-col items-center justify-center space-y-6">
           {[
-            { href: '/', label: 'HOME' },
-            { href: '/products', label: 'PRODUCTS' },
-            { href: '/gallery', label: 'GALLERY' },
-            { href: '/careers', label: 'CAREERS' },
+            { href: '/' as const, label: t('home') },
+            { href: '/products' as const, label: t('products') },
+            { href: '/gallery' as const, label: t('gallery') },
+            { href: '/careers' as const, label: t('careers') },
           ].map(({ href, label }) => (
             <Link
               key={href}
@@ -284,7 +301,7 @@ export default function Header() {
               className="text-[#E01020] hover:text-[#FF2A3A] text-2xl tracking-widest neon-glow-soft transition-colors"
               style={{ fontFamily: 'var(--font-oxanium)' }}
             >
-              SERVICES
+              {t('services')}
             </Link>
             <div className="flex flex-col items-center mt-2 space-y-1.5">
               {serviceSubLinks.map((sub) => (
@@ -306,16 +323,26 @@ export default function Header() {
             className="text-[#E01020] hover:text-[#FF2A3A] text-2xl tracking-widest neon-glow-soft transition-colors cursor-pointer"
             style={{ fontFamily: 'var(--font-oxanium)' }}
           >
-            BOOK
+            {t('book')}
           </button>
         </nav>
 
         {/* Bottom actions */}
         <div className="flex items-center justify-center gap-6 pb-10">
+          <Link
+            href={user ? '/account' : '/account/login'}
+            onClick={() => setIsMenuOpen(false)}
+            className="text-[#E01020] hover:text-[#FF2A3A] transition-colors cursor-pointer"
+            aria-label={user ? t('myAccount') : tc('signIn')}
+          >
+            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+            </svg>
+          </Link>
           <button
             onClick={() => { openCheckout(); setIsMenuOpen(false); }}
             className="text-[#E01020] hover:text-[#FF2A3A] transition-colors relative cursor-pointer"
-            aria-label="Shopping cart"
+            aria-label={t('shoppingCart')}
           >
             <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
@@ -332,8 +359,9 @@ export default function Header() {
             className="px-6 py-3 border-2 border-[#E01020] text-[#E01020] text-sm tracking-widest hover:bg-[#E01020]/10 transition-colors cyber-button"
             style={{ fontFamily: 'var(--font-oxanium)' }}
           >
-            CONTACT
+            {t('contact')}
           </Link>
+          <LanguageSwitcher />
         </div>
       </div>
     )}

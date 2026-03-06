@@ -9,12 +9,13 @@ This document is the single source of truth for whitelabeling and extending both
 1. [Architecture Overview](#architecture-overview)
 2. [NLA Website — Next.js Frontend](#nla-website)
 3. [BayReady — Booking Platform](#bayready)
-4. [Clover POS Integration](#clover-pos-integration)
-5. [Design System](#design-system)
-6. [Environment Variables](#environment-variables)
-7. [Deployment](#deployment)
-8. [Whitelabel Guide](#whitelabel-guide)
-9. [Gotchas & Lessons Learned](#gotchas)
+4. [BayReady Android — Clover Tablet App](#bayready-android)
+5. [Clover POS Integration](#clover-pos-integration)
+6. [Design System](#design-system)
+7. [Environment Variables](#environment-variables)
+8. [Deployment](#deployment)
+9. [Whitelabel Guide](#whitelabel-guide)
+10. [Gotchas & Lessons Learned](#gotchas)
 
 ---
 
@@ -34,8 +35,10 @@ next-level-audio/          ← NLA: Customer-facing website (Next.js on Vercel)
     ├── backend/           ← NestJS API (Railway)
     │   ├── src/           ← Modules: clover, merchant, service, booking, customer, vehicle, payment
     │   └── prisma/        ← Schema + migrations
-    └── frontend/          ← React + Vite (Vercel)
-        └── src/           ← Pages, components, types
+    ├── frontend/          ← React + Vite (Vercel)
+    │   └── src/           ← Pages, components, types
+    └── android/           ← Native Android app for Clover tablets
+        └── app/src/main/  ← Kotlin MVVM with Hilt, Retrofit, ViewBinding
 ```
 
 **How they connect:** NLA embeds BayReady's public booking page (`/book/:merchantId`) inside an iframe via `BookingWizardModal.tsx`. Product purchases go through NLA's own Clover checkout. Appointment bookings go through BayReady.
@@ -244,6 +247,93 @@ BlockedDate → belongs to Merchant
 | `VehicleSelector` | `VehicleSelector.tsx` | Year/Make/Model/Trim cascading dropdowns (NHTSA API) |
 | `IntakeQuestionnaire` | `IntakeQuestionnaire.tsx` | Dynamic service-specific questions |
 | `CloverCardForm` | `CloverCardForm.tsx` | Clover hosted iframe card form for deposits |
+
+---
+
+## BayReady Android
+
+### Tech Stack
+- **Language:** Kotlin
+- **Architecture:** MVVM (ViewModel + LiveData + Repository pattern)
+- **DI:** Hilt (Dagger)
+- **Networking:** Retrofit + OkHttp + Gson
+- **UI:** ViewBinding, Material Design Components, Navigation Component
+- **Target:** Clover tablets (API 29+, landscape, 7"–14" screens)
+
+### Project Structure
+
+```
+bayready/android/app/src/main/java/com/bayready/app/
+├── clover/                  ← Clover SDK integration (account, merchant resolution)
+├── data/
+│   ├── api/                 ← BayReadyApi (Retrofit), DTOs (BookingDto, ServiceDto, etc.)
+│   ├── local/               ← PreferencesManager (SharedPreferences)
+│   └── repository/          ← BookingRepository, ServiceRepository
+├── di/                      ← Hilt modules (NetworkModule, AppModule)
+├── printer/                 ← Clover Mini receipt printer (ReceiptPrinter, formatters)
+├── ui/
+│   ├── main/                ← MainActivity (sidebar navigation)
+│   ├── bookings/            ← BookingsFragment, CalendarGridView, BookingDetailPanel
+│   ├── customers/           ← CustomerLookupFragment
+│   ├── services/            ← ServicesFragment (placeholder)
+│   ├── settings/            ← SettingsFragment
+│   └── splash/              ← SplashActivity (merchant resolution)
+└── util/                    ← StatusUtils, DateUtils, CurrencyUtils
+```
+
+### Tablet Dashboard UI
+
+The Android UI mirrors BayReady's web dashboard (`DashboardLayout.tsx`, `BookingsPage.tsx`, etc.) for a consistent experience across web and tablet.
+
+**Completed (Phases 1-3):**
+
+| Phase | Feature | Key Files |
+|-------|---------|-----------|
+| 1 | **Left Sidebar Navigation** — 240dp permanent sidebar with BayReady branding, merchant avatar, 4 nav items (Bookings, Services, Customers, Settings) | `activity_main.xml`, `MainActivity.kt` |
+| 2 | **Calendar Grid** — Custom `CalendarGridView` with time-positioned booking blocks, week/day toggle, date navigation, status filter, "+ Walk-in" button | `CalendarGridView.kt`, `fragment_bookings.xml`, `BookingsViewModel.kt`, `BookingsFragment.kt` |
+| 3 | **Booking Detail Panel** — 400dp right slide-out panel with scrim overlay, animated entry/exit, service/customer/vehicle cards, status action buttons | `BookingDetailPanel.kt`, `view_booking_detail_panel.xml` |
+
+**Pending (Phases 4-7):**
+- Phase 4: Revenue sidebar (matching `RevenueSidebar.tsx`)
+- Phase 5: Services CRUD (matching `ServicesPage.tsx`)
+- Phase 6: Settings editor (matching `SettingsPage.tsx`)
+- Phase 7: Customer detail view
+
+### Building & Testing
+
+```bash
+# Build (no gradlew — use cached gradle)
+cd bayready/android
+~/.gradle/wrapper/dists/gradle-8.11.1-bin/.../gradle-8.11.1/bin/gradle.bat assembleDebug
+
+# Install on Clover Mini emulator
+adb -s emulator-5554 install -r app/build/outputs/apk/debug/app-debug.apk
+
+# Launch
+adb shell monkey -p com.bayready.app -c android.intent.category.LAUNCHER 1
+
+# Screenshot (Android 36)
+adb -s emulator-5554 exec-out screencap -p > screenshot.png
+```
+
+### Clover Emulator AVDs
+
+Custom AVDs created to match real Clover tablet specs:
+
+| AVD | Screen | Resolution | DPI | Orientation |
+|-----|--------|------------|-----|-------------|
+| `Clover_Mini_7in` | 7" | 1280x800 | 213 | Landscape |
+| `Clover_Station_14in` | 14" | 1920x1080 | 160 | Landscape |
+
+Both configured without phone hardware (no GPS, cameras, battery, gyroscope) to match real Clover devices. Config files at `~/.android/avd/`.
+
+### API Connection
+
+The Android app connects to the same BayReady backend (`bayready-production.up.railway.app`) via Retrofit. The base URL is configured in `build.gradle.kts`:
+- Debug: `https://bayready-production.up.railway.app` (production backend for emulator testing)
+- Release: same production URL
+
+Merchant resolution: `CloverAccountManager` tries `CloverAccount.getAccount()` first, falls back to hardcoded `FALLBACK_CLOVER_MERCHANT_ID = "E7ZRTEB8B2EE1"` when Clover SDK is unavailable (emulator). This resolves the BayReady internal merchant ID via `GET /merchants/by-clover-id/{cloverMerchantId}`.
 
 ---
 
@@ -619,6 +709,15 @@ allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-
 - NLA uses `CLOVER_CHARGE_ENV` to decouple charge routing from inventory API base URL. This allows switching between sandbox/production charges independently.
 - BayReady derives charge URL from `CLOVER_API_BASE_URL` — if it contains "sandbox", charges go to sandbox endpoint.
 - **Current state:** Both NLA and BayReady are fully on production.
+
+### BayReady Android
+- **No `gradlew` in repo** — use cached gradle binary at `~/.gradle/wrapper/dists/gradle-8.11.1-bin/.../gradle.bat`.
+- **`CloverAccount.getAccount()`** takes ~3 seconds retrying on non-Clover devices, always returns null. Code removed the `BuildConfig.DEBUG` gate and always falls back to hardcoded merchant ID.
+- **Activity launch on emulator** — use `adb shell monkey -p com.bayready.app -c android.intent.category.LAUNCHER 1` (not `am start -n` which fails due to export restriction).
+- **Android 36 screencap** — use `adb exec-out screencap -p > file.png` (the old `adb shell screencap /sdcard/file.png` syntax fails on API 36).
+- **Emulator disk space** — Google Play system images hardcode ~7.4GB userdata. C: drive space is tight; delete AVD snapshot dirs (e.g., `Medium_Phone.avd/snapshots`) to free ~2GB if needed.
+- **Safe Args removal** — `BookingDetailFragment` was updated to use bundle args instead of Safe Args after removing the `action_bookings_to_detail` from `nav_graph.xml` (replaced by slide-out panel). If you see `BookingDetailFragmentArgs` errors, the nav graph action was removed intentionally.
+- **Multiple emulators** — when more than one device/emulator is connected, target with `adb -s emulator-5554`.
 
 ### Switching Production → Sandbox (For Testing)
 
