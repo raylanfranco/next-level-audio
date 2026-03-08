@@ -16,7 +16,8 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       console.error("Best sellers fetch error:", error);
-      return NextResponse.json({ items: [], error: error.message }, { status: 500 });
+      // Return empty list gracefully (table may not exist yet)
+      return NextResponse.json({ items: [], count: 0 });
     }
 
     return NextResponse.json({

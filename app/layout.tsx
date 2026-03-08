@@ -63,6 +63,7 @@ export default async function RootLayout({
   return (
     <html lang={locale} className="dark">
       <head>
+        <link rel="preload" href="/images/logo.webp" as="image" type="image/webp" fetchPriority="high" />
         <link rel="preconnect" href="https://checkout.clover.com" />
         <link rel="dns-prefetch" href="https://api.openai.com" />
         <script

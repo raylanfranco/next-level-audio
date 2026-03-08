@@ -24,7 +24,7 @@ export default async function Home() {
       desc: t('windowTintingDesc'),
       image: '/images/services/window-tints.webp',
       href: '/services/window-tinting' as const,
-      cta: t('learnMore'),
+      cta: t('learnMoreTinting'),
     },
     {
       num: '02',
@@ -32,7 +32,7 @@ export default async function Home() {
       desc: t('carAudioDesc'),
       image: '/images/services/car-audio.webp',
       href: '/services/car-audio' as const,
-      cta: t('learnMore'),
+      cta: t('learnMoreAudio'),
     },
     {
       num: '03',

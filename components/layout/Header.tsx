@@ -134,10 +134,11 @@ export default function Header() {
             <Image
               src="/images/logo.webp"
               alt="Next Level Audio"
-              width={360}
-              height={100}
+              width={945}
+              height={745}
               className="h-24 lg:h-32 w-auto transition-all duration-300 hover:scale-105"
               priority
+              fetchPriority="high"
             />
           </Link>
 
@@ -210,10 +211,11 @@ export default function Header() {
             <Image
               src="/images/logo.webp"
               alt="Next Level Audio"
-              width={180}
-              height={50}
+              width={945}
+              height={745}
               className="h-12 w-auto"
               priority
+              fetchPriority="high"
             />
           </Link>
           <button
@@ -253,8 +255,8 @@ export default function Header() {
             <Image
               src="/images/logo.webp"
               alt="Next Level Audio"
-              width={180}
-              height={50}
+              width={945}
+              height={745}
               className="h-12 w-auto"
               priority
             />

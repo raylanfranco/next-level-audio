@@ -1,6 +1,7 @@
 'use client';
 
 import { Link } from '@/i18n/navigation';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useBookingModal } from '@/components/BookingModalContext';
 import QuoteCalculator from '@/components/QuoteCalculator';
@@ -119,10 +120,13 @@ export default function ServicesPage() {
                 {/* Service Image */}
                 {service.image && (
                   <div className="relative h-48 bg-gradient-to-br from-[#E01020]/20 to-black overflow-hidden">
-                    <img
+                    <Image
                       src={service.image}
                       alt={service.title}
+                      width={600}
+                      height={400}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      loading="lazy"
                     />
                     <div className="absolute inset-0 bg-[#E01020]/10 group-hover:bg-[#E01020]/20 transition-colors"></div>
                     <div className="absolute inset-0 border-b-2 border-[#E01020]/50"></div>
