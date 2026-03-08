@@ -26,7 +26,10 @@ const SCREEN_TITLES: Record<WidgetScreen, string> = {
   contact: 'CONTACT US',
   chat: 'AI ASSISTANT',
   submitted: 'REQUEST SENT',
+  map: 'OUR LOCATION',
 };
+
+const GOOGLE_MAPS_EMBED_URL = 'https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12046.44235724779!2d-75.2157096!3d40.9900071!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c4891d338ef55b%3A0xd2a0254037c29699!2sNext%20Level%20Audio!5e0!3m2!1sen!2sph!4v1694036537644!5m2!1sen!2sph';
 
 export default function ChatWidget() {
   const pathname = usePathname();
@@ -210,10 +213,42 @@ export default function ChatWidget() {
                 onClose={resetAndClose}
               />
             )}
+
+            {screen === 'map' && (
+              <div className="flex-1 flex flex-col p-4">
+                <p
+                  className="text-white/70 text-sm mb-3"
+                  style={{ fontFamily: 'var(--font-geist-mono)' }}
+                >
+                  944 North 9th Street, Stroudsburg, PA 18360
+                </p>
+                <div className="flex-1 border border-[#E01020]/30 overflow-hidden">
+                  <iframe
+                    src={GOOGLE_MAPS_EMBED_URL}
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0, minHeight: '250px' }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="Next Level Audio Location"
+                  />
+                </div>
+                <a
+                  href="https://maps.google.com/?q=944+North+9th+Street+Stroudsburg+PA+18360"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 w-full py-2.5 bg-[#E01020] text-black text-sm font-bold tracking-wider text-center block hover:bg-[#E01020]/90 transition-colors"
+                  style={{ fontFamily: 'var(--font-oxanium)' }}
+                >
+                  GET DIRECTIONS
+                </a>
+              </div>
+            )}
           </div>
 
-          {/* Contact action bar (shown on all screens except chat which has its own input) */}
-          {screen !== 'chat' && <ContactActionBar />}
+          {/* Contact action bar (shown on all screens except chat and map) */}
+          {screen !== 'chat' && screen !== 'map' && <ContactActionBar onNavigateMap={() => setScreen('map')} />}
         </div>
       )}
     </>

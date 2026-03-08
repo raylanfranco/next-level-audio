@@ -1,0 +1,16 @@
+{
+  "name": "bayready-fitment-scraper",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup": "npx patchright install chromium",
+    "vehicles": "node scraper.mjs vehicles",
+    "inspect": "node scraper.mjs inspect",
+    "test": "node scraper.mjs test",
+    "scrape": "node scraper.mjs scrape",
+    "seed": "node scraper.mjs seed"
+  },
+  "dependencies": {
+    "patchright": "^1.58.2"
+  }
+}

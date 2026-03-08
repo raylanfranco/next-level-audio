@@ -7,7 +7,7 @@ export const chatbotConfig = {
     email: 'nextlevelauto@ymail.com',
     hours: {
       'Monday - Friday': '9AM - 7PM',
-      'Saturday': '9AM - 2PM',
+      'Saturday': '9AM - 3PM',
       'Sunday': 'Closed',
     } as Record<string, string>,
     services: [
@@ -105,7 +105,8 @@ export const chatbotConfig = {
   quickActions: [
     { id: 'book', label: 'Book an Appointment', icon: 'calendar' as const, action: 'open_booking_modal' as const },
     { id: 'quote', label: 'Get a Quote', icon: 'dollar' as const, action: 'navigate' as const, screen: 'quote' as const },
-    { id: 'fitment', label: 'Check Fitment', icon: 'wrench' as const, action: 'navigate' as const, screen: 'fitment' as const },
+    // Fitment disabled until BayReady fitment API is populated
+    // { id: 'fitment', label: 'Check Fitment', icon: 'wrench' as const, action: 'navigate' as const, screen: 'fitment' as const },
     { id: 'contact', label: 'Contact Us', icon: 'phone' as const, action: 'navigate' as const, screen: 'contact' as const },
   ],
   contactActions: [
@@ -125,6 +126,18 @@ export const chatbotConfig = {
   ],
 };
 
+// Labor rate and service hour estimates — matches QuoteCalculator.tsx
+export const HOURLY_RATE = 125;
+
+export const servicePricing = [
+  { id: 'window-tinting', name: 'Window Tinting', minHours: 1, maxHours: 2 },
+  { id: 'car-audio', name: 'Car Audio Installation', minHours: 2, maxHours: 4 },
+  { id: 'remote-start', name: 'Remote Start', minHours: 1.5, maxHours: 3 },
+  { id: 'security-systems', name: 'Security Systems', minHours: 2, maxHours: 3 },
+  { id: 'lighting', name: 'Custom Lighting', minHours: 1, maxHours: 2 },
+  { id: 'accessories', name: 'Auto Accessories', minHours: 0.5, maxHours: 1.5 },
+];
+
 export type ChatbotConfig = typeof chatbotConfig;
 
 export function buildSystemPrompt(config: ChatbotConfig): string {
@@ -133,6 +146,10 @@ export function buildSystemPrompt(config: ChatbotConfig): string {
       (s) =>
         `- ${s.name}: ${s.description}\n  Features: ${s.features.join(', ')}`,
     )
+    .join('\n');
+
+  const pricingList = servicePricing
+    .map((s) => `- ${s.name}: ${s.minHours}-${s.maxHours} hrs → $${Math.round(s.minHours * HOURLY_RATE)}-$${Math.round(s.maxHours * HOURLY_RATE)}`)
     .join('\n');
 
   const hoursList = Object.entries(config.business.hours)
@@ -150,6 +167,10 @@ IDENTITY:
 SERVICES WE OFFER:
 ${servicesList}
 
+ESTIMATED PRICING (labor rate: $${HOURLY_RATE}/hr):
+${pricingList}
+Note: These are estimates based on typical job complexity. Final pricing depends on the specific vehicle and scope of work. Parts/materials are additional. Always present these as estimates and suggest calling for a precise quote.
+
 BUSINESS HOURS:
 ${hoursList}
 
@@ -166,8 +187,8 @@ RULES:
 - When asked about a specific service, use the getServiceInfo tool
 - When asked about hours, use the getBusinessHours tool
 - When asked about contact info or location, use the getContactInfo tool
-- When asked about what parts fit a specific vehicle (year/make/model), use the lookupFitment tool
-- When asked about pricing, cost, or quotes, use the suggestQuote tool — never make up prices
+- When asked about what parts fit a specific vehicle (year/make/model), use the lookupFitment tool — note: the fitment database is currently being built, so always suggest calling us for vehicle-specific recommendations
+- When asked about pricing, cost, or quotes, use the getQuoteEstimate tool to look up pricing, then provide the estimate conversationally. For precise quotes, suggest calling us.
 - When the customer wants to call or speak to a person, use the suggestCall tool
 - If you don't know something or it's beyond what you can help with, use the suggestCall tool
 - Do not discuss competitors or other businesses

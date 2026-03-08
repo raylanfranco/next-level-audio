@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const offset = searchParams.get("offset") || "0";
 
     const data = await cloverFetch<CloverCustomersResponse>("/customers", {
-      params: { limit, offset },
+      params: { limit, offset, expand: 'emailAddresses,phoneNumbers' },
     });
 
     return NextResponse.json({

@@ -61,7 +61,7 @@
     "contactInfo": "INFORMACIÓN DE CONTACTO",
     "hours": "HORARIO",
     "monFri": "Lunes - Viernes: 9AM - 7PM",
-    "saturday": "Sábado: 9AM - 2PM",
+    "saturday": "Sábado: 9AM - 3PM",
     "sunday": "Domingo: Cerrado",
     "copyright": "© {year} Next Level Audio. Todos los derechos reservados."
   },
@@ -153,7 +153,7 @@
     "monFri": "Lunes - Viernes:",
     "monFriHours": "9AM - 7PM",
     "saturday": "Sábado:",
-    "saturdayHours": "9AM - 2PM",
+    "saturdayHours": "9AM - 3PM",
     "sunday": "Domingo:",
     "closed": "Cerrado",
     "findUsDesc": "Ubicados en Stroudsburg, PA — fácilmente accesible desde las Montañas Pocono y alrededores."

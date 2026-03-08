@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { chatbotConfig } from '@/lib/chatbot/config';
+import { formatPhone } from '@/lib/formatPhone';
 import type { QuoteStep, QuoteFormData } from './types';
 
 interface QuoteFlowProps {
@@ -228,7 +229,7 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
               <input
                 type="tel"
                 value={form.customerPhone}
-                onChange={(e) => setForm({ ...form, customerPhone: e.target.value })}
+                onChange={(e) => setForm({ ...form, customerPhone: formatPhone(e.target.value) })}
                 placeholder="(555) 123-4567"
                 className="w-full bg-black border border-[#E01020]/30 px-3 py-2 text-sm text-[#E01020] font-mono placeholder:text-[#E01020]/20 focus:outline-none focus:border-[#E01020]"
               />

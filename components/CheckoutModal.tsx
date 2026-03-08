@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useCart } from './CartContext';
 import { useAuth } from './AuthContext';
+import { formatPhone } from '@/lib/formatPhone';
 
 declare global {
   interface Window {
@@ -458,7 +459,7 @@ export default function CheckoutModal() {
                   <input
                     type="tel"
                     value={customerInfo.phone}
-                    onChange={(e) => setCustomerInfo((p) => ({ ...p, phone: e.target.value }))}
+                    onChange={(e) => setCustomerInfo((p) => ({ ...p, phone: formatPhone(e.target.value) }))}
                     required
                     className="w-full px-4 py-2.5 bg-black border-2 border-[#E01020]/30 text-[#E01020] placeholder-[#E01020]/40 font-mono text-sm focus:outline-none focus:border-[#E01020] transition-colors"
                     placeholder="(555) 555-5555"

@@ -27,17 +27,16 @@ export interface JobListingFormData {
 
 export interface CareerApplication {
   id: string;
-  job_listing_id: string;
   applicant_name: string;
   applicant_email: string;
   applicant_phone: string;
   resume_url: string | null;
   cover_letter: string | null;
+  position: string | null;
   status: ApplicationStatus;
   admin_notes: string | null;
   created_at: string;
   updated_at: string;
-  job_listing?: JobListing;
 }
 
 export interface CareerApplicationFormData {

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useBookingModal } from '@/components/BookingModalContext';
+import { formatPhone } from '@/lib/formatPhone';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
 
 export default function ContactPage() {
@@ -21,7 +22,7 @@ export default function ContactPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: name === 'phone' ? formatPhone(value) : value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

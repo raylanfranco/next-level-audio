@@ -1,7 +1,7 @@
 import { openai } from '@ai-sdk/openai';
 import { streamText, tool, stepCountIs, convertToModelMessages } from 'ai';
 import { z } from 'zod';
-import { chatbotConfig, buildSystemPrompt } from '@/lib/chatbot/config';
+import { chatbotConfig, buildSystemPrompt, servicePricing, HOURLY_RATE } from '@/lib/chatbot/config';
 
 export async function POST(req: Request) {
   if (!process.env.OPENAI_API_KEY) {
@@ -49,17 +49,41 @@ export async function POST(req: Request) {
         inputSchema: z.object({ serviceName: z.string().optional() }),
         execute: async () => ({ action: 'open_booking_modal' }),
       }),
-      suggestQuote: tool({
+      getQuoteEstimate: tool({
         description:
-          'When user asks about pricing, quotes, or how much something costs, direct them to the quote calculator',
-        inputSchema: z.object({ serviceName: z.string().optional() }),
-        execute: async () => ({
-          action: 'suggest_quote',
-          message:
-            'We provide custom quotes based on your vehicle and specific needs. You can use our Quote Calculator on the Services page for an estimate, or call us at (570) 730-4433 for a personalized quote.',
-          quoteCalculatorUrl: '/services',
-          phone: chatbotConfig.business.phone,
+          'Get a price estimate for one or more services. Use when user asks about pricing, quotes, or how much something costs.',
+        inputSchema: z.object({
+          serviceNames: z.array(z.string()).describe('Service names to get estimates for, e.g. ["Window Tinting", "Car Audio"]'),
         }),
+        execute: async ({ serviceNames }: { serviceNames: string[] }) => {
+          const matched = serviceNames.map((name) => {
+            const svc = servicePricing.find((s) =>
+              s.name.toLowerCase().includes(name.toLowerCase()) ||
+              name.toLowerCase().includes(s.name.toLowerCase().replace(' installation', ''))
+            );
+            if (svc) {
+              return {
+                service: svc.name,
+                hoursRange: `${svc.minHours}-${svc.maxHours} hours`,
+                priceRange: `$${Math.round(svc.minHours * HOURLY_RATE)}-$${Math.round(svc.maxHours * HOURLY_RATE)}`,
+                minPrice: Math.round(svc.minHours * HOURLY_RATE),
+                maxPrice: Math.round(svc.maxHours * HOURLY_RATE),
+              };
+            }
+            return { service: name, error: 'Service not found in pricing list' };
+          });
+
+          const totalMin = matched.reduce((sum, m) => sum + (('minPrice' in m ? m.minPrice : 0) as number), 0);
+          const totalMax = matched.reduce((sum, m) => sum + (('maxPrice' in m ? m.maxPrice : 0) as number), 0);
+
+          return {
+            estimates: matched,
+            totalRange: matched.length > 1 ? `$${totalMin}-$${totalMax}` : undefined,
+            hourlyRate: HOURLY_RATE,
+            disclaimer: 'These are labor estimates. Final pricing depends on vehicle and job complexity. Parts/materials are additional. Call (570) 730-4433 for a precise quote.',
+            phone: chatbotConfig.business.phone,
+          };
+        },
       }),
       suggestCall: tool({
         description:
@@ -72,55 +96,19 @@ export async function POST(req: Request) {
           message: `Give us a call at ${chatbotConfig.business.phone} — we're happy to help!`,
         }),
       }),
+      // Fitment disabled until BayReady fitment database is populated
       lookupFitment: tool({
         description:
-          'Look up compatible parts for a specific vehicle year/make/model',
+          'Look up compatible parts for a specific vehicle — currently unavailable, direct customer to call',
         inputSchema: z.object({
           year: z.number(),
           make: z.string(),
           model: z.string(),
-          trim: z.string().optional(),
-          category: z.string().optional(),
         }),
-        execute: async ({
-          year,
-          make,
-          model,
-          trim,
-          category,
-        }: {
-          year: number;
-          make: string;
-          model: string;
-          trim?: string;
-          category?: string;
-        }) => {
-          const params = new URLSearchParams({
-            year: String(year),
-            make,
-            model,
-          });
-          if (trim) params.set('trim', trim);
-          if (category) params.set('category', category);
-
-          try {
-            const res = await fetch(
-              `${process.env.BAYREADY_API_URL || 'https://bayready-production.up.railway.app'}/fitment?${params}`,
-            );
-            if (!res.ok) {
-              return {
-                message:
-                  'Fitment lookup is not available yet. Please call us at (570) 730-4433 for vehicle-specific part recommendations.',
-              };
-            }
-            return res.json();
-          } catch {
-            return {
-              message:
-                'Fitment lookup is not available yet. Please call us at (570) 730-4433 for vehicle-specific part recommendations.',
-            };
-          }
-        },
+        execute: async () => ({
+          message:
+            'Our fitment database is currently being built. Please call us at (570) 730-4433 and we\'ll help you find the right parts for your vehicle!',
+        }),
       }),
     },
     stopWhen: stepCountIs(3),

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { formatPhone } from '@/lib/formatPhone';
 
 interface InquiryProduct {
   id: string;
@@ -155,7 +156,7 @@ export default function InquiryModal({ product, isOpen, onClose }: InquiryModalP
                   <input
                     type="tel"
                     value={formData.phone}
-                    onChange={(e) => setFormData((p) => ({ ...p, phone: e.target.value }))}
+                    onChange={(e) => setFormData((p) => ({ ...p, phone: formatPhone(e.target.value) }))}
                     required
                     className="w-full px-4 py-2.5 bg-black border-2 border-[#F59E0B]/30 text-[#F59E0B] placeholder-[#F59E0B]/40 font-mono text-sm focus:outline-none focus:border-[#F59E0B] transition-colors"
                     placeholder="(555) 555-5555"

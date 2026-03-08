@@ -4,7 +4,8 @@ export type WidgetScreen =
   | 'fitment'
   | 'contact'
   | 'chat'
-  | 'submitted';
+  | 'submitted'
+  | 'map';
 
 export type QuoteStep = 'select-service' | 'vehicle-info' | 'customer-info';
 

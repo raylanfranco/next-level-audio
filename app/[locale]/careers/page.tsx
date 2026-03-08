@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
+import { formatPhone } from '@/lib/formatPhone';
 
 const EMPLOYMENT_STATUS_KEYS = ['lookingForNew', 'unemployed', 'selfEmployed'] as const;
 const EMPLOYMENT_TYPE_KEYS = ['fullTime', 'partTime', 'subContract'] as const;
@@ -36,7 +37,7 @@ export default function CareersPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: name === 'applicant_phone' ? formatPhone(value) : value }));
   };
 
   const handlePositionToggle = (position: string) => {

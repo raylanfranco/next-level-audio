@@ -34,26 +34,51 @@ function ContactIcon({ name, className }: { name: string; className?: string }) 
   }
 }
 
-export default function ContactActionBar() {
+interface ContactActionBarProps {
+  onNavigateMap?: () => void;
+}
+
+export default function ContactActionBar({ onNavigateMap }: ContactActionBarProps) {
   return (
     <div className="shrink-0 border-t-2 border-[#E01020]/30 bg-[#E01020]/5 px-4 py-2 flex items-center justify-around">
-      {chatbotConfig.contactActions.map((action) => (
-        <a
-          key={action.id}
-          href={action.href}
-          target={'external' in action && action.external ? '_blank' : undefined}
-          rel={'external' in action && action.external ? 'noopener noreferrer' : undefined}
-          className="flex flex-col items-center gap-1 text-white/50 hover:text-[#E01020] transition-colors py-1 px-2"
-        >
-          <ContactIcon name={action.icon} />
-          <span
-            className="text-[9px] uppercase tracking-wider"
-            style={{ fontFamily: 'var(--font-oxanium)' }}
+      {chatbotConfig.contactActions.map((action) => {
+        // Map button navigates to embedded map screen instead of opening new window
+        if (action.id === 'directions' && onNavigateMap) {
+          return (
+            <button
+              key={action.id}
+              onClick={onNavigateMap}
+              className="flex flex-col items-center gap-1 text-white/50 hover:text-[#E01020] transition-colors py-1 px-2 cursor-pointer bg-transparent border-none"
+            >
+              <ContactIcon name={action.icon} />
+              <span
+                className="text-[9px] uppercase tracking-wider"
+                style={{ fontFamily: 'var(--font-oxanium)' }}
+              >
+                {action.label}
+              </span>
+            </button>
+          );
+        }
+
+        return (
+          <a
+            key={action.id}
+            href={action.href}
+            target={'external' in action && action.external ? '_blank' : undefined}
+            rel={'external' in action && action.external ? 'noopener noreferrer' : undefined}
+            className="flex flex-col items-center gap-1 text-white/50 hover:text-[#E01020] transition-colors py-1 px-2"
           >
-            {action.label}
-          </span>
-        </a>
-      ))}
+            <ContactIcon name={action.icon} />
+            <span
+              className="text-[9px] uppercase tracking-wider"
+              style={{ fontFamily: 'var(--font-oxanium)' }}
+            >
+              {action.label}
+            </span>
+          </a>
+        );
+      })}
     </div>
   );
 }

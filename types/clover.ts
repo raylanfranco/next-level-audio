@@ -108,6 +108,8 @@ export interface CloverCustomer {
   marketingAllowed?: boolean;
   customerSince?: number;
   metadata?: Record<string, unknown>;
+  emailAddresses?: { elements: { id: string; emailAddress: string }[] };
+  phoneNumbers?: { elements: { id: string; phoneNumber: string }[] };
 }
 
 export interface CloverCustomersResponse {

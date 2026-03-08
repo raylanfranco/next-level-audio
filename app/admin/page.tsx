@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
 import { Booking, BookingStatus } from '@/types/booking';
@@ -12,7 +12,7 @@ import type {
   CloverCategory,
 } from '@/types/clover';
 import type { Inquiry, InquiryStatus } from '@/types/inquiry';
-import type { JobListing, CareerApplication, ApplicationStatus, JobListingFormData } from '@/types/career';
+import type { CareerApplication, ApplicationStatus } from '@/types/career';
 import { AdminThemeProvider, useAdminTheme } from './AdminThemeProvider';
 
 const statusColors: Record<string, { dark: string; light: string }> = {
@@ -67,7 +67,7 @@ const serviceNames: Record<string, string> = {
   'accessories': 'Auto Accessories',
 };
 
-type NavItem = 'overview' | 'inventory' | 'orders' | 'payments' | 'customers' | 'bookings' | 'requests' | 'jobs' | 'applications' | 'best-sellers' | 'coupons';
+type NavItem = 'overview' | 'inventory' | 'orders' | 'payments' | 'customers' | 'bookings' | 'requests' | 'applications' | 'best-sellers' | 'coupons';
 
 function formatCents(cents: number) {
   return `$${(cents / 100).toFixed(2)}`;
@@ -114,7 +114,6 @@ function AdminDashboard() {
   const [customers, setCustomers] = useState<CloverCustomer[]>([]);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
-  const [jobListings, setJobListings] = useState<JobListing[]>([]);
   const [applications, setApplications] = useState<CareerApplication[]>([]);
 
   // Best sellers state
@@ -256,14 +255,6 @@ function AdminDashboard() {
     }
   };
 
-  // Job form state
-  const [showJobForm, setShowJobForm] = useState(false);
-  const [editingJob, setEditingJob] = useState<JobListing | null>(null);
-  const [jobFormData, setJobFormData] = useState<JobListingFormData>({
-    title: '', department: '', location: 'Stroudsburg, PA',
-    type: 'full-time', description: '', requirements: '', salary_range: '',
-  });
-
   // Product form state
   const [showProductForm, setShowProductForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<CloverItem | null>(null);
@@ -275,6 +266,10 @@ function AdminDashboard() {
   const [inventoryOffset, setInventoryOffset] = useState(0);
   const [inventorySearch, setInventorySearch] = useState('');
   const [ordersOffset, setOrdersOffset] = useState(0);
+  const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
+  const [editingOrderNote, setEditingOrderNote] = useState<string | null>(null);
+  const [orderNoteValue, setOrderNoteValue] = useState('');
+  const [orderActionLoading, setOrderActionLoading] = useState(false);
   const [paymentsOffset, setPaymentsOffset] = useState(0);
   const [customersOffset, setCustomersOffset] = useState(0);
 
@@ -283,7 +278,7 @@ function AdminDashboard() {
   const fetchOverviewData = useCallback(async () => {
     setLoading(true);
     try {
-      const [invRes, catRes, ordRes, payRes, custRes, bookRes, inqRes, jobsRes, appsRes] = await Promise.allSettled([
+      const [invRes, catRes, ordRes, payRes, custRes, bookRes, inqRes, appsRes] = await Promise.allSettled([
         fetch(`/api/clover/inventory?limit=${PAGE_SIZE}&offset=0`),
         fetch('/api/clover/categories'),
         fetch('/api/clover/orders?limit=10'),
@@ -291,7 +286,6 @@ function AdminDashboard() {
         fetch('/api/clover/customers?limit=100'),
         fetch('/api/bookings'),
         fetch('/api/inquiries'),
-        fetch('/api/careers/jobs?active=false'),
         fetch('/api/careers/applications'),
       ]);
 
@@ -323,10 +317,6 @@ function AdminDashboard() {
       if (inqRes.status === 'fulfilled' && inqRes.value.ok) {
         const d = await inqRes.value.json();
         setInquiries(d.inquiries || []);
-      }
-      if (jobsRes.status === 'fulfilled' && jobsRes.value.ok) {
-        const d = await jobsRes.value.json();
-        setJobListings(d.jobs || []);
       }
       if (appsRes.status === 'fulfilled' && appsRes.value.ok) {
         const d = await appsRes.value.json();
@@ -387,6 +377,39 @@ function AdminDashboard() {
     } catch (error) {
       console.error('Error fetching orders:', error);
     }
+  };
+
+  const updateOrderNote = async (orderId: string, note: string) => {
+    setOrderActionLoading(true);
+    try {
+      const res = await fetch(`/api/clover/orders/${orderId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ note }),
+      });
+      if (res.ok) {
+        setOrders(prev => prev.map(o => o.id === orderId ? { ...o, note } : o));
+        setEditingOrderNote(null);
+      }
+    } catch (error) {
+      console.error('Error updating order:', error);
+    }
+    setOrderActionLoading(false);
+  };
+
+  const deleteOrder = async (orderId: string) => {
+    if (!confirm('Are you sure you want to delete this order? This cannot be undone.')) return;
+    setOrderActionLoading(true);
+    try {
+      const res = await fetch(`/api/clover/orders/${orderId}`, { method: 'DELETE' });
+      if (res.ok) {
+        setOrders(prev => prev.filter(o => o.id !== orderId));
+        setExpandedOrderId(null);
+      }
+    } catch (error) {
+      console.error('Error deleting order:', error);
+    }
+    setOrderActionLoading(false);
   };
 
   const fetchPaymentsPage = async (offset: number) => {
@@ -466,58 +489,6 @@ function AdminDashboard() {
       }
     } catch (error) {
       console.error('Error updating inquiry status:', error);
-    }
-  };
-
-  const resetJobForm = () => {
-    setJobFormData({ title: '', department: '', location: 'Stroudsburg, PA', type: 'full-time', description: '', requirements: '', salary_range: '' });
-    setEditingJob(null);
-    setShowJobForm(false);
-  };
-
-  const createOrUpdateJob = async () => {
-    try {
-      const url = editingJob ? `/api/careers/jobs/${editingJob.id}` : '/api/careers/jobs';
-      const method = editingJob ? 'PATCH' : 'POST';
-      const res = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(jobFormData),
-      });
-      if (res.ok) {
-        resetJobForm();
-        fetchOverviewData();
-      }
-    } catch (error) {
-      console.error('Error saving job:', error);
-    }
-  };
-
-  const toggleJobActive = async (job: JobListing) => {
-    try {
-      const res = await fetch(`/api/careers/jobs/${job.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ is_active: !job.is_active }),
-      });
-      if (res.ok) {
-        setJobListings(prev => prev.map(j => j.id === job.id ? { ...j, is_active: !j.is_active } : j));
-      }
-    } catch (error) {
-      console.error('Error toggling job:', error);
-    }
-  };
-
-  const deleteJob = async (jobId: string) => {
-    if (!confirm('Delete this job listing? All associated applications will also be deleted.')) return;
-    try {
-      const res = await fetch(`/api/careers/jobs/${jobId}`, { method: 'DELETE' });
-      if (res.ok) {
-        setJobListings(prev => prev.filter(j => j.id !== jobId));
-        setApplications(prev => prev.filter(a => a.job_listing_id !== jobId));
-      }
-    } catch (error) {
-      console.error('Error deleting job:', error);
     }
   };
 
@@ -655,7 +626,6 @@ function AdminDashboard() {
     { key: 'customers', label: 'Customers' },
     { key: 'bookings', label: 'Bookings', badge: pendingBookings || undefined },
     { key: 'requests', label: 'Requests', badge: pendingInquiries || undefined },
-    { key: 'jobs', label: 'Jobs' },
     { key: 'applications', label: 'Applications', badge: pendingApplications || undefined },
     { key: 'best-sellers', label: 'Best Sellers' },
     { key: 'coupons', label: 'Coupons' },
@@ -1134,32 +1104,115 @@ function AdminDashboard() {
                     </thead>
                     <tbody>
                       {orders.map((order) => (
-                        <tr key={order.id} className={`border-b ${borderColor} ${bgHover} transition-colors`}>
-                          <td className="px-6 py-3">
-                            <div className={`${textPrimary} text-sm`}>{order.id.slice(0, 8)}...</div>
-                            {order.note && <div className={`${textMuted} text-xs mt-0.5`}>{order.note.split('\n')[0]}</div>}
-                          </td>
-                          <td className="px-6 py-3">
-                            <div className="text-sm">
-                              {order.lineItems?.elements?.map((li, i) => (
-                                <div key={li.id || i} className={textPrimary}>
-                                  {li.name} <span className={textMuted}>{formatCents(li.price)}</span>
+                        <React.Fragment key={order.id}>
+                          <tr
+                            className={`border-b ${borderColor} ${bgHover} transition-colors cursor-pointer`}
+                            onClick={() => setExpandedOrderId(expandedOrderId === order.id ? null : order.id)}
+                          >
+                            <td className="px-6 py-3">
+                              <div className="flex items-center gap-2">
+                                <span className={`text-xs transition-transform ${expandedOrderId === order.id ? 'rotate-90' : ''}`}>&#9654;</span>
+                                <div>
+                                  <div className={`${textPrimary} text-sm`}>{order.id.slice(0, 8)}...</div>
+                                  {order.note && <div className={`${textMuted} text-xs mt-0.5`}>{order.note.split('\n')[0]}</div>}
                                 </div>
-                              )) || <span className={textMuted}>—</span>}
-                            </div>
-                          </td>
-                          <td className={`px-6 py-3 ${textPrimary} text-sm font-medium`}>{formatCents(order.total)}</td>
-                          <td className="px-6 py-3">
-                            <span className={`px-2 py-0.5 text-xs rounded-full border ${
-                              order.paymentState === 'PAID'
-                                ? isDark ? 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10' : 'text-emerald-600 border-emerald-200 bg-emerald-50'
-                                : isDark ? 'text-amber-400 border-amber-400/30 bg-amber-400/10' : 'text-amber-600 border-amber-200 bg-amber-50'
-                            }`}>
-                              {order.paymentState || 'OPEN'}
-                            </span>
-                          </td>
-                          <td className={`px-6 py-3 ${textSecondary} text-sm`}>{order.createdTime ? formatDate(order.createdTime) : '—'}</td>
-                        </tr>
+                              </div>
+                            </td>
+                            <td className="px-6 py-3">
+                              <div className={`${textPrimary} text-sm`}>
+                                {order.lineItems?.elements?.length || 0} item{(order.lineItems?.elements?.length || 0) !== 1 ? 's' : ''}
+                              </div>
+                            </td>
+                            <td className={`px-6 py-3 ${textPrimary} text-sm font-medium`}>{formatCents(order.total)}</td>
+                            <td className="px-6 py-3">
+                              <span className={`px-2 py-0.5 text-xs rounded-full border ${
+                                order.paymentState === 'PAID'
+                                  ? isDark ? 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10' : 'text-emerald-600 border-emerald-200 bg-emerald-50'
+                                  : isDark ? 'text-amber-400 border-amber-400/30 bg-amber-400/10' : 'text-amber-600 border-amber-200 bg-amber-50'
+                              }`}>
+                                {order.paymentState || 'OPEN'}
+                              </span>
+                            </td>
+                            <td className={`px-6 py-3 ${textSecondary} text-sm`}>{order.createdTime ? formatDate(order.createdTime) : '—'}</td>
+                          </tr>
+                          {expandedOrderId === order.id && (
+                            <tr>
+                              <td colSpan={5} className={`px-6 py-4 ${isDark ? 'bg-slate-800/30' : 'bg-slate-50/50'} border-b ${borderColor}`}>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                  <div>
+                                    <h4 className={`${textSecondary} text-xs uppercase tracking-wide mb-2`}>Line Items</h4>
+                                    {order.lineItems?.elements?.length ? (
+                                      <div className="space-y-1">
+                                        {order.lineItems.elements.map((li, i) => (
+                                          <div key={li.id || i} className="flex justify-between text-sm">
+                                            <span className={textPrimary}>{li.name}</span>
+                                            <span className={textMuted}>{formatCents(li.price)}</span>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    ) : (
+                                      <span className={`${textMuted} text-sm`}>No line items</span>
+                                    )}
+                                  </div>
+                                  <div className="space-y-2">
+                                    <div>
+                                      <span className={`${textSecondary} text-xs uppercase tracking-wide`}>Order ID</span>
+                                      <div className={`${textPrimary} text-sm font-mono`}>{order.id}</div>
+                                    </div>
+                                    <div>
+                                      <span className={`${textSecondary} text-xs uppercase tracking-wide`}>Notes</span>
+                                      {editingOrderNote === order.id ? (
+                                        <div className="flex gap-2 mt-1">
+                                          <input
+                                            type="text"
+                                            value={orderNoteValue}
+                                            onChange={(e) => setOrderNoteValue(e.target.value)}
+                                            className={`flex-1 px-2 py-1 text-sm border ${borderColor} ${isDark ? 'bg-slate-700 text-white' : 'bg-white text-black'}`}
+                                            placeholder="Order note..."
+                                          />
+                                          <button
+                                            onClick={() => updateOrderNote(order.id, orderNoteValue)}
+                                            disabled={orderActionLoading}
+                                            className="px-2 py-1 text-xs bg-emerald-600 text-white hover:bg-emerald-700 disabled:opacity-50"
+                                          >Save</button>
+                                          <button
+                                            onClick={() => setEditingOrderNote(null)}
+                                            className={`px-2 py-1 text-xs ${isDark ? 'bg-slate-600 text-white' : 'bg-slate-200 text-black'}`}
+                                          >Cancel</button>
+                                        </div>
+                                      ) : (
+                                        <div className="flex items-center gap-2">
+                                          <span className={`${textPrimary} text-sm`}>{order.note || '—'}</span>
+                                          <button
+                                            onClick={(e) => { e.stopPropagation(); setEditingOrderNote(order.id); setOrderNoteValue(order.note || ''); }}
+                                            className={`text-xs ${isDark ? 'text-blue-400 hover:text-blue-300' : 'text-blue-600 hover:text-blue-500'}`}
+                                          >Edit</button>
+                                        </div>
+                                      )}
+                                    </div>
+                                    <div>
+                                      <span className={`${textSecondary} text-xs uppercase tracking-wide`}>Payment</span>
+                                      <div className={`${textPrimary} text-sm`}>{order.paymentState || 'OPEN'} &middot; {order.state || '—'}</div>
+                                    </div>
+                                    {order.createdTime && (
+                                      <div>
+                                        <span className={`${textSecondary} text-xs uppercase tracking-wide`}>Created</span>
+                                        <div className={`${textPrimary} text-sm`}>{formatDate(order.createdTime)}</div>
+                                      </div>
+                                    )}
+                                    <div className="pt-2 flex gap-2">
+                                      <button
+                                        onClick={(e) => { e.stopPropagation(); deleteOrder(order.id); }}
+                                        disabled={orderActionLoading}
+                                        className="px-3 py-1 text-xs bg-red-600 text-white hover:bg-red-700 disabled:opacity-50"
+                                      >Delete Order</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                        </React.Fragment>
                       ))}
                     </tbody>
                   </table>
@@ -1247,42 +1300,51 @@ function AdminDashboard() {
                 <p className={textSecondary}>Customer records from Clover POS</p>
               </div>
 
-              <div className={`${bgCard} border ${borderColor} rounded-lg overflow-hidden`}>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className={`border-b ${borderColor} ${isDark ? 'bg-slate-800/50' : 'bg-slate-50'}`}>
-                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Name</th>
-                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Marketing Opt-in</th>
-                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Customer Since</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {customers.map((customer) => (
-                        <tr key={customer.id} className={`border-b ${borderColor} ${bgHover} transition-colors`}>
-                          <td className={`px-6 py-3 ${textPrimary} text-sm`}>
-                            {customer.firstName || customer.lastName
-                              ? `${customer.firstName || ''} ${customer.lastName || ''}`.trim()
-                              : <span className={textMuted}>Unknown</span>
-                            }
-                          </td>
-                          <td className="px-6 py-3">
-                            <span className={`px-2 py-0.5 text-xs rounded-full border ${
-                              customer.marketingAllowed
-                                ? isDark ? 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10' : 'text-emerald-600 border-emerald-200 bg-emerald-50'
-                                : isDark ? 'text-red-400/60 border-red-400/20 bg-red-400/5' : 'text-red-500 border-red-200 bg-red-50'
-                            }`}>
-                              {customer.marketingAllowed ? 'YES' : 'NO'}
-                            </span>
-                          </td>
-                          <td className={`px-6 py-3 ${textSecondary} text-sm`}>{customer.customerSince ? formatDate(customer.customerSince) : '—'}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                {customers.length === 0 && <div className={`text-center ${textMuted} py-12 text-sm`}>No customers found.</div>}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {customers.filter(c => c.firstName || c.lastName).map((customer) => {
+                  const name = `${customer.firstName || ''} ${customer.lastName || ''}`.trim();
+                  const email = customer.emailAddresses?.elements?.[0]?.emailAddress;
+                  const phone = customer.phoneNumbers?.elements?.[0]?.phoneNumber;
+                  return (
+                    <div key={customer.id} className={`${bgCard} border ${borderColor} p-5 hover:border-blue-500/40 transition-colors`}>
+                      <div className="flex items-start justify-between mb-3">
+                        <div className={`w-10 h-10 flex items-center justify-center text-lg font-bold ${isDark ? 'bg-slate-700 text-white' : 'bg-slate-200 text-slate-700'}`}>
+                          {(customer.firstName?.[0] || customer.lastName?.[0] || '?').toUpperCase()}
+                        </div>
+                        <span className={`px-2 py-0.5 text-xs border ${
+                          customer.marketingAllowed
+                            ? isDark ? 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10' : 'text-emerald-600 border-emerald-200 bg-emerald-50'
+                            : isDark ? 'text-red-400/60 border-red-400/20 bg-red-400/5' : 'text-red-500 border-red-200 bg-red-50'
+                        }`}>
+                          {customer.marketingAllowed ? 'Marketing: Yes' : 'Marketing: No'}
+                        </span>
+                      </div>
+                      <h3 className={`${textPrimary} font-semibold text-lg mb-2`}>{name}</h3>
+                      <div className="space-y-1">
+                        {email && (
+                          <div className="flex items-center gap-2">
+                            <span className={`${textMuted} text-xs`}>Email:</span>
+                            <a href={`mailto:${email}`} className={`text-sm ${isDark ? 'text-blue-400' : 'text-blue-600'} hover:underline truncate`}>{email}</a>
+                          </div>
+                        )}
+                        {phone && (
+                          <div className="flex items-center gap-2">
+                            <span className={`${textMuted} text-xs`}>Phone:</span>
+                            <a href={`tel:${phone}`} className={`text-sm ${isDark ? 'text-blue-400' : 'text-blue-600'} hover:underline`}>{phone}</a>
+                          </div>
+                        )}
+                        {!email && !phone && (
+                          <div className={`${textMuted} text-sm`}>No contact info</div>
+                        )}
+                      </div>
+                      <div className={`mt-3 pt-3 border-t ${borderColor} ${textMuted} text-xs`}>
+                        Customer since {customer.customerSince ? formatDate(customer.customerSince) : 'Unknown'}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
+              {customers.filter(c => c.firstName || c.lastName).length === 0 && <div className={`text-center ${textMuted} py-12 text-sm`}>No customers found.</div>}
 
               <div className="flex justify-between items-center mt-4">
                 <span className={`${textMuted} text-sm`}>Page {Math.floor(customersOffset / PAGE_SIZE) + 1}</span>
@@ -1404,203 +1466,6 @@ function AdminDashboard() {
             </div>
           )}
 
-          {/* ==================== JOBS ==================== */}
-          {activeNav === 'jobs' && (
-            <div>
-              <div className="mb-8 flex items-center justify-between">
-                <div>
-                  <h2 className={`text-3xl font-bold ${textPrimary} mb-1`}>Job Listings</h2>
-                  <p className={textSecondary}>Manage career opportunities</p>
-                </div>
-                <button
-                  onClick={() => { resetJobForm(); setShowJobForm(true); }}
-                  className={`px-5 py-2.5 ${isDark ? 'bg-blue-500/10 text-blue-400 border-blue-400/30' : 'bg-blue-50 text-blue-600 border-blue-200'} border rounded-md hover:opacity-80 transition-colors text-sm`}
-                >
-                  + Create New Job
-                </button>
-              </div>
-
-              {/* Job Form */}
-              {showJobForm && (
-                <div className={`${bgCard} border ${borderColor} rounded-lg p-6 mb-6`}>
-                  <h3 className={`text-lg font-semibold ${textPrimary} mb-4`}>
-                    {editingJob ? 'Edit Job Listing' : 'Create New Job Listing'}
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Title *</label>
-                      <input
-                        type="text"
-                        value={jobFormData.title}
-                        onChange={(e) => setJobFormData(prev => ({ ...prev, title: e.target.value }))}
-                        placeholder="e.g. Car Audio Installer"
-                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors`}
-                      />
-                    </div>
-                    <div>
-                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Department *</label>
-                      <input
-                        type="text"
-                        value={jobFormData.department}
-                        onChange={(e) => setJobFormData(prev => ({ ...prev, department: e.target.value }))}
-                        placeholder="e.g. Installation"
-                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors`}
-                      />
-                    </div>
-                    <div>
-                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Location</label>
-                      <input
-                        type="text"
-                        value={jobFormData.location}
-                        onChange={(e) => setJobFormData(prev => ({ ...prev, location: e.target.value }))}
-                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors`}
-                      />
-                    </div>
-                    <div>
-                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Type</label>
-                      <select
-                        value={jobFormData.type}
-                        onChange={(e) => setJobFormData(prev => ({ ...prev, type: e.target.value as 'full-time' | 'part-time' | 'contract' }))}
-                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors cursor-pointer`}
-                      >
-                        <option value="full-time">Full-time</option>
-                        <option value="part-time">Part-time</option>
-                        <option value="contract">Contract</option>
-                      </select>
-                    </div>
-                    <div>
-                      <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Salary Range</label>
-                      <input
-                        type="text"
-                        value={jobFormData.salary_range}
-                        onChange={(e) => setJobFormData(prev => ({ ...prev, salary_range: e.target.value }))}
-                        placeholder="e.g. $40,000 - $60,000"
-                        className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors`}
-                      />
-                    </div>
-                  </div>
-                  <div className="mb-4">
-                    <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Description *</label>
-                    <textarea
-                      value={jobFormData.description}
-                      onChange={(e) => setJobFormData(prev => ({ ...prev, description: e.target.value }))}
-                      rows={4}
-                      placeholder="Describe the role and responsibilities..."
-                      className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors resize-y`}
-                    />
-                  </div>
-                  <div className="mb-4">
-                    <label className={`block ${textSecondary} text-xs uppercase tracking-wide mb-1`}>Requirements</label>
-                    <textarea
-                      value={jobFormData.requirements}
-                      onChange={(e) => setJobFormData(prev => ({ ...prev, requirements: e.target.value }))}
-                      rows={3}
-                      placeholder="List qualifications, skills, experience needed..."
-                      className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-2.5 rounded-md text-sm focus:border-blue-500 focus:outline-none transition-colors resize-y`}
-                    />
-                  </div>
-                  <div className="flex gap-3">
-                    <button
-                      onClick={createOrUpdateJob}
-                      disabled={!jobFormData.title || !jobFormData.department || !jobFormData.description}
-                      className={`px-5 py-2.5 ${isDark ? 'bg-blue-500 text-white' : 'bg-blue-600 text-white'} rounded-md hover:opacity-90 transition-colors text-sm disabled:opacity-30 disabled:cursor-not-allowed`}
-                    >
-                      {editingJob ? 'Update Job' : 'Create Job'}
-                    </button>
-                    <button
-                      onClick={resetJobForm}
-                      className={`px-5 py-2.5 border ${borderColor} ${textSecondary} rounded-md ${btnHover} transition-colors text-sm`}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              )}
-
-              {/* Jobs Table */}
-              <div className={`${bgCard} border ${borderColor} rounded-lg overflow-hidden`}>
-                <div className="overflow-x-auto">
-                  <table className="w-full">
-                    <thead>
-                      <tr className={`border-b ${borderColor} ${isDark ? 'bg-slate-800/50' : 'bg-slate-50'}`}>
-                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Title</th>
-                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Department</th>
-                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Type</th>
-                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Salary</th>
-                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Active</th>
-                        <th className={`px-6 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {jobListings.map((job) => (
-                        <tr key={job.id} className={`border-b ${borderColor} ${bgHover} transition-colors`}>
-                          <td className="px-6 py-3">
-                            <div className={`${textPrimary} text-sm font-medium`}>{job.title}</div>
-                            <div className={`${textMuted} text-xs`}>{job.location}</div>
-                          </td>
-                          <td className={`px-6 py-3 ${textSecondary} text-sm`}>{job.department}</td>
-                          <td className="px-6 py-3">
-                            <span className={`px-2 py-0.5 text-xs rounded-full border ${
-                              isDark ? 'text-cyan-400 border-cyan-400/20 bg-cyan-400/10' : 'text-cyan-600 border-cyan-200 bg-cyan-50'
-                            }`}>
-                              {job.type}
-                            </span>
-                          </td>
-                          <td className={`px-6 py-3 ${textSecondary} text-sm`}>{job.salary_range || '—'}</td>
-                          <td className="px-6 py-3">
-                            <button
-                              onClick={() => toggleJobActive(job)}
-                              className={`px-2.5 py-1 text-xs rounded-full border cursor-pointer transition-colors ${
-                                job.is_active
-                                  ? isDark ? 'text-emerald-400 border-emerald-400/30 bg-emerald-400/10' : 'text-emerald-600 border-emerald-200 bg-emerald-50'
-                                  : isDark ? 'text-slate-400 border-slate-400/30 bg-slate-400/10' : 'text-slate-500 border-slate-200 bg-slate-50'
-                              }`}
-                            >
-                              {job.is_active ? 'ACTIVE' : 'INACTIVE'}
-                            </button>
-                          </td>
-                          <td className="px-6 py-3">
-                            <div className="flex gap-2">
-                              <button
-                                onClick={() => {
-                                  setEditingJob(job);
-                                  setJobFormData({
-                                    title: job.title,
-                                    department: job.department,
-                                    location: job.location,
-                                    type: job.type,
-                                    description: job.description,
-                                    requirements: job.requirements || '',
-                                    salary_range: job.salary_range || '',
-                                  });
-                                  setShowJobForm(true);
-                                }}
-                                className={`${textAccent} text-sm ${btnHover} px-2 py-1 rounded transition-colors`}
-                              >
-                                Edit
-                              </button>
-                              <button
-                                onClick={() => deleteJob(job.id)}
-                                className={`${isDark ? 'text-red-400' : 'text-red-600'} text-sm ${btnHover} px-2 py-1 rounded transition-colors`}
-                              >
-                                Delete
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-                {jobListings.length === 0 && (
-                  <div className={`text-center ${textMuted} py-12 text-sm`}>
-                    No job listings yet. Click &ldquo;Create New Job&rdquo; to add your first listing.
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
           {/* ==================== APPLICATIONS ==================== */}
           {activeNav === 'applications' && (
             <div>
@@ -1635,8 +1500,7 @@ function AdminDashboard() {
                             {app.applicant_phone && <div className={`${textMuted} text-xs`}>{app.applicant_phone}</div>}
                           </td>
                           <td className="px-6 py-3">
-                            <div className={`${textPrimary} text-sm`}>{app.job_listing?.title || 'Unknown Position'}</div>
-                            {app.job_listing?.department && <div className={`${textMuted} text-xs`}>{app.job_listing.department}</div>}
+                            <div className={`${textPrimary} text-sm`}>{app.position || 'General Application'}</div>
                           </td>
                           <td className="px-6 py-3">
                             {app.resume_url ? (
