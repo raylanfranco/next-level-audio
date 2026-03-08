@@ -645,8 +645,7 @@ function AdminDashboard() {
       <aside className={`w-64 ${bgSidebar} border-r ${borderColor} flex flex-col min-h-screen sticky top-0`}>
         <div className={`p-6 border-b ${borderColor}`}>
           <h1
-            className={`text-2xl font-bold ${textAccent}`}
-            style={{ fontFamily: 'var(--font-oxanium)' }}
+            className={`text-2xl font-bold ${textAccent} font-oxanium`}
           >
             NEXT LEVEL
           </h1>

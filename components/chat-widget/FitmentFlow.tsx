@@ -59,7 +59,7 @@ export default function FitmentFlow({ form, setForm, onBack, onNavigateQuote }: 
 
           <div className="space-y-3 flex-1">
             <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1 font-oxanium">
                 Year *
               </label>
               <select
@@ -74,7 +74,7 @@ export default function FitmentFlow({ form, setForm, onBack, onNavigateQuote }: 
               </select>
             </div>
             <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1 font-oxanium">
                 Make *
               </label>
               <input
@@ -85,7 +85,7 @@ export default function FitmentFlow({ form, setForm, onBack, onNavigateQuote }: 
               />
             </div>
             <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1 font-oxanium">
                 Model *
               </label>
               <input
@@ -100,16 +100,14 @@ export default function FitmentFlow({ form, setForm, onBack, onNavigateQuote }: 
           <div className="flex gap-2 mt-4">
             <button
               onClick={onBack}
-              className="flex-1 py-2.5 border border-[#E01020]/30 text-white/60 text-sm tracking-wider hover:border-[#E01020]/60 hover:text-[#E01020] transition-colors cursor-pointer"
-              style={{ fontFamily: 'var(--font-oxanium)' }}
+              className="flex-1 py-2.5 border border-[#E01020]/30 text-white/60 text-sm tracking-wider hover:border-[#E01020]/60 hover:text-[#E01020] transition-colors cursor-pointer font-oxanium"
             >
               BACK
             </button>
             <button
               onClick={handleSearch}
               disabled={searching || !form.year || !form.make || !form.model}
-              className="flex-1 py-2.5 bg-[#E01020] text-black text-sm font-bold tracking-wider disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#E01020]/90 transition-colors cursor-pointer"
-              style={{ fontFamily: 'var(--font-oxanium)' }}
+              className="flex-1 py-2.5 bg-[#E01020] text-black text-sm font-bold tracking-wider disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#E01020]/90 transition-colors cursor-pointer font-oxanium"
             >
               {searching ? 'SEARCHING...' : 'SEARCH'}
             </button>
@@ -121,8 +119,7 @@ export default function FitmentFlow({ form, setForm, onBack, onNavigateQuote }: 
         <>
           <div className="border-b border-[#E01020]/15 pb-3 mb-3">
             <p
-              className="text-[#E01020] text-sm font-bold"
-              style={{ fontFamily: 'var(--font-oxanium)' }}
+              className="text-[#E01020] text-sm font-bold font-oxanium"
             >
               {vehicleStr}
             </p>
@@ -156,8 +153,7 @@ export default function FitmentFlow({ form, setForm, onBack, onNavigateQuote }: 
               </p>
               <a
                 href="tel:+15707304433"
-                className="text-[#E01020] text-sm font-bold hover:underline"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                className="text-[#E01020] text-sm font-bold hover:underline font-oxanium"
               >
                 (570) 730-4433
               </a>
@@ -171,15 +167,13 @@ export default function FitmentFlow({ form, setForm, onBack, onNavigateQuote }: 
             <div className="flex gap-2">
               <button
                 onClick={() => { setStep('vehicle-select'); setResults([]); setNoResults(false); }}
-                className="flex-1 py-2 border border-[#E01020]/30 text-white/60 text-xs tracking-wider hover:border-[#E01020]/60 hover:text-[#E01020] transition-colors cursor-pointer"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                className="flex-1 py-2 border border-[#E01020]/30 text-white/60 text-xs tracking-wider hover:border-[#E01020]/60 hover:text-[#E01020] transition-colors cursor-pointer font-oxanium"
               >
                 SEARCH AGAIN
               </button>
               <button
                 onClick={onNavigateQuote}
-                className="flex-1 py-2 bg-[#E01020] text-black text-xs font-bold tracking-wider hover:bg-[#E01020]/90 transition-colors cursor-pointer"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                className="flex-1 py-2 bg-[#E01020] text-black text-xs font-bold tracking-wider hover:bg-[#E01020]/90 transition-colors cursor-pointer font-oxanium"
               >
                 GET A QUOTE
               </button>

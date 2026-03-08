@@ -70,8 +70,7 @@ export default function WelcomeScreen({ onBook, onNavigate, aiEnabled }: Welcome
               <ActionIcon name={action.icon} className="w-5 h-5" />
             </span>
             <span
-              className="text-sm tracking-wide"
-              style={{ fontFamily: 'var(--font-oxanium)' }}
+              className="text-sm tracking-wide font-oxanium"
             >
               {action.label}
             </span>
@@ -89,8 +88,7 @@ export default function WelcomeScreen({ onBook, onNavigate, aiEnabled }: Welcome
               </svg>
             </span>
             <span
-              className="text-sm tracking-wide"
-              style={{ fontFamily: 'var(--font-oxanium)' }}
+              className="text-sm tracking-wide font-oxanium"
             >
               Ask a Question
             </span>

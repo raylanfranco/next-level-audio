@@ -59,8 +59,7 @@ export default function AccountReferralsPage() {
   return (
     <div>
       <h1
-        className="text-2xl font-bold text-white mb-6 neon-glow"
-        style={{ fontFamily: 'var(--font-oxanium)' }}
+        className="text-2xl font-bold text-white mb-6 neon-glow font-oxanium"
       >
         {t('referralsTitle')}
       </h1>
@@ -101,8 +100,7 @@ export default function AccountReferralsPage() {
       {/* How It Works */}
       <div className="border-2 border-[#E01020]/20 p-5 mb-8">
         <h2
-          className="text-sm font-bold text-white mb-3"
-          style={{ fontFamily: 'var(--font-oxanium)' }}
+          className="text-sm font-bold text-white mb-3 font-oxanium"
         >
           {t('howItWorksTitle')}
         </h2>

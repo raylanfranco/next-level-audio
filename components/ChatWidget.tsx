@@ -144,14 +144,12 @@ export default function ChatWidget() {
               )}
               <div>
                 <h3
-                  className="text-[#E01020] text-sm font-bold tracking-wider neon-glow-soft"
-                  style={{ fontFamily: 'var(--font-oxanium)' }}
+                  className="text-[#E01020] text-sm font-bold tracking-wider neon-glow-soft font-oxanium"
                 >
                   {chatbotConfig.business.name.toUpperCase()}
                 </h3>
                 <p
-                  className="text-white/60 text-xs tracking-widest"
-                  style={{ fontFamily: 'var(--font-oxanium)' }}
+                  className="text-white/60 text-xs tracking-widest font-oxanium"
                 >
                   {SCREEN_TITLES[screen]}
                 </p>
@@ -238,8 +236,7 @@ export default function ChatWidget() {
                   href="https://maps.google.com/?q=944+North+9th+Street+Stroudsburg+PA+18360"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-3 w-full py-2.5 bg-[#E01020] text-black text-sm font-bold tracking-wider text-center block hover:bg-[#E01020]/90 transition-colors"
-                  style={{ fontFamily: 'var(--font-oxanium)' }}
+                  className="mt-3 w-full py-2.5 bg-[#E01020] text-black text-sm font-bold tracking-wider text-center block hover:bg-[#E01020]/90 transition-colors font-oxanium"
                 >
                   GET DIRECTIONS
                 </a>

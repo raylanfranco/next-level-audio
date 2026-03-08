@@ -61,16 +61,14 @@ export default function ContactScreen() {
           <div className="flex items-center gap-3 mb-2">
             <method.icon className="w-5 h-5 text-white/60 group-hover:text-[#E01020] transition-colors" />
             <span
-              className="text-xs text-white/60 tracking-widest font-bold"
-              style={{ fontFamily: 'var(--font-oxanium)' }}
+              className="text-xs text-white/60 tracking-widest font-bold font-oxanium"
             >
               {method.title}
             </span>
           </div>
           <div className="text-[#E01020] text-sm font-mono mb-2">{method.detail}</div>
           <div
-            className="text-[10px] text-white/40 tracking-wider group-hover:text-white/70 transition-colors"
-            style={{ fontFamily: 'var(--font-oxanium)' }}
+            className="text-[10px] text-white/40 tracking-wider group-hover:text-white/70 transition-colors font-oxanium"
           >
             {method.cta}
           </div>
@@ -80,8 +78,7 @@ export default function ContactScreen() {
       {/* Business Hours */}
       <div className="border border-[#E01020]/10 bg-[#0a0a0a] p-4 mt-4">
         <h4
-          className="text-xs text-white/60 tracking-widest font-bold mb-3"
-          style={{ fontFamily: 'var(--font-oxanium)' }}
+          className="text-xs text-white/60 tracking-widest font-bold mb-3 font-oxanium"
         >
           BUSINESS HOURS
         </h4>

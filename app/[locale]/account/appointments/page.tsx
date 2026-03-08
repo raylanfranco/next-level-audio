@@ -83,8 +83,7 @@ export default function AccountAppointmentsPage() {
   return (
     <div>
       <h1
-        className="text-2xl font-bold text-white mb-6 neon-glow"
-        style={{ fontFamily: 'var(--font-oxanium)' }}
+        className="text-2xl font-bold text-white mb-6 neon-glow font-oxanium"
       >
         {t('appointmentsTitle')}
       </h1>
@@ -114,8 +113,7 @@ export default function AccountAppointmentsPage() {
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <p
-                            className="text-white font-semibold text-sm"
-                            style={{ fontFamily: 'var(--font-oxanium)' }}
+                            className="text-white font-semibold text-sm font-oxanium"
                           >
                             {apt.service_name.toUpperCase()}
                           </p>
@@ -153,8 +151,7 @@ export default function AccountAppointmentsPage() {
                       <div className="flex items-start justify-between mb-2">
                         <div>
                           <p
-                            className="text-white font-semibold text-sm"
-                            style={{ fontFamily: 'var(--font-oxanium)' }}
+                            className="text-white font-semibold text-sm font-oxanium"
                           >
                             {apt.service_name.toUpperCase()}
                           </p>

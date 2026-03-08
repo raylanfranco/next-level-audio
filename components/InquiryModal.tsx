@@ -86,8 +86,7 @@ export default function InquiryModal({ product, isOpen, onClose }: InquiryModalP
         {/* Header */}
         <div className="p-4 border-b-2 border-[#F59E0B]/30 flex justify-between items-center">
           <h2
-            className="text-xl font-bold text-[#F59E0B]"
-            style={{ fontFamily: 'var(--font-oxanium)' }}
+            className="text-xl font-bold text-[#F59E0B] font-oxanium"
           >
             {step === 'form' ? 'REQUEST ITEM' : step === 'success' ? 'REQUEST SUBMITTED' : 'REQUEST FAILED'}
           </h2>
@@ -115,7 +114,7 @@ export default function InquiryModal({ product, isOpen, onClose }: InquiryModalP
                   </div>
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="text-white text-sm font-semibold truncate" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                  <p className="text-white text-sm font-semibold truncate font-oxanium">
                     {product.name}
                   </p>
                   <p className="text-[#F59E0B] font-mono text-sm">{formatCents(product.price)}</p>
@@ -181,8 +180,7 @@ export default function InquiryModal({ product, isOpen, onClose }: InquiryModalP
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full bg-[#F59E0B]/20 border-2 border-[#F59E0B] text-[#F59E0B] px-6 py-3 font-semibold text-sm hover:bg-[#F59E0B]/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                className="w-full bg-[#F59E0B]/20 border-2 border-[#F59E0B] text-[#F59E0B] px-6 py-3 font-semibold text-sm hover:bg-[#F59E0B]/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer font-oxanium"
               >
                 {isSubmitting ? 'SUBMITTING...' : 'SUBMIT REQUEST'}
               </button>
@@ -195,13 +193,13 @@ export default function InquiryModal({ product, isOpen, onClose }: InquiryModalP
               <svg className="w-16 h-16 mx-auto mb-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <h3 className="text-xl font-bold text-green-400 mb-2" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <h3 className="text-xl font-bold text-green-400 mb-2 font-oxanium">
                 REQUEST RECEIVED
               </h3>
               <p className="text-[#F59E0B]/70 font-mono text-sm mb-2">
                 We&apos;ve received your request for:
               </p>
-              <p className="text-white font-semibold mb-4" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <p className="text-white font-semibold mb-4 font-oxanium">
                 {product.name}
               </p>
               <p className="text-[#F59E0B]/60 font-mono text-xs mb-6">
@@ -222,7 +220,7 @@ export default function InquiryModal({ product, isOpen, onClose }: InquiryModalP
               <svg className="w-16 h-16 mx-auto mb-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <h3 className="text-xl font-bold text-red-400 mb-2" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <h3 className="text-xl font-bold text-red-400 mb-2 font-oxanium">
                 SUBMISSION FAILED
               </h3>
               <p className="text-[#F59E0B]/70 font-mono text-sm mb-4">
@@ -230,8 +228,7 @@ export default function InquiryModal({ product, isOpen, onClose }: InquiryModalP
               </p>
               <button
                 onClick={() => { setStep('form'); setErrorMessage(''); }}
-                className="bg-[#F59E0B]/20 border-2 border-[#F59E0B] text-[#F59E0B] px-6 py-3 font-semibold text-sm hover:bg-[#F59E0B]/30 transition-all cursor-pointer"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                className="bg-[#F59E0B]/20 border-2 border-[#F59E0B] text-[#F59E0B] px-6 py-3 font-semibold text-sm hover:bg-[#F59E0B]/30 transition-all cursor-pointer font-oxanium"
               >
                 TRY AGAIN
               </button>

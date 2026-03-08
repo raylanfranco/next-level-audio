@@ -8,13 +8,27 @@ export default function VideoSection() {
   const t = useTranslations('home');
   const previewRef = useRef<HTMLVideoElement>(null);
   const lightboxRef = useRef<HTMLVideoElement>(null);
+  const sectionRef = useRef<HTMLElement>(null);
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
-  // Autoplay preview video
+  // Lazy-load preview video: play only when section is visible
   useEffect(() => {
-    if (previewRef.current) {
-      previewRef.current.play().catch(() => {});
-    }
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && previewRef.current) {
+          previewRef.current.play().catch(() => {});
+        } else if (!entry.isIntersecting && previewRef.current) {
+          previewRef.current.pause();
+        }
+      },
+      { threshold: 0.25 }
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
   }, []);
 
   const openLightbox = useCallback(() => {
@@ -47,14 +61,13 @@ export default function VideoSection() {
 
   return (
     <>
-      <section className="relative bg-black overflow-hidden border-t-2 border-[#E01020]/30">
+      <section ref={sectionRef} className="relative bg-black overflow-hidden border-t-2 border-[#E01020]/30">
         {/* Section heading */}
         <div className="py-16 md:py-20">
           <AnimateOnScroll animation="fade-up">
             <div className="text-center">
               <h2
-                className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow hover-glitch"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow hover-glitch font-oxanium"
               >
                 {t('videoHeading')}
               </h2>
@@ -79,7 +92,7 @@ export default function VideoSection() {
               loop
               muted
               playsInline
-              preload="metadata"
+              preload="none"
             >
               <source src="/videos/about.mp4" type="video/mp4" />
             </video>

@@ -20,7 +20,7 @@ export default function BookingWizardModal({ isOpen, onClose }: BookingWizardMod
       <div className="bg-black border-2 border-[#E01020]/50 w-full max-w-3xl h-[90vh] flex flex-col neon-border-soft">
         {/* Header */}
         <div className="p-4 border-b-2 border-[#E01020]/30 flex justify-between items-center flex-shrink-0">
-          <h2 className="text-2xl font-bold text-[#E01020] neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
+          <h2 className="text-2xl font-bold text-[#E01020] neon-glow font-oxanium">
             BOOK APPOINTMENT
           </h2>
           <button
@@ -60,8 +60,7 @@ export default function BookingWizardModal({ isOpen, onClose }: BookingWizardMod
                   href={BOOKING_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-8 py-3 font-semibold text-sm hover:bg-[#E01020]/30 transition-all duration-300 neon-border-soft cyber-button"
-                  style={{ fontFamily: 'var(--font-oxanium)' }}
+                  className="inline-block bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-8 py-3 font-semibold text-sm hover:bg-[#E01020]/30 transition-all duration-300 neon-border-soft cyber-button font-oxanium"
                 >
                   OPEN BOOKING PAGE
                 </a>

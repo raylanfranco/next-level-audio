@@ -25,6 +25,11 @@ body {
   overflow-x: hidden;
 }
 
+/* Oxanium heading font utility */
+.font-oxanium {
+  font-family: var(--font-oxanium);
+}
+
 /* Cyberpunk neon glow effects - much more subtle */
 .neon-glow {
   text-shadow: 
@@ -324,4 +329,24 @@ input[type="time"]::-webkit-outer-spin-button {
 
 .typing-dot {
   animation: typing-bounce 1.2s ease-in-out infinite;
+}
+
+/* ===== Performance: Reduced Motion ===== */
+@media (prefers-reduced-motion: reduce) {
+  .scanline { display: none !important; }
+  .hero-stagger { opacity: 1; animation: none; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ===== Performance: Mobile Optimizations ===== */
+@media (max-width: 768px) {
+  .scanline { display: none; }
+  .neon-glow { text-shadow: 0 0 3px var(--neon-blue); }
+  .neon-glow-soft { text-shadow: 0 0 2px var(--neon-blue); }
+  .neon-border-soft { box-shadow: 0 0 5px var(--neon-blue); }
+  .pulse-glow { animation: none; box-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue); }
 }

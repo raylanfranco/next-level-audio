@@ -124,7 +124,7 @@ export default function CareersPage() {
                     <svg className="w-16 h-16 text-[#E01020] mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <h3 className="text-2xl font-bold text-[#E01020] mb-4 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                    <h3 className="text-2xl font-bold text-[#E01020] mb-4 neon-glow-soft font-oxanium">
                       {t('applicationSubmitted')}
                     </h3>
                     <p className="text-white/70 font-mono mb-6">
@@ -304,8 +304,7 @@ export default function CareersPage() {
                     <button
                       type="submit"
                       disabled={isSubmitting || !agreedToTerms}
-                      className="w-full bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-8 py-4 font-semibold text-lg hover:bg-[#E01020]/30 transition-all duration-300 neon-border-soft cyber-button disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                      style={{ fontFamily: 'var(--font-oxanium)' }}
+                      className="w-full bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-8 py-4 font-semibold text-lg hover:bg-[#E01020]/30 transition-all duration-300 neon-border-soft cyber-button disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer font-oxanium"
                     >
                       {isSubmitting ? (
                         <span className="flex items-center justify-center">
@@ -334,16 +333,16 @@ export default function CareersPage() {
           {/* Right — Hero Image + Text */}
           <div className="relative hidden lg:flex items-center justify-center border-l-2 border-[#E01020]/20">
             <img
-              src="/images/gallery/join-us.png"
+              src="/images/gallery/join-us.webp"
               alt="Join the Next Level Audio team"
               className="absolute inset-0 w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-black/60"></div>
             <div className="relative z-10 text-center px-12 max-w-lg">
-              <p className="text-[#E01020] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <p className="text-[#E01020] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft font-oxanium">
                 {t('title')}
               </p>
-              <h1 className="text-5xl xl:text-6xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <h1 className="text-5xl xl:text-6xl font-bold text-white mb-6 neon-glow font-oxanium">
                 {t('heading')}
               </h1>
               <p className="text-white/80 text-lg font-mono">
@@ -355,16 +354,16 @@ export default function CareersPage() {
           {/* Mobile hero — shows above form on small screens */}
           <div className="lg:hidden relative h-64 order-first">
             <img
-              src="/images/gallery/join-us.png"
+              src="/images/gallery/join-us.webp"
               alt="Join the Next Level Audio team"
               className="absolute inset-0 w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-black/60"></div>
             <div className="relative z-10 flex flex-col items-center justify-center h-full px-6 text-center">
-              <p className="text-[#E01020] text-xs uppercase tracking-widest mb-2 font-semibold neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <p className="text-[#E01020] text-xs uppercase tracking-widest mb-2 font-semibold neon-glow-soft font-oxanium">
                 {t('title')}
               </p>
-              <h1 className="text-3xl font-bold text-white neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <h1 className="text-3xl font-bold text-white neon-glow font-oxanium">
                 {t('heading')}
               </h1>
             </div>
@@ -378,7 +377,7 @@ export default function CareersPage() {
         <div className="absolute inset-0 cyber-grid opacity-10"></div>
         <div className="container mx-auto px-4 relative z-10 text-center">
           <AnimateOnScroll animation="fade-up">
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
+            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow font-oxanium">
               {t('whyNextLevel')}
             </h2>
             <p className="text-white/80 max-w-2xl mx-auto text-lg font-mono mb-12">
@@ -392,7 +391,7 @@ export default function CareersPage() {
                 <svg className="w-12 h-12 text-[#E01020] mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
-                <h3 className="text-xl font-bold text-[#E01020] mb-2 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                <h3 className="text-xl font-bold text-[#E01020] mb-2 neon-glow-soft font-oxanium">
                   {t('competitivePay')}
                 </h3>
                 <p className="text-white/60 font-mono text-sm">
@@ -405,7 +404,7 @@ export default function CareersPage() {
                 <svg className="w-12 h-12 text-[#E01020] mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                 </svg>
-                <h3 className="text-xl font-bold text-[#E01020] mb-2 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                <h3 className="text-xl font-bold text-[#E01020] mb-2 neon-glow-soft font-oxanium">
                   {t('handsOnTraining')}
                 </h3>
                 <p className="text-white/60 font-mono text-sm">
@@ -418,7 +417,7 @@ export default function CareersPage() {
                 <svg className="w-12 h-12 text-[#E01020] mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
-                <h3 className="text-xl font-bold text-[#E01020] mb-2 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                <h3 className="text-xl font-bold text-[#E01020] mb-2 neon-glow-soft font-oxanium">
                   {t('greatTeam')}
                 </h3>
                 <p className="text-white/60 font-mono text-sm">
@@ -435,7 +434,7 @@ export default function CareersPage() {
         <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
           <AnimateOnScroll animation="fade-up">
             <div className="text-center mb-10">
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 neon-glow font-oxanium">
                 {tc('findUs')}
               </h2>
               <p className="text-white/80 font-mono text-sm md:text-base max-w-xl mx-auto">

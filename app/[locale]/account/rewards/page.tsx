@@ -64,8 +64,7 @@ export default function AccountRewardsPage() {
   return (
     <div>
       <h1
-        className="text-2xl font-bold text-white mb-6 neon-glow"
-        style={{ fontFamily: 'var(--font-oxanium)' }}
+        className="text-2xl font-bold text-white mb-6 neon-glow font-oxanium"
       >
         {t('rewardsTitle')}
       </h1>
@@ -74,8 +73,7 @@ export default function AccountRewardsPage() {
       <div className="border-2 border-[#FFD700]/30 bg-[#FFD700]/5 p-6 mb-8 text-center">
         <p className="text-white/50 font-mono text-xs uppercase tracking-wider mb-2">{t('yourPointsBalance')}</p>
         <p
-          className="text-5xl font-bold text-[#FFD700] neon-glow-soft"
-          style={{ fontFamily: 'var(--font-oxanium)' }}
+          className="text-5xl font-bold text-[#FFD700] neon-glow-soft font-oxanium"
         >
           {balance.toLocaleString()}
         </p>
@@ -94,8 +92,7 @@ export default function AccountRewardsPage() {
           <div key={step.title} className="border-2 border-[#E01020]/20 p-4 text-center">
             <span className="text-[#E01020] text-2xl">{step.icon}</span>
             <p
-              className="text-white font-bold text-sm mt-2"
-              style={{ fontFamily: 'var(--font-oxanium)' }}
+              className="text-white font-bold text-sm mt-2 font-oxanium"
             >
               {step.title}
             </p>

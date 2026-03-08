@@ -61,8 +61,7 @@ export default function StatsCounter() {
               style={{ animationDelay: `${index * 0.15}s`, animationFillMode: 'both' }}
             >
               <div
-                className="text-4xl md:text-6xl font-bold text-[#E01020] mb-2 neon-glow"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                className="text-4xl md:text-6xl font-bold text-[#E01020] mb-2 neon-glow font-oxanium"
               >
                 <AnimatedNumber target={stat.value} suffix={stat.suffix} started={isInView} />
               </div>

@@ -82,7 +82,7 @@ export default function VideoLightbox({
 
           {title && (
             <div className="absolute bottom-4 left-4 right-4">
-              <h3 className="text-[#E01020] font-semibold text-lg neon-glow-soft drop-shadow-lg" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <h3 className="text-[#E01020] font-semibold text-lg neon-glow-soft drop-shadow-lg font-oxanium">
                 {title.toUpperCase()}
               </h3>
             </div>

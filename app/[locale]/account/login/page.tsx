@@ -36,8 +36,7 @@ export default function AccountLoginPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-10">
           <h1
-            className="text-3xl font-bold text-[#E01020] neon-glow mb-2"
-            style={{ fontFamily: 'var(--font-oxanium)' }}
+            className="text-3xl font-bold text-[#E01020] neon-glow mb-2 font-oxanium"
           >
             NEXT LEVEL AUDIO
           </h1>
@@ -86,8 +85,7 @@ export default function AccountLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 border-2 border-[#E01020] text-[#E01020] font-bold text-sm uppercase tracking-wider transition-all hover:bg-[#E01020]/10 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer cyber-button"
-            style={{ fontFamily: 'var(--font-oxanium)' }}
+            className="w-full py-3 border-2 border-[#E01020] text-[#E01020] font-bold text-sm uppercase tracking-wider transition-all hover:bg-[#E01020]/10 disabled:opacity-30 disabled:cursor-not-allowed cursor-pointer cyber-button font-oxanium"
           >
             {loading ? t('signingIn') : t('signIn')}
           </button>

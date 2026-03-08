@@ -174,14 +174,12 @@ export default function CarAudioPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <p
-                className="text-[#E01020] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                className="text-[#E01020] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft font-oxanium"
               >
                 {t('location')}
               </p>
               <h1
-                className="text-5xl md:text-7xl font-bold text-white mb-6 neon-glow"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                className="text-5xl md:text-7xl font-bold text-white mb-6 neon-glow font-oxanium"
               >
                 {t('heroTitle')}
               </h1>
@@ -191,15 +189,13 @@ export default function CarAudioPage() {
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
                   href="/contact"
-                  className="inline-block bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-8 py-4 font-semibold text-base hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button text-center"
-                  style={{ fontFamily: 'var(--font-oxanium)' }}
+                  className="inline-block bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-8 py-4 font-semibold text-base hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button text-center font-oxanium"
                 >
                   {t('getFreeQuote')}
                 </Link>
                 <Link
                   href="tel:+15707304433"
-                  className="inline-block border-2 border-[#E01020]/50 bg-black/40 text-[#E01020] px-8 py-4 font-semibold text-base hover:border-[#E01020] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button text-center"
-                  style={{ fontFamily: 'var(--font-oxanium)' }}
+                  className="inline-block border-2 border-[#E01020]/50 bg-black/40 text-[#E01020] px-8 py-4 font-semibold text-base hover:border-[#E01020] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button text-center font-oxanium"
                 >
                   {t('callUs')}
                 </Link>
@@ -208,7 +204,7 @@ export default function CarAudioPage() {
             <div className="relative hidden lg:block">
               <div className="relative overflow-hidden border-2 border-[#E01020]/30 neon-border-soft">
                 <img
-                  src="/images/services/car-audio.png"
+                  src="/images/services/car-audio.webp"
                   alt="Custom car audio installation in Stroudsburg, PA"
                   className="w-full h-[400px] object-cover"
                 />
@@ -226,8 +222,7 @@ export default function CarAudioPage() {
           <AnimateOnScroll animation="fade-up">
             <div className="text-center mb-16">
               <h2
-                className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow font-oxanium"
               >
                 {t('whatWeInstall')}
               </h2>
@@ -245,8 +240,7 @@ export default function CarAudioPage() {
                     {service.icon}
                   </div>
                   <h3
-                    className="text-xl font-bold text-[#E01020] mb-3 neon-glow-soft"
-                    style={{ fontFamily: 'var(--font-oxanium)' }}
+                    className="text-xl font-bold text-[#E01020] mb-3 neon-glow-soft font-oxanium"
                   >
                     {service.title}
                   </h3>
@@ -266,8 +260,7 @@ export default function CarAudioPage() {
           <AnimateOnScroll animation="fade-up">
             <div className="text-center mb-16">
               <h2
-                className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow font-oxanium"
               >
                 {t('brandsWeTrust')}
               </h2>
@@ -301,8 +294,7 @@ export default function CarAudioPage() {
           <AnimateOnScroll animation="fade-up">
             <div className="text-center mb-16">
               <h2
-                className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow font-oxanium"
               >
                 {t('whyProfessional')}
               </h2>
@@ -320,8 +312,7 @@ export default function CarAudioPage() {
                     {item.icon}
                   </div>
                   <h3
-                    className="text-xl font-bold text-[#E01020] mb-4 neon-glow-soft"
-                    style={{ fontFamily: 'var(--font-oxanium)' }}
+                    className="text-xl font-bold text-[#E01020] mb-4 neon-glow-soft font-oxanium"
                   >
                     {item.title}
                   </h3>
@@ -342,8 +333,7 @@ export default function CarAudioPage() {
           <AnimateOnScroll animation="fade-up">
             <div className="text-center max-w-4xl mx-auto">
               <h2
-                className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow font-oxanium"
               >
                 {t('servingPocono')}
               </h2>
@@ -384,8 +374,7 @@ export default function CarAudioPage() {
           <AnimateOnScroll animation="fade-up">
             <div className="text-center mb-16">
               <h2
-                className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow font-oxanium"
               >
                 {t('faqTitle')}
               </h2>
@@ -400,8 +389,7 @@ export default function CarAudioPage() {
               <AnimateOnScroll key={index} animation="fade-up" delay={index * 0.08}>
                 <details className="group border-2 border-[#E01020]/30 hover:border-[#E01020]/60 transition-colors bg-black">
                   <summary
-                    className="flex items-center justify-between px-6 py-5 cursor-pointer list-none"
-                    style={{ fontFamily: 'var(--font-oxanium)' }}
+                    className="flex items-center justify-between px-6 py-5 cursor-pointer list-none font-oxanium"
                   >
                     <span className="text-[#E01020] font-bold tracking-wide text-sm md:text-base pr-4">
                       {faq.question}
@@ -433,8 +421,7 @@ export default function CarAudioPage() {
         <div className="container mx-auto px-4 text-center relative z-10">
           <AnimateOnScroll animation="scale-up">
             <h2
-              className="text-4xl md:text-7xl font-bold mb-6 neon-glow"
-              style={{ fontFamily: 'var(--font-oxanium)' }}
+              className="text-4xl md:text-7xl font-bold mb-6 neon-glow font-oxanium"
             >
               {t('upgradeSound')}
             </h2>
@@ -444,15 +431,13 @@ export default function CarAudioPage() {
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Link
                 href="/contact"
-                className="inline-block bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-10 py-5 font-semibold text-lg hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                className="inline-block bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-10 py-5 font-semibold text-lg hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button font-oxanium"
               >
                 {t('getFreeQuote')}
               </Link>
               <Link
                 href="tel:+15707304433"
-                className="inline-block border-2 border-[#E01020]/50 bg-black/40 backdrop-blur-sm text-[#E01020] px-10 py-5 font-semibold text-lg hover:border-[#E01020] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                className="inline-block border-2 border-[#E01020]/50 bg-black/40 backdrop-blur-sm text-[#E01020] px-10 py-5 font-semibold text-lg hover:border-[#E01020] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button font-oxanium"
               >
                 {t('callUs')}
               </Link>

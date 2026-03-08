@@ -1,14 +1,16 @@
 'use client';
 
 import { ReactNode } from 'react';
+import dynamic from 'next/dynamic';
 import { AuthProvider } from './AuthContext';
 import { BookingModalProvider } from './BookingModalContext';
-import BookingWizardModal from './BookingWizardModal';
 import { useBookingModal } from './BookingModalContext';
 import { CartProvider } from './CartContext';
 import { ChatProvider } from './ChatContext';
-import CheckoutModal from './CheckoutModal';
-import ChatWidget from './ChatWidget';
+
+const BookingWizardModal = dynamic(() => import('./BookingWizardModal'), { ssr: false });
+const CheckoutModal = dynamic(() => import('./CheckoutModal'), { ssr: false });
+const ChatWidget = dynamic(() => import('./ChatWidget'), { ssr: false });
 
 function ModalRenderer() {
   const { isOpen, closeModal } = useBookingModal();

@@ -24,11 +24,18 @@ export default function Header() {
   ];
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 20);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -42,7 +49,7 @@ export default function Header() {
     return () => { document.body.style.overflow = ''; };
   }, [isMenuOpen]);
 
-  const navLinkClass = `relative transition-all duration-300 font-medium text-sm group/link ${
+  const navLinkClass = `relative transition-all duration-300 font-medium text-sm group/link font-oxanium ${
     isScrolled
       ? 'text-white/80 hover:text-[#FF2A3A] neon-glow-soft cursor-pointer'
       : 'text-[#E01020] hover:text-[#FF2A3A] neon-glow-soft cursor-pointer'
@@ -68,7 +75,6 @@ export default function Header() {
             <Link
               href="/"
               className={navLinkClass}
-              style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               {t('home')}
               {navUnderline}
@@ -79,7 +85,6 @@ export default function Header() {
               <Link
                 href="/services"
                 className={`${navLinkClass} flex items-center gap-1`}
-                style={{ fontFamily: 'var(--font-oxanium)' }}
               >
                 {t('services')}
                 <svg
@@ -98,8 +103,7 @@ export default function Header() {
                 <div className="bg-black/95 backdrop-blur-md border-2 border-[#E01020]/30 min-w-[200px] py-2 shadow-[0_0_20px_rgba(224,16,32,0.15)]">
                   <Link
                     href="/services"
-                    className="block px-5 py-2.5 text-white/60 hover:text-[#E01020] hover:bg-[#E01020]/5 transition-colors text-xs tracking-widest"
-                    style={{ fontFamily: 'var(--font-oxanium)' }}
+                    className="block px-5 py-2.5 text-white/60 hover:text-[#E01020] hover:bg-[#E01020]/5 transition-colors text-xs tracking-widest font-oxanium"
                   >
                     {t('allServices')}
                   </Link>
@@ -108,8 +112,7 @@ export default function Header() {
                     <Link
                       key={sub.href}
                       href={sub.href}
-                      className="block px-5 py-2.5 text-white/80 hover:text-[#FF2A3A] hover:bg-[#E01020]/5 transition-colors text-xs tracking-widest"
-                      style={{ fontFamily: 'var(--font-oxanium)' }}
+                      className="block px-5 py-2.5 text-white/80 hover:text-[#FF2A3A] hover:bg-[#E01020]/5 transition-colors text-xs tracking-widest font-oxanium"
                     >
                       {sub.label.toUpperCase()}
                     </Link>
@@ -121,7 +124,6 @@ export default function Header() {
             <Link
               href="/products"
               className={navLinkClass}
-              style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               {t('products')}
               {navUnderline}
@@ -130,7 +132,7 @@ export default function Header() {
 
           <Link href="/" className="flex items-center justify-center flex-shrink-0 mx-8 mt-8">
             <Image
-              src="/images/logo.png"
+              src="/images/logo.webp"
               alt="Next Level Audio"
               width={360}
               height={100}
@@ -143,7 +145,6 @@ export default function Header() {
             <Link
               href="/gallery"
               className={navLinkClass}
-              style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               {t('gallery')}
               {navUnderline}
@@ -151,7 +152,6 @@ export default function Header() {
             <Link
               href="/careers"
               className={navLinkClass}
-              style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               {t('careers')}
               {navUnderline}
@@ -159,7 +159,6 @@ export default function Header() {
             <button
               onClick={openModal}
               className={navLinkClass}
-              style={{ fontFamily: 'var(--font-oxanium)' }}
             >
               {t('book')}
               {navUnderline}
@@ -171,7 +170,6 @@ export default function Header() {
             <Link
               href={user ? '/account' : '/account/login'}
               className={`${navLinkClass} relative`}
-              style={{ fontFamily: 'var(--font-oxanium)' }}
               aria-label={user ? t('myAccount') : tc('signIn')}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -181,7 +179,6 @@ export default function Header() {
             <button
               onClick={openCheckout}
               className={`${navLinkClass} relative`}
-              style={{ fontFamily: 'var(--font-oxanium)' }}
               aria-label={t('shoppingCart')}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -199,8 +196,7 @@ export default function Header() {
                 isScrolled
                   ? 'bg-[#E01020]/20 text-white border-[#E01020] hover:bg-[#E01020]/30 neon-border-soft'
                   : 'bg-[#E01020]/10 text-white border-[#E01020]/50 hover:bg-[#E01020]/20 neon-border-soft'
-              }`}
-              style={{ fontFamily: 'var(--font-oxanium)' }}
+              } font-oxanium`}
             >
               {t('contact')}
             </Link>
@@ -212,7 +208,7 @@ export default function Header() {
         <div className="flex lg:hidden items-center justify-between h-16">
           <Link href="/" className="flex items-center">
             <Image
-              src="/images/logo.png"
+              src="/images/logo.webp"
               alt="Next Level Audio"
               width={180}
               height={50}
@@ -255,7 +251,7 @@ export default function Header() {
         <div className="flex items-center justify-between h-16 px-4">
           <Link href="/" className="flex items-center" onClick={() => setIsMenuOpen(false)}>
             <Image
-              src="/images/logo.png"
+              src="/images/logo.webp"
               alt="Next Level Audio"
               width={180}
               height={50}
@@ -286,8 +282,7 @@ export default function Header() {
               key={href}
               href={href}
               onClick={() => setIsMenuOpen(false)}
-              className="text-[#E01020] hover:text-[#FF2A3A] text-2xl tracking-widest neon-glow-soft transition-colors"
-              style={{ fontFamily: 'var(--font-oxanium)' }}
+              className="text-[#E01020] hover:text-[#FF2A3A] text-2xl tracking-widest neon-glow-soft transition-colors font-oxanium"
             >
               {label}
             </Link>
@@ -298,8 +293,7 @@ export default function Header() {
             <Link
               href="/services"
               onClick={() => setIsMenuOpen(false)}
-              className="text-[#E01020] hover:text-[#FF2A3A] text-2xl tracking-widest neon-glow-soft transition-colors"
-              style={{ fontFamily: 'var(--font-oxanium)' }}
+              className="text-[#E01020] hover:text-[#FF2A3A] text-2xl tracking-widest neon-glow-soft transition-colors font-oxanium"
             >
               {t('services')}
             </Link>
@@ -309,8 +303,7 @@ export default function Header() {
                   key={sub.href}
                   href={sub.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className="text-white/50 hover:text-[#FF2A3A] text-sm tracking-widest transition-colors"
-                  style={{ fontFamily: 'var(--font-oxanium)' }}
+                  className="text-white/50 hover:text-[#FF2A3A] text-sm tracking-widest transition-colors font-oxanium"
                 >
                   {sub.label.toUpperCase()}
                 </Link>
@@ -320,8 +313,7 @@ export default function Header() {
 
           <button
             onClick={() => { openModal(); setIsMenuOpen(false); }}
-            className="text-[#E01020] hover:text-[#FF2A3A] text-2xl tracking-widest neon-glow-soft transition-colors cursor-pointer"
-            style={{ fontFamily: 'var(--font-oxanium)' }}
+            className="text-[#E01020] hover:text-[#FF2A3A] text-2xl tracking-widest neon-glow-soft transition-colors cursor-pointer font-oxanium"
           >
             {t('book')}
           </button>
@@ -356,8 +348,7 @@ export default function Header() {
           <Link
             href="/contact"
             onClick={() => setIsMenuOpen(false)}
-            className="px-6 py-3 border-2 border-[#E01020] text-[#E01020] text-sm tracking-widest hover:bg-[#E01020]/10 transition-colors cyber-button"
-            style={{ fontFamily: 'var(--font-oxanium)' }}
+            className="px-6 py-3 border-2 border-[#E01020] text-[#E01020] text-sm tracking-widest hover:bg-[#E01020]/10 transition-colors cyber-button font-oxanium"
           >
             {t('contact')}
           </Link>

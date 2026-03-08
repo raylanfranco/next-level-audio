@@ -50,16 +50,17 @@ export default function ProductsSection() {
     { key: 'accessories', label: t('accessories'), match: TAB_MATCHES.accessories },
   ];
 
-  // Fetch best seller IDs on mount
+  // Fetch best sellers + categories in parallel on mount
   useEffect(() => {
-    fetch('/api/best-sellers?limit=20')
-      .then(res => res.ok ? res.json() : null)
-      .then(data => {
-        if (data?.items?.length > 0) {
-          setBestSellerIds(new Set(data.items.map((bs: { clover_item_id: string }) => bs.clover_item_id)));
-        }
-      })
-      .catch(() => {});
+    Promise.all([
+      fetch('/api/best-sellers?limit=20').then(res => res.ok ? res.json() : null).catch(() => null),
+      fetch('/api/clover/categories').then(res => res.ok ? res.json() : null).catch(() => null),
+    ]).then(([bestData, catData]) => {
+      if (bestData?.items?.length > 0) {
+        setBestSellerIds(new Set(bestData.items.map((bs: { clover_item_id: string }) => bs.clover_item_id)));
+      }
+      if (catData?.categories) setCategories(catData.categories);
+    });
   }, []);
 
   // Resolve a curated tab key to a Clover category ID
@@ -72,16 +73,6 @@ export default function ProductsSection() {
     );
     return cat?.id ?? null;
   }, [categories]);
-
-  // Fetch categories on mount
-  useEffect(() => {
-    fetch('/api/clover/categories')
-      .then(res => res.ok ? res.json() : null)
-      .then(data => {
-        if (data?.categories) setCategories(data.categories);
-      })
-      .catch(() => {});
-  }, []);
 
   // Fetch items when tab changes
   const fetchItems = useCallback(async (tabKey: string) => {
@@ -161,8 +152,7 @@ export default function ProductsSection() {
         <AnimateOnScroll animation="fade-up">
           <div className="text-center mb-12">
             <h2
-              className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow hover-glitch"
-              style={{ fontFamily: 'var(--font-oxanium)' }}
+              className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow hover-glitch font-oxanium"
             >
               {activeTab === 'all' && bestSellerIds.size > 0 ? t('bestSellers') : t('shopByCategory')}
             </h2>
@@ -258,8 +248,7 @@ export default function ProductsSection() {
 
                   <div className="p-6">
                     <h3
-                      className="text-lg font-bold text-[#E01020] mb-2 line-clamp-2 neon-glow-soft"
-                      style={{ fontFamily: 'var(--font-oxanium)' }}
+                      className="text-lg font-bold text-[#E01020] mb-2 line-clamp-2 neon-glow-soft font-oxanium"
                     >
                       {(item.onlineName || item.name).toUpperCase()}
                     </h3>
@@ -291,8 +280,7 @@ export default function ProductsSection() {
             <div className="text-center">
               <Link
                 href="/products"
-                className="inline-block px-8 py-4 bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] font-semibold text-lg font-mono hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                className="inline-block px-8 py-4 bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] font-semibold text-lg font-mono hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button font-oxanium"
               >
                 {tc('viewAll')}
               </Link>

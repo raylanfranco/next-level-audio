@@ -125,7 +125,6 @@ export default function CheckoutModal() {
         elementsRef.current.mounted = true;
       }, 100);
     } catch (err) {
-      console.error('Clover init error:', err);
       setSdkError(true);
     }
   }, [sdkLoaded, merchantId]);
@@ -260,8 +259,7 @@ export default function CheckoutModal() {
         {/* Header */}
         <div className="p-4 border-b-2 border-[#E01020]/30 flex justify-between items-center">
           <h2
-            className="text-xl font-bold text-[#E01020] neon-glow"
-            style={{ fontFamily: 'var(--font-oxanium)' }}
+            className="text-xl font-bold text-[#E01020] neon-glow font-oxanium"
           >
             {step === 'cart' ? 'YOUR CART' : step === 'payment' ? 'CHECKOUT' : step === 'success' ? 'ORDER CONFIRMED' : 'PAYMENT ERROR'}
           </h2>
@@ -296,7 +294,7 @@ export default function CheckoutModal() {
                           </div>
                         )}
                         <div className="flex-1 min-w-0">
-                          <p className="text-white text-sm font-semibold truncate" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                          <p className="text-white text-sm font-semibold truncate font-oxanium">
                             {item.name}
                           </p>
                           <p className="text-[#E01020] font-mono text-sm">{formatCents(item.price)}</p>
@@ -383,7 +381,7 @@ export default function CheckoutModal() {
                       </>
                     )}
                     <div className="flex justify-between items-center">
-                      <span className="text-white font-semibold" style={{ fontFamily: 'var(--font-oxanium)' }}>TOTAL</span>
+                      <span className="text-white font-semibold font-oxanium">TOTAL</span>
                       <span className="text-[#E01020] font-mono text-xl font-bold neon-glow">{formatCents(finalTotal)}</span>
                     </div>
                   </div>
@@ -396,8 +394,7 @@ export default function CheckoutModal() {
 
                   <button
                     onClick={() => setStep('payment')}
-                    className="w-full bg-[#E01020]/20 border-2 border-[#E01020] text-[#E01020] px-6 py-3 font-semibold text-sm hover:bg-[#E01020]/30 transition-all duration-300 cursor-pointer"
-                    style={{ fontFamily: 'var(--font-oxanium)' }}
+                    className="w-full bg-[#E01020]/20 border-2 border-[#E01020] text-[#E01020] px-6 py-3 font-semibold text-sm hover:bg-[#E01020]/30 transition-all duration-300 cursor-pointer font-oxanium"
                   >
                     PROCEED TO CHECKOUT
                   </button>
@@ -425,7 +422,7 @@ export default function CheckoutModal() {
                   </div>
                 )}
                 <div className="flex justify-between text-sm mt-2 pt-2 border-t border-[#E01020]/10">
-                  <span className="text-white font-bold" style={{ fontFamily: 'var(--font-oxanium)' }}>TOTAL</span>
+                  <span className="text-white font-bold font-oxanium">TOTAL</span>
                   <span className="text-[#E01020] font-bold font-mono">{formatCents(finalTotal)}</span>
                 </div>
               </div>
@@ -532,16 +529,14 @@ export default function CheckoutModal() {
                     elementsRef.current.mounted = false;
                     cloverRef.current = null;
                   }}
-                  className="px-6 py-3 border-2 border-[#E01020]/50 text-[#E01020] hover:border-[#E01020] transition-colors font-semibold text-sm cursor-pointer"
-                  style={{ fontFamily: 'var(--font-oxanium)' }}
+                  className="px-6 py-3 border-2 border-[#E01020]/50 text-[#E01020] hover:border-[#E01020] transition-colors font-semibold text-sm cursor-pointer font-oxanium"
                 >
                   BACK
                 </button>
                 <button
                   type="submit"
                   disabled={isProcessing || sdkError}
-                  className="flex-1 bg-[#E01020]/20 border-2 border-[#E01020] text-[#E01020] px-6 py-3 font-semibold text-sm hover:bg-[#E01020]/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                  style={{ fontFamily: 'var(--font-oxanium)' }}
+                  className="flex-1 bg-[#E01020]/20 border-2 border-[#E01020] text-[#E01020] px-6 py-3 font-semibold text-sm hover:bg-[#E01020]/30 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer font-oxanium"
                 >
                   {isProcessing ? 'PROCESSING...' : `PAY ${formatCents(finalTotal)}`}
                 </button>
@@ -555,7 +550,7 @@ export default function CheckoutModal() {
               <svg className="w-16 h-16 mx-auto mb-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <h3 className="text-xl font-bold text-green-400 mb-2" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <h3 className="text-xl font-bold text-green-400 mb-2 font-oxanium">
                 PAYMENT SUCCESSFUL
               </h3>
               <p className="text-white/70 font-mono text-sm mb-2">
@@ -599,7 +594,7 @@ export default function CheckoutModal() {
               <svg className="w-16 h-16 mx-auto mb-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              <h3 className="text-xl font-bold text-red-400 mb-2" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <h3 className="text-xl font-bold text-red-400 mb-2 font-oxanium">
                 PAYMENT FAILED
               </h3>
               <p className="text-white/70 font-mono text-sm mb-4">
@@ -607,8 +602,7 @@ export default function CheckoutModal() {
               </p>
               <button
                 onClick={() => setStep('payment')}
-                className="bg-[#E01020]/20 border-2 border-[#E01020] text-[#E01020] px-6 py-3 font-semibold text-sm hover:bg-[#E01020]/30 transition-all cursor-pointer"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                className="bg-[#E01020]/20 border-2 border-[#E01020] text-[#E01020] px-6 py-3 font-semibold text-sm hover:bg-[#E01020]/30 transition-all cursor-pointer font-oxanium"
               >
                 TRY AGAIN
               </button>

@@ -13,7 +13,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* About */}
           <div>
-            <h3 className="text-[#E01020] text-xl font-bold mb-6 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>{t('brandName')}</h3>
+            <h3 className="text-[#E01020] text-xl font-bold mb-6 neon-glow-soft font-oxanium">{t('brandName')}</h3>
             <p className="text-white/70 leading-relaxed font-mono text-sm">
               {t('brandDescription')}
             </p>
@@ -21,7 +21,7 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-[#E01020] text-xl font-bold mb-6 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>{t('quickLinks')}</h3>
+            <h3 className="text-[#E01020] text-xl font-bold mb-6 neon-glow-soft font-oxanium">{t('quickLinks')}</h3>
             <ul className="space-y-3 font-mono text-sm">
               <li>
                 <Link href="/" className="text-white/70 hover:text-[#E01020] transition-colors neon-glow-soft">
@@ -58,7 +58,7 @@ export default function Footer() {
 
           {/* Contact Info */}
           <div>
-            <h3 className="text-[#E01020] text-xl font-bold mb-6 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>{t('contactInfo')}</h3>
+            <h3 className="text-[#E01020] text-xl font-bold mb-6 neon-glow-soft font-oxanium">{t('contactInfo')}</h3>
             <ul className="space-y-3 text-white/70 font-mono text-sm">
               <li>
                 <a href="tel:+15707304433" className="hover:text-[#E01020] transition-colors neon-glow-soft">
@@ -74,7 +74,7 @@ export default function Footer() {
 
           {/* Hours */}
           <div>
-            <h3 className="text-[#E01020] text-xl font-bold mb-6 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>{t('hours')}</h3>
+            <h3 className="text-[#E01020] text-xl font-bold mb-6 neon-glow-soft font-oxanium">{t('hours')}</h3>
             <ul className="space-y-3 text-white/70 font-mono text-sm">
               <li>{t('monFri')}</li>
               <li>{t('saturday')}</li>

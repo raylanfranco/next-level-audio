@@ -52,8 +52,7 @@ export default function ContactActionBar({ onNavigateMap }: ContactActionBarProp
             >
               <ContactIcon name={action.icon} />
               <span
-                className="text-[9px] uppercase tracking-wider"
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                className="text-[9px] uppercase tracking-wider font-oxanium"
               >
                 {action.label}
               </span>
@@ -71,8 +70,7 @@ export default function ContactActionBar({ onNavigateMap }: ContactActionBarProp
           >
             <ContactIcon name={action.icon} />
             <span
-              className="text-[9px] uppercase tracking-wider"
-              style={{ fontFamily: 'var(--font-oxanium)' }}
+              className="text-[9px] uppercase tracking-wider font-oxanium"
             >
               {action.label}
             </span>

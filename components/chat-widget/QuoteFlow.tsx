@@ -61,8 +61,7 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
                   : i < ['select-service', 'vehicle-info', 'customer-info'].indexOf(step)
                     ? 'bg-[#E01020]/30 text-[#E01020]'
                     : 'bg-[#E01020]/10 text-white/40'
-              }`}
-              style={{ fontFamily: 'var(--font-oxanium)' }}
+              } font-oxanium`}
             >
               {i + 1}
             </div>
@@ -96,8 +95,7 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
                   form.service === s.label
                     ? 'border-[#E01020] bg-[#E01020]/15 text-[#E01020]'
                     : 'border-[#E01020]/15 bg-[#0a0a0a] text-white/70 hover:border-[#E01020]/40'
-                }`}
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                } font-oxanium`}
               >
                 {s.label}
               </button>
@@ -106,8 +104,7 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
           <button
             onClick={() => setStep('vehicle-info')}
             disabled={!form.service}
-            className="mt-4 w-full py-2.5 bg-[#E01020] text-black text-sm font-bold tracking-wider disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#E01020]/90 transition-colors cursor-pointer"
-            style={{ fontFamily: 'var(--font-oxanium)' }}
+            className="mt-4 w-full py-2.5 bg-[#E01020] text-black text-sm font-bold tracking-wider disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#E01020]/90 transition-colors cursor-pointer font-oxanium"
           >
             NEXT
           </button>
@@ -119,7 +116,7 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
         <div className="flex-1 flex flex-col">
           <div className="space-y-3 flex-1">
             <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1 font-oxanium">
                 Year
               </label>
               <select
@@ -134,7 +131,7 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
               </select>
             </div>
             <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1 font-oxanium">
                 Make
               </label>
               <input
@@ -145,7 +142,7 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
               />
             </div>
             <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1 font-oxanium">
                 Model
               </label>
               <input
@@ -156,7 +153,7 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
               />
             </div>
             <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1 font-oxanium">
                 Notes (optional)
               </label>
               <textarea
@@ -171,15 +168,13 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
           <div className="flex gap-2 mt-4">
             <button
               onClick={handleBack}
-              className="flex-1 py-2.5 border border-[#E01020]/30 text-white/60 text-sm tracking-wider hover:border-[#E01020]/60 hover:text-[#E01020] transition-colors cursor-pointer"
-              style={{ fontFamily: 'var(--font-oxanium)' }}
+              className="flex-1 py-2.5 border border-[#E01020]/30 text-white/60 text-sm tracking-wider hover:border-[#E01020]/60 hover:text-[#E01020] transition-colors cursor-pointer font-oxanium"
             >
               BACK
             </button>
             <button
               onClick={() => setStep('customer-info')}
-              className="flex-1 py-2.5 bg-[#E01020] text-black text-sm font-bold tracking-wider hover:bg-[#E01020]/90 transition-colors cursor-pointer"
-              style={{ fontFamily: 'var(--font-oxanium)' }}
+              className="flex-1 py-2.5 bg-[#E01020] text-black text-sm font-bold tracking-wider hover:bg-[#E01020]/90 transition-colors cursor-pointer font-oxanium"
             >
               NEXT
             </button>
@@ -200,7 +195,7 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
 
           <div className="space-y-3 flex-1">
             <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1 font-oxanium">
                 Name *
               </label>
               <input
@@ -211,7 +206,7 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
               />
             </div>
             <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1 font-oxanium">
                 Email *
               </label>
               <input
@@ -223,7 +218,7 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
               />
             </div>
             <div>
-              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <label className="block text-[10px] text-white/50 uppercase tracking-wider mb-1 font-oxanium">
                 Phone *
               </label>
               <input
@@ -243,16 +238,14 @@ export default function QuoteFlow({ form, setForm, onSubmitted, onBack }: QuoteF
           <div className="flex gap-2 mt-4">
             <button
               onClick={handleBack}
-              className="flex-1 py-2.5 border border-[#E01020]/30 text-white/60 text-sm tracking-wider hover:border-[#E01020]/60 hover:text-[#E01020] transition-colors cursor-pointer"
-              style={{ fontFamily: 'var(--font-oxanium)' }}
+              className="flex-1 py-2.5 border border-[#E01020]/30 text-white/60 text-sm tracking-wider hover:border-[#E01020]/60 hover:text-[#E01020] transition-colors cursor-pointer font-oxanium"
             >
               BACK
             </button>
             <button
               onClick={handleSubmit}
               disabled={submitting || !form.customerName || !form.customerEmail || !form.customerPhone}
-              className="flex-1 py-2.5 bg-[#E01020] text-black text-sm font-bold tracking-wider disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#E01020]/90 transition-colors cursor-pointer"
-              style={{ fontFamily: 'var(--font-oxanium)' }}
+              className="flex-1 py-2.5 bg-[#E01020] text-black text-sm font-bold tracking-wider disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#E01020]/90 transition-colors cursor-pointer font-oxanium"
             >
               {submitting ? 'SENDING...' : 'SUBMIT REQUEST'}
             </button>

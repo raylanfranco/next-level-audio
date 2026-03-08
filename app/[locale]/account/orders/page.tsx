@@ -60,8 +60,7 @@ export default function AccountOrdersPage() {
   return (
     <div>
       <h1
-        className="text-2xl font-bold text-white mb-6 neon-glow"
-        style={{ fontFamily: 'var(--font-oxanium)' }}
+        className="text-2xl font-bold text-white mb-6 neon-glow font-oxanium"
       >
         {t('orderHistoryTitle')}
       </h1>
@@ -84,7 +83,7 @@ export default function AccountOrdersPage() {
               >
                 <div className="flex items-center gap-4 text-left">
                   <div>
-                    <p className="text-white font-semibold text-sm" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                    <p className="text-white font-semibold text-sm font-oxanium">
                       {formatDate(order.created_at)}
                     </p>
                     <p className="text-white/40 font-mono text-xs">

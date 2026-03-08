@@ -127,10 +127,10 @@ export default function GalleryPage() {
         <div className="absolute inset-0 cyber-grid opacity-20"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
-            <p className="text-[#E01020] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+            <p className="text-[#E01020] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft font-oxanium">
               {t('ourPortfolio')}
             </p>
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 neon-glow font-oxanium">
               {t('title')}
             </h1>
             <p className="text-white/80 text-lg md:text-xl max-w-2xl mx-auto font-mono">
@@ -152,8 +152,7 @@ export default function GalleryPage() {
                   activeCategory === id
                     ? 'bg-[#E01020]/20 text-[#E01020] border-[#E01020] neon-border-soft'
                     : 'bg-transparent text-white/60 border-[#E01020]/30 hover:border-[#E01020]/60 hover:text-[#E01020]'
-                }`}
-                style={{ fontFamily: 'var(--font-oxanium)' }}
+                } font-oxanium`}
               >
                 {categoryNames[id]}
               </button>
@@ -196,7 +195,7 @@ export default function GalleryPage() {
 
                 {/* Info */}
                 <div className="p-4">
-                  <h3 className="text-lg font-bold text-[#E01020] mb-1 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                  <h3 className="text-lg font-bold text-[#E01020] mb-1 neon-glow-soft font-oxanium">
                     {item.title.toUpperCase()}
                   </h3>
                   <p className="text-white/60 text-sm font-mono line-clamp-2">
@@ -246,7 +245,7 @@ export default function GalleryPage() {
 
             {/* Info */}
             <div className="p-6 border-t-2 border-[#E01020]/30">
-              <h3 className="text-2xl font-bold text-[#E01020] mb-2 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <h3 className="text-2xl font-bold text-[#E01020] mb-2 neon-glow-soft font-oxanium">
                 {selectedImage.title.toUpperCase()}
               </h3>
               <p className="text-white/70 font-mono">
@@ -266,7 +265,7 @@ export default function GalleryPage() {
       <section className="py-20 md:py-32 bg-black text-white relative overflow-hidden border-t-2 border-[#E01020]/30">
         <div className="absolute inset-0 cyber-grid opacity-30"></div>
         <div className="container mx-auto px-4 text-center relative z-10">
-          <h2 className="text-4xl md:text-6xl font-bold mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
+          <h2 className="text-4xl md:text-6xl font-bold mb-6 neon-glow font-oxanium">
             {t('likeWhatYouSee')}
           </h2>
           <p className="text-xl md:text-2xl text-[#E01020] mb-12 max-w-3xl mx-auto leading-relaxed font-mono">
@@ -275,15 +274,13 @@ export default function GalleryPage() {
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
             <Link
               href="/book-appointment"
-              className="inline-block bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-10 py-5 font-semibold text-lg hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button"
-              style={{ fontFamily: 'var(--font-oxanium)' }}
+              className="inline-block bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-10 py-5 font-semibold text-lg hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button font-oxanium"
             >
               {tc('bookAppointment')}
             </Link>
             <Link
               href="/contact"
-              className="inline-block border-2 border-[#E01020]/50 bg-black/40 backdrop-blur-sm text-[#E01020] px-10 py-5 font-semibold text-lg hover:border-[#E01020] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button"
-              style={{ fontFamily: 'var(--font-oxanium)' }}
+              className="inline-block border-2 border-[#E01020]/50 bg-black/40 backdrop-blur-sm text-[#E01020] px-10 py-5 font-semibold text-lg hover:border-[#E01020] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button font-oxanium"
             >
               {tc('contactUs')}
             </Link>

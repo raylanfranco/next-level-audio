@@ -11,20 +11,16 @@ export async function middleware(request: NextRequest) {
 
   // Skip i18n for API routes and admin routes
   if (pathname.startsWith('/api') || pathname.startsWith('/admin')) {
-    // Admin auth protection
-    if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
+    // Admin auth protection — single session check
+    if (pathname.startsWith('/admin')) {
+      const isLoginPage = pathname.startsWith('/admin/login');
       const { supabase, response } = createMiddlewareClient(request);
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
+
+      if (!isLoginPage && !session) {
         return NextResponse.redirect(new URL('/admin/login', request.url));
       }
-      return response;
-    }
-
-    if (pathname === '/admin/login') {
-      const { supabase, response } = createMiddlewareClient(request);
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
+      if (isLoginPage && session) {
         return NextResponse.redirect(new URL('/admin', request.url));
       }
       return response;
@@ -37,7 +33,6 @@ export async function middleware(request: NextRequest) {
   const response = intlMiddleware(request);
 
   // Determine the actual pathname after locale prefix removal
-  // e.g. /es/account/orders → /account/orders
   const localePrefix = routing.locales.find(
     (l) => pathname.startsWith(`/${l}/`) || pathname === `/${l}`
   );
@@ -45,33 +40,28 @@ export async function middleware(request: NextRequest) {
     ? pathname.replace(`/${localePrefix}`, '') || '/'
     : pathname;
 
-  // Protect /account routes (except /account/login and /account/signup)
-  if (
-    strippedPathname.startsWith('/account') &&
-    !strippedPathname.startsWith('/account/login') &&
-    !strippedPathname.startsWith('/account/signup')
-  ) {
-    const { supabase } = createMiddlewareClient(request);
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      const loginUrl = new URL(
-        localePrefix ? `/${localePrefix}/account/login` : '/account/login',
-        request.url
-      );
-      return NextResponse.redirect(loginUrl);
-    }
-  }
+  // Account route protection — single session check for all account routes
+  if (strippedPathname.startsWith('/account')) {
+    const isAuthPage = strippedPathname.startsWith('/account/login') || strippedPathname.startsWith('/account/signup');
 
-  // If logged in and hitting /account/login, redirect to /account
-  if (strippedPathname === '/account/login') {
-    const { supabase } = createMiddlewareClient(request);
-    const { data: { session } } = await supabase.auth.getSession();
-    if (session) {
-      const accountUrl = new URL(
-        localePrefix ? `/${localePrefix}/account` : '/account',
-        request.url
-      );
-      return NextResponse.redirect(accountUrl);
+    if (!isAuthPage || strippedPathname === '/account/login') {
+      const { supabase } = createMiddlewareClient(request);
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (!isAuthPage && !session) {
+        const loginUrl = new URL(
+          localePrefix ? `/${localePrefix}/account/login` : '/account/login',
+          request.url
+        );
+        return NextResponse.redirect(loginUrl);
+      }
+      if (strippedPathname === '/account/login' && session) {
+        const accountUrl = new URL(
+          localePrefix ? `/${localePrefix}/account` : '/account',
+          request.url
+        );
+        return NextResponse.redirect(accountUrl);
+      }
     }
   }
 

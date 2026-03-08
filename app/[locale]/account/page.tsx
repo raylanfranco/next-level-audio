@@ -64,8 +64,7 @@ export default function AccountDashboardPage() {
       {/* Welcome Banner */}
       <div className="border-2 border-[#E01020]/30 p-6 mb-8">
         <h1
-          className="text-2xl md:text-3xl font-bold text-white mb-2 neon-glow"
-          style={{ fontFamily: 'var(--font-oxanium)' }}
+          className="text-2xl md:text-3xl font-bold text-white mb-2 neon-glow font-oxanium"
         >
           {t('welcomeBanner')}{profile?.full_name ? `, ${profile.full_name.split(' ')[0].toUpperCase()}` : ''}
         </h1>
@@ -95,8 +94,7 @@ export default function AccountDashboardPage() {
 
       {/* Quick Links */}
       <h2
-        className="text-lg font-bold text-white mb-4"
-        style={{ fontFamily: 'var(--font-oxanium)' }}
+        className="text-lg font-bold text-white mb-4 font-oxanium"
       >
         {t('quickLinksTitle')}
       </h2>
@@ -111,8 +109,7 @@ export default function AccountDashboardPage() {
               <span className="text-[#E01020] text-lg">{link.icon}</span>
               <div>
                 <p
-                  className="text-white font-semibold text-sm group-hover:text-[#E01020] transition-colors"
-                  style={{ fontFamily: 'var(--font-oxanium)' }}
+                  className="text-white font-semibold text-sm group-hover:text-[#E01020] transition-colors font-oxanium"
                 >
                   {link.label}
                 </p>

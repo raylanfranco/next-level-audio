@@ -56,10 +56,10 @@ export default function ContactPage() {
         <div className="absolute inset-0 cyber-grid opacity-20"></div>
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center max-w-4xl mx-auto">
-            <p className="text-[#E01020] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+            <p className="text-[#E01020] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft font-oxanium">
               {t('getInTouch')}
             </p>
-            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
+            <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 neon-glow font-oxanium">
               {t('title')}
             </h1>
             <p className="text-white/80 text-lg md:text-xl max-w-2xl mx-auto font-mono">
@@ -76,7 +76,7 @@ export default function ContactPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             {/* Contact Form */}
             <div className="bg-black border-2 border-[#E01020]/30 p-8 md:p-12 neon-border-soft">
-              <h2 className="text-3xl font-bold text-[#E01020] mb-8 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <h2 className="text-3xl font-bold text-[#E01020] mb-8 neon-glow-soft font-oxanium">
                 {t('sendUsMessage')}
               </h2>
 
@@ -85,7 +85,7 @@ export default function ContactPage() {
                   <svg className="w-16 h-16 text-[#E01020] mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
-                  <h3 className="text-2xl font-bold text-[#E01020] mb-4 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                  <h3 className="text-2xl font-bold text-[#E01020] mb-4 neon-glow-soft font-oxanium">
                     {t('messageSent')}
                   </h3>
                   <p className="text-white/70 font-mono mb-6">
@@ -189,8 +189,7 @@ export default function ContactPage() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-8 py-4 font-semibold text-lg hover:bg-[#E01020]/30 transition-all duration-300 neon-border-soft cyber-button disabled:opacity-50 disabled:cursor-not-allowed"
-                    style={{ fontFamily: 'var(--font-oxanium)' }}
+                    className="w-full bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-8 py-4 font-semibold text-lg hover:bg-[#E01020]/30 transition-all duration-300 neon-border-soft cyber-button disabled:opacity-50 disabled:cursor-not-allowed font-oxanium"
                   >
                     {isSubmitting ? (
                       <span className="flex items-center justify-center">
@@ -226,7 +225,7 @@ export default function ContactPage() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-[#E01020] mb-2 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                    <h3 className="text-xl font-bold text-[#E01020] mb-2 neon-glow-soft font-oxanium">
                       {t('location')}
                     </h3>
                     <p className="text-white/70 font-mono">
@@ -257,7 +256,7 @@ export default function ContactPage() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-[#E01020] mb-2 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                    <h3 className="text-xl font-bold text-[#E01020] mb-2 neon-glow-soft font-oxanium">
                       {t('phone')}
                     </h3>
                     <a
@@ -279,7 +278,7 @@ export default function ContactPage() {
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-[#E01020] mb-2 neon-glow-soft" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                    <h3 className="text-xl font-bold text-[#E01020] mb-2 neon-glow-soft font-oxanium">
                       {t('businessHours')}
                     </h3>
                     <ul className="text-white/70 font-mono space-y-1">
@@ -304,15 +303,13 @@ export default function ContactPage() {
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
                   onClick={openModal}
-                  className="flex-1 text-center bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-6 py-4 font-semibold hover:bg-[#E01020]/30 transition-all duration-300 neon-border-soft cyber-button cursor-pointer"
-                  style={{ fontFamily: 'var(--font-oxanium)' }}
+                  className="flex-1 text-center bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] px-6 py-4 font-semibold hover:bg-[#E01020]/30 transition-all duration-300 neon-border-soft cyber-button cursor-pointer font-oxanium"
                 >
                   {tc('bookAppointment')}
                 </button>
                 <a
                   href="tel:+15707304433"
-                  className="flex-1 text-center border-2 border-[#E01020]/50 bg-black text-[#E01020] px-6 py-4 font-semibold hover:border-[#E01020] transition-all duration-300 neon-border-soft cyber-button"
-                  style={{ fontFamily: 'var(--font-oxanium)' }}
+                  className="flex-1 text-center border-2 border-[#E01020]/50 bg-black text-[#E01020] px-6 py-4 font-semibold hover:border-[#E01020] transition-all duration-300 neon-border-soft cyber-button font-oxanium"
                 >
                   {tc('callNow')}
                 </a>
@@ -328,7 +325,7 @@ export default function ContactPage() {
         <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
           <AnimateOnScroll animation="fade-up">
             <div className="text-center mb-10">
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 neon-glow" style={{ fontFamily: 'var(--font-oxanium)' }}>
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 neon-glow font-oxanium">
                 {tc('findUs')}
               </h2>
               <p className="text-white/80 font-mono text-sm md:text-base max-w-xl mx-auto">

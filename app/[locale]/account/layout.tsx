@@ -40,11 +40,11 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
             {/* User card */}
             <div className="border-2 border-[#E01020]/30 p-5 mb-6">
               <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 bg-[#E01020]/20 border border-[#E01020]/50 flex items-center justify-center text-[#E01020] font-bold text-lg" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                <div className="w-10 h-10 bg-[#E01020]/20 border border-[#E01020]/50 flex items-center justify-center text-[#E01020] font-bold text-lg font-oxanium">
                   {profile?.full_name?.charAt(0)?.toUpperCase() || '?'}
                 </div>
                 <div>
-                  <p className="text-white font-semibold text-sm" style={{ fontFamily: 'var(--font-oxanium)' }}>
+                  <p className="text-white font-semibold text-sm font-oxanium">
                     {profile?.full_name || 'User'}
                   </p>
                   <p className="text-white/40 font-mono text-xs">{profile?.email}</p>
