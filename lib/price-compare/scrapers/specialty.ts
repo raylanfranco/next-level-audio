@@ -72,19 +72,8 @@ async function searchSpecialty(query: string): Promise<PriceResult[]> {
   const results: PriceResult[] = [];
 
   if (!cookies) {
-    // Can't access site without auth — return a helpful message
-    return [{
-      distributor: 'Specialty Marketing',
-      distributorUrl: BASE_URL,
-      productName: `Search for: ${query}`,
-      productUrl: BASE_URL,
-      sku: null,
-      priceCents: null,
-      priceDisplay: 'Login required',
-      inStock: null,
-      imageUrl: null,
-      matchConfidence: 'partial',
-    }];
+    // Can't access site without auth — return empty (no fake results)
+    return [];
   }
 
   // Try search endpoints

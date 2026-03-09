@@ -3,7 +3,6 @@ import { metraScraper } from './scrapers/metra';
 import { firstechScraper } from './scrapers/firstech';
 import { ecusadScraper } from './scrapers/ecusad';
 import { idatalinkScraper } from './scrapers/idatalink';
-import { directechsScraper } from './scrapers/directechs';
 import { meyerScraper } from './scrapers/meyer';
 import { specialtyScraper } from './scrapers/specialty';
 
@@ -12,7 +11,6 @@ const ALL_SCRAPERS: DistributorScraper[] = [
   firstechScraper,
   ecusadScraper,
   idatalinkScraper,
-  directechsScraper,
   meyerScraper,
   specialtyScraper,
 ];

@@ -20,46 +20,40 @@ async function ensureSession(): Promise<string> {
   if (!username || !password) return '';
 
   try {
-    // Firstech uses Nuxt.js — login via POST to /login or /api/auth
+    // Firstech is Nuxt.js/Vue — get initial cookies
     const loginPageRes = await fetch(`${BASE_URL}/login`, {
       headers: HEADERS,
       redirect: 'manual',
     });
     const initialCookies = extractCookies(loginPageRes);
 
-    // Try JSON login endpoint first (common in Nuxt apps)
+    // Try form-encoded login (Nuxt typically handles form POSTs)
     const loginRes = await fetch(`${BASE_URL}/login`, {
       method: 'POST',
       headers: {
         ...HEADERS,
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/x-www-form-urlencoded',
         'Cookie': initialCookies,
       },
-      body: JSON.stringify({
+      body: new URLSearchParams({
         email: username,
         password: password,
-      }),
+      }).toString(),
       redirect: 'manual',
     });
 
-    if (loginRes.status === 405 || loginRes.status === 422) {
-      // Try form-encoded login
-      const formRes = await fetch(`${BASE_URL}/login`, {
-        method: 'POST',
-        headers: {
-          ...HEADERS,
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'Cookie': initialCookies,
-        },
-        body: new URLSearchParams({
-          email: username,
-          password: password,
-        }).toString(),
-        redirect: 'manual',
-      });
-      sessionCookies = mergeCookies(initialCookies, extractCookies(formRes));
-    } else {
-      sessionCookies = mergeCookies(initialCookies, extractCookies(loginRes));
+    sessionCookies = mergeCookies(initialCookies, extractCookies(loginRes));
+
+    // If 302 redirect, follow it to get auth cookies
+    if (loginRes.status === 302) {
+      const loc = loginRes.headers.get('location') || '';
+      if (loc) {
+        const followRes = await fetch(
+          loc.startsWith('http') ? loc : `${BASE_URL}${loc}`,
+          { headers: { ...HEADERS, Cookie: sessionCookies }, redirect: 'manual' }
+        );
+        sessionCookies = mergeCookies(sessionCookies, extractCookies(followRes));
+      }
     }
 
     sessionExpiry = Date.now() + 25 * 60 * 1000;
@@ -74,7 +68,8 @@ async function searchFirstech(query: string): Promise<PriceResult[]> {
   const results: PriceResult[] = [];
 
   try {
-    const searchUrl = `${BASE_URL}/search?q=${encodeURIComponent(query)}&p=1&so=price-asc`;
+    // Real URL structure: /search?s={SKU}&b=approved-brands-only&p=1&so=price-desc
+    const searchUrl = `${BASE_URL}/search?s=${encodeURIComponent(query)}&b=approved-brands-only&p=1&so=price-desc`;
     const res = await fetch(searchUrl, {
       headers: { ...HEADERS, Cookie: cookies },
     });
@@ -84,69 +79,77 @@ async function searchFirstech(query: string): Promise<PriceResult[]> {
     const html = await res.text();
     const $ = cheerio.load(html);
 
-    // Parse Nuxt __NUXT__ state for product data
-    const nuxtScript = $('script').filter((_, el) => {
-      const text = $(el).html() || '';
-      return text.includes('__NUXT__') || text.includes('window.__NUXT__');
-    }).html() || '';
+    // Real selector: .ProductCardFull__price for price
+    // Product cards use ProductCardFull component (Vue/Nuxt)
+    $('[class*="ProductCardFull"], [class*="ProductCard"], [class*="product-card"]').each((_, el) => {
+      const card = $(el);
 
-    // Try to extract product data from __NUXT__ payload
-    // The payload often contains serialized product arrays
-    const productDataMatch = nuxtScript.match(/products['":\s]*\[([\s\S]*?)\]/);
+      // Product name
+      const name = card.find('[class*="ProductCardFull__name"], [class*="ProductCard__name"], [class*="name"], h3, h4').first().text().trim();
+      const link = card.find('a').first().attr('href') || '';
 
-    // Also try parsing product cards from HTML
-    $('[class*="product-card"], [class*="ProductCard"], .product-item, .search-result').each((_, el) => {
-      const name = $(el).find('[class*="name"], [class*="title"], h3, h4').first().text().trim();
-      const link = $(el).find('a').first().attr('href') || '';
-      const skuEl = $(el).find('[class*="sku"], [class*="part"]').first().text().trim();
-      const priceEl = $(el).find('[class*="price"]').first().text().trim();
-      const imgEl = $(el).find('img').first().attr('src') || null;
+      if (!name || name.length < 3) return;
 
-      if (!name) return;
-
+      // Price: .ProductCardFull__price
       let priceCents: number | null = null;
       let priceDisplay = 'Login for pricing';
-      const priceMatch = priceEl.match(/\$?([\d,]+\.?\d*)/);
+      const priceText = card.find('[class*="ProductCardFull__price"], [class*="ProductCard__price"], [class*="price"]').first().text().trim();
+      const priceMatch = priceText.match(/\$\s*([\d,]+\.?\d*)/);
       if (priceMatch) {
         priceCents = Math.round(parseFloat(priceMatch[1].replace(',', '')) * 100);
         priceDisplay = `$${(priceCents / 100).toFixed(2)}`;
       }
 
+      // SKU
+      const skuText = card.find('[class*="sku"], [class*="part-number"], [class*="PartNumber"]').first().text().trim();
+
+      // Image
+      const imgEl = card.find('img').first().attr('src') || null;
+
       results.push({
         distributor: 'Firstech',
         distributorUrl: BASE_URL,
         productName: name,
-        productUrl: link.startsWith('http') ? link : `${BASE_URL}${link}`,
-        sku: skuEl || null,
+        productUrl: link ? (link.startsWith('http') ? link : `${BASE_URL}${link}`) : searchUrl,
+        sku: skuText || null,
         priceCents,
         priceDisplay,
         inStock: null,
-        imageUrl: imgEl,
+        imageUrl: imgEl ? (imgEl.startsWith('http') ? imgEl : `${BASE_URL}${imgEl}`) : null,
         matchConfidence: scoreMatch(name, query),
       });
     });
 
-    // Fallback: try to find any product links matching the query
+    // Fallback: look for product links if no card components found
     if (results.length === 0) {
-      $('a').each((_, el) => {
-        const href = $(el).attr('href') || '';
+      $('a[href*="/product/"], a[href*="/p/"]').each((_, el) => {
         const text = $(el).text().trim();
-        if (text && href && (href.includes('/product') || href.includes('/p/')) &&
-            (text.toLowerCase().includes(query.toLowerCase()) ||
-             href.toLowerCase().includes(query.toLowerCase()))) {
-          results.push({
-            distributor: 'Firstech',
-            distributorUrl: BASE_URL,
-            productName: text,
-            productUrl: href.startsWith('http') ? href : `${BASE_URL}${href}`,
-            sku: null,
-            priceCents: null,
-            priceDisplay: 'See website',
-            inStock: null,
-            imageUrl: null,
-            matchConfidence: scoreMatch(text, query),
-          });
+        const href = $(el).attr('href') || '';
+        if (!text || text.length < 3 || text.length > 200) return;
+
+        // Check for price near the link
+        const parent = $(el).parent();
+        let priceCents: number | null = null;
+        let priceDisplay = 'See website';
+        const nearbyPrice = parent.find('[class*="price"]').first().text().trim();
+        const priceMatch = nearbyPrice.match(/\$\s*([\d,]+\.?\d*)/);
+        if (priceMatch) {
+          priceCents = Math.round(parseFloat(priceMatch[1].replace(',', '')) * 100);
+          priceDisplay = `$${(priceCents / 100).toFixed(2)}`;
         }
+
+        results.push({
+          distributor: 'Firstech',
+          distributorUrl: BASE_URL,
+          productName: text,
+          productUrl: href.startsWith('http') ? href : `${BASE_URL}${href}`,
+          sku: null,
+          priceCents,
+          priceDisplay,
+          inStock: null,
+          imageUrl: null,
+          matchConfidence: scoreMatch(text, query),
+        });
       });
     }
   } catch { /* search failed */ }

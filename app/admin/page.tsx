@@ -1997,7 +1997,7 @@ function AdminDashboard() {
                     PRICE COMPARE
                   </h2>
                   <p className={`${textMuted} text-sm mt-1`}>
-                    Search 7 distributors for the best price
+                    Search 6 distributors for the best price
                   </p>
                 </div>
               </div>

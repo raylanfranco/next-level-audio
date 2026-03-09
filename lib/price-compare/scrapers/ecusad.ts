@@ -108,14 +108,23 @@ async function searchEcusad(query: string): Promise<PriceResult[]> {
 
       if (!name || name.length < 3 || name.length > 150) return;
 
-      // Extract price if visible
+      // Extract price — ECUSAD uses crimson-colored spans for pricing
       let priceCents: number | null = null;
       let priceDisplay = 'See website';
-      const cardText = card.text();
-      const priceMatch = cardText.match(/\$\s*([\d,]+\.?\d*)/);
+      const priceSpan = card.find('span[style*="crimson"], span[style*="color: crimson"], [class*="price"]').first().text().trim();
+      const priceMatch = priceSpan.match(/\$\s*([\d,]+\.?\d*)/);
       if (priceMatch) {
         priceCents = Math.round(parseFloat(priceMatch[1].replace(',', '')) * 100);
         priceDisplay = `$${(priceCents / 100).toFixed(2)}`;
+      }
+      // Fallback: any $ amount in the card text
+      if (!priceCents) {
+        const cardText = card.text();
+        const fallbackMatch = cardText.match(/\$\s*([\d,]+\.?\d*)/);
+        if (fallbackMatch) {
+          priceCents = Math.round(parseFloat(fallbackMatch[1].replace(',', '')) * 100);
+          priceDisplay = `$${(priceCents / 100).toFixed(2)}`;
+        }
       }
 
       results.push({
