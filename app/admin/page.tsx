@@ -67,7 +67,7 @@ const serviceNames: Record<string, string> = {
   'accessories': 'Auto Accessories',
 };
 
-type NavItem = 'overview' | 'inventory' | 'orders' | 'payments' | 'customers' | 'bookings' | 'requests' | 'applications' | 'best-sellers' | 'coupons';
+type NavItem = 'overview' | 'inventory' | 'orders' | 'payments' | 'customers' | 'bookings' | 'requests' | 'applications' | 'best-sellers' | 'coupons' | 'price-compare';
 
 function formatCents(cents: number) {
   return `$${(cents / 100).toFixed(2)}`;
@@ -192,6 +192,57 @@ function AdminDashboard() {
   });
   const [couponSaving, setCouponSaving] = useState(false);
   const [couponError, setCouponError] = useState('');
+
+  // Price Compare state
+  interface PriceResultRow {
+    distributor: string;
+    distributorUrl: string;
+    productName: string;
+    productUrl: string;
+    sku: string | null;
+    priceCents: number | null;
+    priceDisplay: string;
+    inStock: boolean | null;
+    imageUrl: string | null;
+    matchConfidence: 'exact' | 'high' | 'partial';
+  }
+  const [priceQuery, setPriceQuery] = useState('');
+  const [priceResults, setPriceResults] = useState<PriceResultRow[]>([]);
+  const [priceErrors, setPriceErrors] = useState<{ distributor: string; error: string }[]>([]);
+  const [priceSearching, setPriceSearching] = useState(false);
+  const [priceSearchedAt, setPriceSearchedAt] = useState<string | null>(null);
+  const [priceSearchHistory, setPriceSearchHistory] = useState<string[]>([]);
+
+  const searchPrices = async () => {
+    const q = priceQuery.trim();
+    if (!q) return;
+    setPriceSearching(true);
+    setPriceResults([]);
+    setPriceErrors([]);
+    setPriceSearchedAt(null);
+    try {
+      const res = await fetch('/api/admin/price-compare', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: q }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setPriceResults(data.results || []);
+        setPriceErrors(data.errors || []);
+        setPriceSearchedAt(data.searchedAt);
+        // Add to search history (deduplicated, max 10)
+        setPriceSearchHistory(prev => {
+          const filtered = prev.filter(h => h.toLowerCase() !== q.toLowerCase());
+          return [q, ...filtered].slice(0, 10);
+        });
+      }
+    } catch (error) {
+      console.error('Price search error:', error);
+    } finally {
+      setPriceSearching(false);
+    }
+  };
 
   const fetchCoupons = useCallback(async () => {
     setCouponsLoading(true);
@@ -629,6 +680,7 @@ function AdminDashboard() {
     { key: 'applications', label: 'Applications', badge: pendingApplications || undefined },
     { key: 'best-sellers', label: 'Best Sellers' },
     { key: 'coupons', label: 'Coupons' },
+    { key: 'price-compare', label: 'Price Compare' },
   ];
 
   const getStatusClasses = (status: string) => {
@@ -1924,6 +1976,213 @@ function AdminDashboard() {
                         ))}
                       </tbody>
                     </table>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Price Compare Tab */}
+          {activeNav === 'price-compare' && (
+            <div>
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className={`text-xl font-semibold ${textPrimary} font-oxanium`}>
+                    PRICE COMPARE
+                  </h2>
+                  <p className={`${textMuted} text-sm mt-1`}>
+                    Search 7 distributors for the best price
+                  </p>
+                </div>
+              </div>
+
+              {/* Search Bar */}
+              <div className={`${bgCard} border ${borderColor} p-6 mb-6`}>
+                <div className="flex gap-3">
+                  <div className="flex-1 relative">
+                    <input
+                      type="text"
+                      placeholder="Enter product name or SKU (e.g. CS7900-AS, dash kit, remote start)..."
+                      value={priceQuery}
+                      onChange={(e) => setPriceQuery(e.target.value)}
+                      onKeyDown={(e) => e.key === 'Enter' && searchPrices()}
+                      className={`w-full ${bgInput} border ${borderColor} ${textPrimary} px-4 py-3 text-sm focus:border-blue-500 focus:outline-none placeholder:${textMuted}`}
+                    />
+                    {priceSearchHistory.length > 0 && !priceSearching && (
+                      <div className={`mt-2 flex flex-wrap gap-2`}>
+                        <span className={`${textMuted} text-xs`}>Recent:</span>
+                        {priceSearchHistory.map((h, i) => (
+                          <button
+                            key={i}
+                            onClick={() => { setPriceQuery(h); }}
+                            className={`text-xs px-2 py-0.5 border ${borderColor} ${textSecondary} ${btnHover} transition-colors`}
+                          >
+                            {h}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <button
+                    onClick={searchPrices}
+                    disabled={priceSearching || !priceQuery.trim()}
+                    className={`px-8 py-3 border ${borderColor} ${textAccent} text-sm font-medium ${btnHover} transition-colors disabled:opacity-30 disabled:cursor-not-allowed whitespace-nowrap`}
+                  >
+                    {priceSearching ? 'SEARCHING...' : 'SEARCH'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Loading State */}
+              {priceSearching && (
+                <div className={`${bgCard} border ${borderColor} p-12 text-center`}>
+                  <div className={`${textAccent} text-lg mb-2 font-oxanium`}>Searching distributors...</div>
+                  <p className={`${textMuted} text-sm`}>
+                    Checking iDatalink, Meyer, Directechs, Firstech, ECUSAD, Specialty Marketing, Metra Online
+                  </p>
+                  <div className="mt-4 flex justify-center gap-1">
+                    {[0, 1, 2, 3, 4].map((i) => (
+                      <div
+                        key={i}
+                        className={`w-2 h-2 ${isDark ? 'bg-blue-400' : 'bg-blue-600'} animate-pulse`}
+                        style={{ animationDelay: `${i * 0.15}s` }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Results */}
+              {!priceSearching && priceSearchedAt && (
+                <div>
+                  {/* Summary */}
+                  <div className={`flex items-center justify-between mb-4`}>
+                    <p className={`${textSecondary} text-sm`}>
+                      {priceResults.length} result{priceResults.length !== 1 ? 's' : ''} found
+                      {priceErrors.length > 0 && (
+                        <span className={`ml-2 ${isDark ? 'text-amber-400' : 'text-amber-600'}`}>
+                          ({priceErrors.length} distributor{priceErrors.length !== 1 ? 's' : ''} failed)
+                        </span>
+                      )}
+                    </p>
+                    <p className={`${textMuted} text-xs`}>
+                      Searched at {new Date(priceSearchedAt).toLocaleTimeString()}
+                    </p>
+                  </div>
+
+                  {/* Results Table */}
+                  {priceResults.length > 0 ? (
+                    <div className={`${bgCard} border ${borderColor} overflow-hidden mb-6`}>
+                      <div className="overflow-x-auto">
+                        <table className="w-full">
+                          <thead>
+                            <tr className={`border-b ${borderColor} ${isDark ? 'bg-slate-800/50' : 'bg-slate-50'}`}>
+                              <th className={`px-4 py-3 text-center ${textSecondary} font-medium text-xs uppercase tracking-wide w-10`}>#</th>
+                              <th className={`px-4 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Distributor</th>
+                              <th className={`px-4 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Product</th>
+                              <th className={`px-4 py-3 text-left ${textSecondary} font-medium text-xs uppercase tracking-wide`}>SKU</th>
+                              <th className={`px-4 py-3 text-right ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Price</th>
+                              <th className={`px-4 py-3 text-center ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Match</th>
+                              <th className={`px-4 py-3 text-center ${textSecondary} font-medium text-xs uppercase tracking-wide`}>Action</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {priceResults.map((r, idx) => {
+                              const isBest = idx === 0 && r.priceCents !== null;
+                              const rowBg = isBest
+                                ? (isDark ? 'bg-emerald-500/5 border-l-2 border-l-emerald-500' : 'bg-emerald-50 border-l-2 border-l-emerald-500')
+                                : '';
+                              return (
+                                <tr key={idx} className={`border-b ${borderColor} ${rowBg} ${isDark ? 'hover:bg-white/5' : 'hover:bg-slate-50'} transition-colors`}>
+                                  <td className={`px-4 py-3 text-center ${textMuted} text-sm font-mono`}>
+                                    {isBest ? (
+                                      <span className={`px-2 py-0.5 text-xs font-bold ${isDark ? 'text-emerald-400 bg-emerald-400/10' : 'text-emerald-600 bg-emerald-50'}`}>
+                                        BEST
+                                      </span>
+                                    ) : (
+                                      idx + 1
+                                    )}
+                                  </td>
+                                  <td className={`px-4 py-3 text-sm`}>
+                                    <div className={`${textPrimary} font-medium`}>{r.distributor}</div>
+                                  </td>
+                                  <td className={`px-4 py-3 text-sm`}>
+                                    <div className={`${textPrimary}`}>{r.productName}</div>
+                                  </td>
+                                  <td className={`px-4 py-3 ${textSecondary} text-sm font-mono`}>
+                                    {r.sku || '—'}
+                                  </td>
+                                  <td className={`px-4 py-3 text-right text-sm font-mono font-bold ${
+                                    r.priceCents !== null
+                                      ? (isBest ? (isDark ? 'text-emerald-400' : 'text-emerald-600') : textPrimary)
+                                      : textMuted
+                                  }`}>
+                                    {r.priceDisplay}
+                                  </td>
+                                  <td className={`px-4 py-3 text-center`}>
+                                    <span className={`px-2 py-0.5 border text-xs font-mono uppercase ${
+                                      r.matchConfidence === 'exact'
+                                        ? (isDark ? 'text-emerald-400 bg-emerald-400/10 border-emerald-400/30' : 'text-emerald-600 bg-emerald-50 border-emerald-200')
+                                        : r.matchConfidence === 'high'
+                                        ? (isDark ? 'text-blue-400 bg-blue-400/10 border-blue-400/30' : 'text-blue-600 bg-blue-50 border-blue-200')
+                                        : (isDark ? 'text-slate-400 bg-slate-400/10 border-slate-400/30' : 'text-slate-500 bg-slate-50 border-slate-200')
+                                    }`}>
+                                      {r.matchConfidence}
+                                    </span>
+                                  </td>
+                                  <td className={`px-4 py-3 text-center`}>
+                                    <a
+                                      href={r.productUrl}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className={`text-xs ${textAccent} ${btnHover} transition-colors px-3 py-1 border ${borderColor} inline-block`}
+                                    >
+                                      VIEW / ORDER
+                                    </a>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className={`${bgCard} border ${borderColor} text-center ${textMuted} py-12 text-sm`}>
+                      No results found. Try a different product name or SKU.
+                    </div>
+                  )}
+
+                  {/* Errors Section */}
+                  {priceErrors.length > 0 && (
+                    <div className={`${bgCard} border ${borderColor} p-4`}>
+                      <p className={`${isDark ? 'text-amber-400' : 'text-amber-600'} text-xs font-medium mb-2 uppercase tracking-wide`}>
+                        Failed Distributors
+                      </p>
+                      <div className="space-y-1">
+                        {priceErrors.map((err, idx) => (
+                          <div key={idx} className={`flex items-center gap-2 ${textMuted} text-xs`}>
+                            <span className={`w-1.5 h-1.5 ${isDark ? 'bg-amber-400' : 'bg-amber-500'}`} />
+                            <span className={`${textSecondary} font-medium`}>{err.distributor}:</span>
+                            <span>{err.error}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Empty State — before first search */}
+              {!priceSearching && !priceSearchedAt && (
+                <div className={`${bgCard} border ${borderColor} p-12 text-center`}>
+                  <div className={`${textMuted} text-4xl mb-4`}>&#128269;</div>
+                  <p className={`${textSecondary} text-sm mb-2`}>
+                    Enter a product name or SKU to compare prices across all distributors.
+                  </p>
+                  <div className={`${textMuted} text-xs space-y-1`}>
+                    <p>Searches: iDatalink, Meyer Distributing, Directechs, Firstech, ECUSAD, Specialty Marketing, Metra Online</p>
+                    <p>Results include dealer pricing where available, with links to place orders directly.</p>
                   </div>
                 </div>
               )}
