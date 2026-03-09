@@ -20,7 +20,6 @@ async function ensureSession(): Promise<string> {
   if (!username || !password) return '';
 
   try {
-    // ECUSAD is ASP.NET — need to get ViewState first
     const loginPageRes = await fetch(`${BASE_URL}/login.aspx`, {
       headers: HEADERS,
     });
@@ -63,7 +62,7 @@ async function searchEcusad(query: string): Promise<PriceResult[]> {
   const results: PriceResult[] = [];
 
   try {
-    // First fetch the search page to get ViewState
+    // Fetch the category page to get ViewState for search
     const pageRes = await fetch(`${BASE_URL}/display_category.aspx`, {
       headers: { ...HEADERS, Cookie: cookies },
     });
@@ -74,7 +73,7 @@ async function searchEcusad(query: string): Promise<PriceResult[]> {
     const viewStateGen = $page('input[name="__VIEWSTATEGENERATOR"]').val() as string || '';
     const eventValidation = $page('input[name="__EVENTVALIDATION"]').val() as string || '';
 
-    // Submit the search form via __doPostBack
+    // Submit the search
     const searchRes = await fetch(`${BASE_URL}/display_category.aspx`, {
       method: 'POST',
       headers: {
@@ -98,75 +97,65 @@ async function searchEcusad(query: string): Promise<PriceResult[]> {
     const html = await searchRes.text();
     const $ = cheerio.load(html);
 
-    // Parse product results — ECUSAD uses table-based layouts
-    $('table tr, .product-item, [class*="product"], [class*="item"]').each((_, el) => {
-      const row = $(el);
-      const cells = row.find('td');
-      if (cells.length < 2) return;
+    // ECUSAD uses .scOuter > .scInner + .scText > a for product cards
+    $('.scOuter').each((_, el) => {
+      const card = $(el);
+      const linkEl = card.find('.scText a, a').first();
+      const name = linkEl.text().trim();
+      const href = linkEl.attr('href') || '';
+      const imgEl = card.find('img').first();
+      const imgSrc = imgEl.attr('src') || null;
 
-      // Try to extract product info from table cells
-      const name = cells.eq(0).text().trim() || cells.eq(1).text().trim();
-      const link = row.find('a').first().attr('href') || '';
+      if (!name || name.length < 3 || name.length > 150) return;
 
-      if (!name || name.length < 3) return;
-
-      // Check if this matches our query
-      const qLower = query.toLowerCase();
-      const nLower = name.toLowerCase();
-      if (!nLower.includes(qLower) && !qLower.split(/\s+/).some(w => nLower.includes(w))) return;
-
+      // Extract price if visible
       let priceCents: number | null = null;
       let priceDisplay = 'See website';
-      // Look for price in any cell
-      cells.each((_, cell) => {
-        const text = $(cell).text().trim();
-        const priceMatch = text.match(/\$\s*([\d,]+\.?\d*)/);
-        if (priceMatch && !priceCents) {
-          priceCents = Math.round(parseFloat(priceMatch[1].replace(',', '')) * 100);
-          priceDisplay = `$${(priceCents / 100).toFixed(2)}`;
-        }
-      });
-
-      const imgEl = row.find('img').first().attr('src') || null;
-      const skuMatch = name.match(/([A-Z0-9]+-?[A-Z0-9]+)/i);
+      const cardText = card.text();
+      const priceMatch = cardText.match(/\$\s*([\d,]+\.?\d*)/);
+      if (priceMatch) {
+        priceCents = Math.round(parseFloat(priceMatch[1].replace(',', '')) * 100);
+        priceDisplay = `$${(priceCents / 100).toFixed(2)}`;
+      }
 
       results.push({
         distributor: 'ECUSAD',
         distributorUrl: BASE_URL,
         productName: name,
-        productUrl: link ? (link.startsWith('http') ? link : `${BASE_URL}/${link}`) : `${BASE_URL}/display_category.aspx`,
-        sku: skuMatch ? skuMatch[1] : null,
+        productUrl: href ? (href.startsWith('http') ? href : `${BASE_URL}/${href.replace(/^\//, '')}`) : `${BASE_URL}/display_category.aspx`,
+        sku: null,
         priceCents,
         priceDisplay,
         inStock: null,
-        imageUrl: imgEl ? (imgEl.startsWith('http') ? imgEl : `${BASE_URL}/${imgEl}`) : null,
+        imageUrl: imgSrc ? (imgSrc.startsWith('http') ? imgSrc : `${BASE_URL}/${imgSrc.replace(/^\//, '')}`) : null,
         matchConfidence: scoreMatch(name, query),
       });
     });
 
-    // Also check for product links in general page content
+    // If no .scOuter cards found, try product detail links as fallback
     if (results.length === 0) {
-      $('a').each((_, el) => {
-        const href = $(el).attr('href') || '';
+      $('a[href*="display_product"], a[href*="product_detail"]').each((_, el) => {
         const text = $(el).text().trim();
-        if (!text || text.length < 3) return;
-        if (!href.includes('product') && !href.includes('item') && !href.includes('display')) return;
+        const href = $(el).attr('href') || '';
+        if (!text || text.length < 3 || text.length > 150) return;
 
         const qLower = query.toLowerCase();
-        if (text.toLowerCase().includes(qLower)) {
-          results.push({
-            distributor: 'ECUSAD',
-            distributorUrl: BASE_URL,
-            productName: text,
-            productUrl: href.startsWith('http') ? href : `${BASE_URL}/${href}`,
-            sku: null,
-            priceCents: null,
-            priceDisplay: 'See website',
-            inStock: null,
-            imageUrl: null,
-            matchConfidence: scoreMatch(text, query),
-          });
-        }
+        const words = qLower.split(/\s+/);
+        const textLower = text.toLowerCase();
+        if (!words.some(w => textLower.includes(w))) return;
+
+        results.push({
+          distributor: 'ECUSAD',
+          distributorUrl: BASE_URL,
+          productName: text,
+          productUrl: href.startsWith('http') ? href : `${BASE_URL}/${href.replace(/^\//, '')}`,
+          sku: null,
+          priceCents: null,
+          priceDisplay: 'See website',
+          inStock: null,
+          imageUrl: null,
+          matchConfidence: scoreMatch(text, query),
+        });
       });
     }
   } catch { /* search failed */ }

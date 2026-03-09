@@ -20,7 +20,6 @@ async function ensureSession(): Promise<string> {
   if (!username || !password) return '';
 
   try {
-    // Directechs uses ASP.NET MVC — login via /Account/Login
     const loginPageRes = await fetch(`${BASE_URL}/Account/Login`, {
       headers: HEADERS,
     });
@@ -58,95 +57,59 @@ async function searchDirectechs(query: string): Promise<PriceResult[]> {
   const cookies = await ensureSession();
   const results: PriceResult[] = [];
 
-  // Try product search/compatibility pages
-  const searchPages = [
-    `/VehicleCompatibility?q=${encodeURIComponent(query)}`,
-    `/Product/Search?q=${encodeURIComponent(query)}`,
-    `/search?q=${encodeURIComponent(query)}`,
-  ];
+  // Directechs is a vehicle compatibility tool, not a product catalog.
+  // Products are lines like DS4, DS4+, BP1 etc. on the homepage.
+  // We scan for product line links that match the query.
+  try {
+    const res = await fetch(BASE_URL, {
+      headers: { ...HEADERS, Cookie: cookies },
+    });
+    if (!res.ok) return results;
 
-  for (const searchPath of searchPages) {
-    try {
-      const res = await fetch(`${BASE_URL}${searchPath}`, {
-        headers: { ...HEADERS, Cookie: cookies },
-        redirect: 'follow',
+    const html = await res.text();
+    const $ = cheerio.load(html);
+
+    // Product links follow: /VehicleCompatibility/SelectMake{CODE}
+    const seen = new Set<string>();
+    $('a[href*="/VehicleCompatibility/SelectMake"]').each((_, el) => {
+      const href = $(el).attr('href') || '';
+      const text = $(el).text().trim();
+      const img = $(el).find('img').attr('src') || null;
+
+      // Extract product code from URL
+      const codeMatch = href.match(/SelectMake([A-Za-z0-9+]+)/);
+      const code = codeMatch ? codeMatch[1] : '';
+      const name = text && text.length > 1 && text.length < 80 ? text : code;
+
+      if (!name || name.length < 2) return;
+      // Skip non-product links (YouTube, social, etc.)
+      const lower = name.toLowerCase();
+      if (lower.includes('watch') || lower.includes('youtube') || lower.includes('channel')) return;
+      if (lower.includes('subscribe') || lower === 'product:') return;
+
+      const key = code || href;
+      if (seen.has(key)) return;
+      seen.add(key);
+
+      // Check if matches query
+      const qLower = query.toLowerCase();
+      const qWords = qLower.split(/\s+/);
+      if (!lower.includes(qLower) && !qWords.some(w => lower.includes(w))) return;
+
+      results.push({
+        distributor: 'Directechs',
+        distributorUrl: BASE_URL,
+        productName: name,
+        productUrl: href.startsWith('http') ? href : `${BASE_URL}${href}`,
+        sku: code || null,
+        priceCents: null,
+        priceDisplay: 'Login for pricing',
+        inStock: null,
+        imageUrl: img ? (img.startsWith('http') ? img : `${BASE_URL}${img}`) : null,
+        matchConfidence: scoreMatch(name, query),
       });
-      if (!res.ok) continue;
-
-      const html = await res.text();
-      const $ = cheerio.load(html);
-
-      // Parse product results
-      $('[class*="product"], [class*="result"], [class*="card"], [class*="item"]').each((_, el) => {
-        const name = $(el).find('h2, h3, h4, [class*="name"], [class*="title"]').first().text().trim();
-        const link = $(el).find('a').first().attr('href') || '';
-
-        if (!name || name.length < 3) return;
-
-        let priceCents: number | null = null;
-        let priceDisplay = 'Login for pricing';
-        const priceEl = $(el).find('[class*="price"]').first().text().trim();
-        const priceMatch = priceEl.match(/\$\s*([\d,]+\.?\d*)/);
-        if (priceMatch) {
-          priceCents = Math.round(parseFloat(priceMatch[1].replace(',', '')) * 100);
-          priceDisplay = `$${(priceCents / 100).toFixed(2)}`;
-        }
-
-        const imgEl = $(el).find('img').first().attr('src') || null;
-
-        results.push({
-          distributor: 'Directechs',
-          distributorUrl: BASE_URL,
-          productName: name,
-          productUrl: link ? (link.startsWith('http') ? link : `${BASE_URL}${link}`) : BASE_URL,
-          sku: null,
-          priceCents,
-          priceDisplay,
-          inStock: null,
-          imageUrl: imgEl ? (imgEl.startsWith('http') ? imgEl : `${BASE_URL}${imgEl}`) : null,
-          matchConfidence: scoreMatch(name, query),
-        });
-      });
-
-      if (results.length > 0) break;
-    } catch { /* search page failed */ }
-  }
-
-  // Also try to scan the main page for product matches if nothing found
-  if (results.length === 0) {
-    try {
-      const mainRes = await fetch(BASE_URL, {
-        headers: { ...HEADERS, Cookie: cookies },
-      });
-      if (mainRes.ok) {
-        const html = await mainRes.text();
-        const $ = cheerio.load(html);
-
-        $('a').each((_, el) => {
-          const href = $(el).attr('href') || '';
-          const text = $(el).text().trim();
-          if (!text || text.length < 3 || text.length > 200) return;
-
-          const qLower = query.toLowerCase();
-          if (text.toLowerCase().includes(qLower) &&
-              (href.includes('product') || href.includes('Product') || href.includes('item'))) {
-            results.push({
-              distributor: 'Directechs',
-              distributorUrl: BASE_URL,
-              productName: text,
-              productUrl: href.startsWith('http') ? href : `${BASE_URL}${href}`,
-              sku: null,
-              priceCents: null,
-              priceDisplay: 'See website',
-              inStock: null,
-              imageUrl: null,
-              matchConfidence: scoreMatch(text, query),
-            });
-          }
-        });
-      }
-    } catch { /* fallback failed */ }
-  }
+    });
+  } catch { /* search failed */ }
 
   return results.slice(0, 10);
 }
