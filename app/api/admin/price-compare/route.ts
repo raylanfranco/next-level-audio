@@ -35,7 +35,14 @@ export async function POST(request: NextRequest) {
   }
 
   // Run search across all distributors
-  const results = await searchAllDistributors(query.trim());
-
-  return NextResponse.json(results);
+  try {
+    const results = await searchAllDistributors(query.trim());
+    return NextResponse.json(results);
+  } catch (error) {
+    console.error('Price compare error:', error);
+    return NextResponse.json(
+      { query: query.trim(), results: [], errors: [{ distributor: 'System', error: String(error) }], searchedAt: new Date().toISOString() },
+      { status: 200 } // Return 200 with empty results so UI still works
+    );
+  }
 }

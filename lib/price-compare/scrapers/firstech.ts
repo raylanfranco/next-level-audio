@@ -1,5 +1,6 @@
 import * as cheerio from 'cheerio';
 import type { PriceResult, DistributorScraper } from '../types';
+import { extractCookies, mergeCookies, scoreMatch } from './utils';
 
 const BASE_URL = 'https://www.myfirstech.com';
 const HEADERS = {
@@ -10,22 +11,6 @@ const HEADERS = {
 
 let sessionCookies: string = '';
 let sessionExpiry: number = 0;
-
-function extractCookies(res: Response): string {
-  const setCookies = res.headers.getSetCookie?.() || [];
-  return setCookies.map(c => c.split(';')[0]).join('; ');
-}
-
-function mergeCookies(...cookieStrings: string[]): string {
-  const map = new Map<string, string>();
-  for (const str of cookieStrings) {
-    for (const part of str.split('; ')) {
-      const [key] = part.split('=');
-      if (key) map.set(key, part);
-    }
-  }
-  return Array.from(map.values()).join('; ');
-}
 
 async function ensureSession(): Promise<string> {
   if (sessionCookies && Date.now() < sessionExpiry) return sessionCookies;
@@ -82,16 +67,6 @@ async function ensureSession(): Promise<string> {
   } catch {
     return '';
   }
-}
-
-function scoreMatch(productName: string, query: string): 'exact' | 'high' | 'partial' {
-  const pLower = productName.toLowerCase();
-  const qLower = query.toLowerCase();
-  if (pLower === qLower || pLower.includes(qLower)) return 'exact';
-  const words = qLower.split(/\s+/);
-  const matchCount = words.filter(w => pLower.includes(w)).length;
-  if (matchCount >= words.length * 0.7) return 'high';
-  return 'partial';
 }
 
 async function searchFirstech(query: string): Promise<PriceResult[]> {

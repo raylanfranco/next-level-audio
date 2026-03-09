@@ -1,4 +1,5 @@
 import type { PriceResult, DistributorScraper } from '../types';
+import { extractCookies, mergeCookies, scoreMatch } from './utils';
 
 const BASE_URL = 'https://online.meyerdistributing.com';
 const HEADERS = {
@@ -9,11 +10,6 @@ const HEADERS = {
 
 let authToken: string = '';
 let sessionExpiry: number = 0;
-
-function extractCookies(res: Response): string {
-  const setCookies = res.headers.getSetCookie?.() || [];
-  return setCookies.map(c => c.split(';')[0]).join('; ');
-}
 
 async function ensureSession(): Promise<{ cookies: string; token: string }> {
   if (authToken && Date.now() < sessionExpiry) return { cookies: '', token: authToken };
@@ -89,16 +85,6 @@ async function ensureSession(): Promise<{ cookies: string; token: string }> {
   } catch { /* login failed */ }
 
   return { cookies: '', token: '' };
-}
-
-function scoreMatch(productName: string, query: string): 'exact' | 'high' | 'partial' {
-  const pLower = productName.toLowerCase();
-  const qLower = query.toLowerCase();
-  if (pLower === qLower || pLower.includes(qLower)) return 'exact';
-  const words = qLower.split(/\s+/);
-  const matchCount = words.filter(w => pLower.includes(w)).length;
-  if (matchCount >= words.length * 0.7) return 'high';
-  return 'partial';
 }
 
 async function searchMeyer(query: string): Promise<PriceResult[]> {
