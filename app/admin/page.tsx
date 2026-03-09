@@ -226,19 +226,25 @@ function AdminDashboard() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: q }),
       });
-      if (res.ok) {
-        const data = await res.json();
+      const data = await res.json().catch(() => null);
+      if (data && data.results) {
         setPriceResults(data.results || []);
         setPriceErrors(data.errors || []);
-        setPriceSearchedAt(data.searchedAt);
-        // Add to search history (deduplicated, max 10)
+        setPriceSearchedAt(data.searchedAt || new Date().toISOString());
         setPriceSearchHistory(prev => {
           const filtered = prev.filter(h => h.toLowerCase() !== q.toLowerCase());
           return [q, ...filtered].slice(0, 10);
         });
+      } else {
+        // Show error info from non-OK responses
+        const errMsg = data?.error || `Server returned ${res.status}`;
+        setPriceErrors([{ distributor: 'System', error: errMsg }]);
+        setPriceSearchedAt(new Date().toISOString());
       }
     } catch (error) {
       console.error('Price search error:', error);
+      setPriceErrors([{ distributor: 'System', error: String(error) }]);
+      setPriceSearchedAt(new Date().toISOString());
     } finally {
       setPriceSearching(false);
     }
