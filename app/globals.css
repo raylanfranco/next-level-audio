@@ -331,6 +331,22 @@ input[type="time"]::-webkit-outer-spin-button {
   animation: typing-bounce 1.2s ease-in-out infinite;
 }
 
+/* Brand Marquee */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  animation: marquee 30s linear infinite;
+  width: max-content;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
 /* ===== Performance: Reduced Motion ===== */
 @media (prefers-reduced-motion: reduce) {
   .scanline { display: none !important; }

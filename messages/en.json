@@ -32,6 +32,9 @@
     "pickupOnly": "PICKUP ONLY:",
     "pickupAddress": "Orders are available for in-store pickup at 944 N 9th St, Stroudsburg, PA."
   },
+  "topBanner": {
+    "hours": "Mon-Fri 9AM-7PM | Sat 9AM-3PM"
+  },
   "header": {
     "home": "HOME",
     "services": "SERVICES",

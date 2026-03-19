@@ -112,51 +112,6 @@ export default async function Home() {
       {/* Stats Counter */}
       <StatsCounter />
 
-      {/* Premium Brands */}
-      <section className="py-16 md:py-24 bg-black relative overflow-hidden border-t-2 border-b-2 border-[#E01020]/20">
-        <div className="absolute inset-0 cyber-grid opacity-10"></div>
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <AnimateOnScroll animation="slide-right">
-              <div>
-                <h2 className="text-4xl md:text-5xl font-bold text-white mb-4 neon-glow font-oxanium">
-                  {t('brandsHeading')}
-                </h2>
-                <p className="text-white/70 font-mono text-sm md:text-base">
-                  {t('brandsDescription')}
-                </p>
-              </div>
-            </AnimateOnScroll>
-            <AnimateOnScroll animation="slide-left" delay={0.2}>
-              <div className="grid grid-cols-3 gap-4">
-                {[
-                  { name: 'Sony', image: '/images/brands/stroudsburg_sony.avif' },
-                  { name: 'Compustar', image: '/images/brands/stroudsburg_compustar.avif' },
-                  { name: 'Kicker', image: '/images/brands/stroundsburg_kicker.avif' },
-                  { name: 'Pioneer', image: '/images/brands/stroudsburg_pioneer.avif' },
-                  { name: 'JBL', image: '/images/brands/stroudsburg_jbl.avif' },
-                  { name: 'Stinger', image: '/images/brands/stroudsburg_s.avif' },
-                ].map((brand) => (
-                  <div
-                    key={brand.name}
-                    className="flex items-center justify-center border border-[#E01020]/20 bg-[#E01020]/5 hover:border-[#E01020]/50 hover:bg-[#E01020]/10 transition-all duration-300 aspect-[3/2] overflow-hidden"
-                  >
-                    <Image
-                      src={brand.image}
-                      alt={brand.name}
-                      width={200}
-                      height={133}
-                      className="w-full h-full object-contain p-4 opacity-80 hover:opacity-100 transition-opacity duration-300"
-                      loading="lazy"
-                    />
-                  </div>
-                ))}
-              </div>
-            </AnimateOnScroll>
-          </div>
-        </div>
-      </section>
-
       {/* Products Section */}
       <ProductsSection />
 

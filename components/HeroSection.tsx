@@ -4,6 +4,7 @@ import { Link } from '@/i18n/navigation';
 import { useRef, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useBookingModal } from './BookingModalContext';
+import BrandMarquee from './BrandMarquee';
 
 const DEFAULT_VIDEO_URL = '/videos/hero-video.mp4';
 
@@ -158,8 +159,13 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
         </div>
       </div>
 
+      {/* Brand Marquee */}
+      <div className="absolute bottom-16 left-0 right-0 z-10">
+        <BrandMarquee />
+      </div>
+
       {/* Scroll Indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
+      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
         <svg
           className="w-6 h-6 text-white"
           fill="none"
