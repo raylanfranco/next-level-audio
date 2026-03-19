@@ -25,10 +25,6 @@ import path from 'path';
 // Configuration
 // ---------------------------------------------------------------------------
 
-// Railway deployment: set RAILWAY_VOLUME_MOUNT_PATH=/data to use persistent volume
-const isRailway = !!process.env.RAILWAY_ENVIRONMENT;
-const dataDir = process.env.RAILWAY_VOLUME_MOUNT_PATH || '.';
-
 const CONFIG = {
   // Sonic Electronix fitment URL pattern
   baseUrl: 'https://www.sonicelectronix.com/find-parts-that-fit-',
@@ -57,18 +53,17 @@ const CONFIG = {
   // First 3-5 pages have vehicle-specific parts; later pages are universal.
   maxPagesPerVehicle: 5,
 
-  // Output — use persistent volume on Railway, local ./output otherwise
-  outputDir: `${dataDir}/output`,
-  vehiclesFile: `${dataDir}/output/vehicles.json`,
-  fitmentsFile: `${dataDir}/output/fitments.json`,
+  // Output
+  outputDir: './output',
+  vehiclesFile: './output/vehicles.json',
+  fitmentsFile: './output/fitments.json',
 
   // BayReady API for seeding
-  bayreadyApi: process.env.BAYREADY_API_URL || 'https://bayready-production.up.railway.app',
+  bayreadyApi: 'https://bayready-production.up.railway.app',
   seedBatchSize: 100,
 
-  // Browser — on Railway, Xvfb provides a virtual display so we can run "headed"
-  // Headed mode is critical for Cloudflare bypass via Patchright
-  headless: false,
+  // Browser
+  headless: false, // Headed mode helps bypass Cloudflare
 
   // Test page for inspect/calibration
   testVehicle: { year: 2018, make: 'Honda', model: 'Civic' },
@@ -590,10 +585,10 @@ async function getNextPageUrl(page) {
 }
 
 async function scrapeFitments(testMode = false) {
-  // Load vehicle list — auto-generate if missing (e.g. first Railway deploy)
+  // Load vehicle list
   if (!fs.existsSync(CONFIG.vehiclesFile)) {
-    console.log('Vehicle list not found. Generating from NHTSA API...');
-    await buildVehicleList();
+    console.error('Vehicle list not found. Run: npm run vehicles');
+    process.exit(1);
   }
 
   let vehicles = JSON.parse(fs.readFileSync(CONFIG.vehiclesFile, 'utf-8'));
@@ -622,13 +617,8 @@ async function scrapeFitments(testMode = false) {
 
   if (remaining.length === 0) {
     console.log('All vehicles already scraped!');
-    if (isRailway) {
-      console.log('Railway: scrape complete. Exiting. Run seed manually or redeploy with "seed" command.');
-    }
     return;
   }
-
-  console.log(isRailway ? '(Running on Railway with Xvfb virtual display)' : '(Running locally)');
 
   // Launch browser with stealth settings
   const browser = await chromium.launch({
