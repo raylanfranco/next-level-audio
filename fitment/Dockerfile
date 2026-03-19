@@ -3,6 +3,7 @@ FROM node:20-slim
 # Install Chromium dependencies + Xvfb for headed mode (Cloudflare bypass)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     xvfb \
+    xauth \
     libnss3 \
     libatk1.0-0 \
     libatk-bridge2.0-0 \
