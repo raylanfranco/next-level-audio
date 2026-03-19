@@ -6,7 +6,7 @@ export default function TopBanner() {
   const t = useTranslations('topBanner');
 
   return (
-    <div className="bg-[#E01020] text-white text-xs md:text-sm font-mono">
+    <div className="bg-black text-white/80 text-xs md:text-sm font-mono border-b border-white/10">
       <div className="max-w-7xl mx-auto px-4 py-1.5 flex items-center justify-between">
         {/* Address + Directions */}
         <a

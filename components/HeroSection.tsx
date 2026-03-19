@@ -159,13 +159,8 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
         </div>
       </div>
 
-      {/* Brand Marquee */}
-      <div className="absolute bottom-16 left-0 right-0 z-10">
-        <BrandMarquee />
-      </div>
-
       {/* Scroll Indicator */}
-      <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
+      <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
         <svg
           className="w-6 h-6 text-white"
           fill="none"
@@ -177,6 +172,11 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
         >
           <path d="M19 14l-7 7m0 0l-7-7m7 7V3" />
         </svg>
+      </div>
+
+      {/* Brand Marquee */}
+      <div className="absolute bottom-0 left-0 right-0 z-10">
+        <BrandMarquee />
       </div>
     </section>
   );

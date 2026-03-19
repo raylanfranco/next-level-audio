@@ -8,6 +8,7 @@ import { useBookingModal } from '@/components/BookingModalContext';
 import { useCart } from '@/components/CartContext';
 import { useAuth } from '@/components/AuthContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import TopBanner from '@/components/layout/TopBanner';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -68,6 +69,7 @@ export default function Header() {
           : 'bg-transparent border-[#E01020]/10'
       }`}
     >
+      <TopBanner />
       <div className="container mx-auto px-4">
         <div className="hidden lg:flex items-center justify-center h-28 relative">
           {/* Centered Navigation Group: links + logo + links */}
