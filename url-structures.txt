@@ -1,0 +1,19 @@
+iDataLink - Invalid Credentials. Will need to double check tomorrow.
+
+Meyer Distributing: [Must be SKU]
+URL: https://online.meyerdistributing.com/parts/details/SHE898-205 | https://online.meyerdistributing.com/parts/details/{SKU}
+Selector: Note - Certain pages contain sales, and classes are dynamically generated via Angular. "sale-price" is most likely our best bet.
+<div _ngcontent-ng-c1687670789="" class="sale-line-break ng-star-inserted"> MY COST $2,155.71 </div><!----><div _ngcontent-ng-c1687670789="" class="sale-price ng-star-inserted"> SALE $1,947.10 </div>
+
+DirectTechs - We can ignore this distributor, as no pricing information is available from their website. 
+
+MyFirstTech
+URL: https://www.myfirstech.com/search?s={SKU}&b=approved-brands-only&p=1&so=price-desc
+Selector: 
+<p data-v-1ebd5ebe="" class="ProductCardFull__price bold-font">
+        $52.25
+</p>
+
+ECUSAD
+URL: https://www.ecusad.com/display_category.aspx [Most likely won't work, as it's aspx and doesn't provide query params. This was the URL after I searched for a specific product by its SKU]
+Selector: <span style="font-size: 17px; color: crimson;">$275.00</span>

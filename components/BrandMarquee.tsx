@@ -26,8 +26,8 @@ export default function BrandMarquee() {
   return (
     <div className="relative overflow-hidden py-6" aria-hidden="true">
       {/* Fade edges — wider gradient for subtler transition */}
-      <div className="absolute left-0 top-0 bottom-0 w-40 md:w-56 bg-gradient-to-r from-black via-black/60 to-transparent z-10" />
-      <div className="absolute right-0 top-0 bottom-0 w-40 md:w-56 bg-gradient-to-l from-black via-black/60 to-transparent z-10" />
+      <div className="absolute left-0 top-0 bottom-0 w-40 md:w-56 z-10" />
+      <div className="absolute right-0 top-0 bottom-0 w-40 md:w-56 z-10" />
 
       <div className="marquee-track">
         {allLogos.map((brand, idx) => (

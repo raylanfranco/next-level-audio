@@ -584,7 +584,7 @@ async function getNextPageUrl(page) {
   });
 }
 
-async function scrapeFitments(testMode = false) {
+async function scrapeFitments(testMode = false, yearStart = null, yearEnd = null) {
   // Load vehicle list
   if (!fs.existsSync(CONFIG.vehiclesFile)) {
     console.error('Vehicle list not found. Run: npm run vehicles');
@@ -594,17 +594,30 @@ async function scrapeFitments(testMode = false) {
   let vehicles = JSON.parse(fs.readFileSync(CONFIG.vehiclesFile, 'utf-8'));
   console.log(`Loaded ${vehicles.length} vehicles`);
 
+  // Filter by year range if specified
+  if (yearStart || yearEnd) {
+    const min = yearStart || CONFIG.yearRange.min;
+    const max = yearEnd || CONFIG.yearRange.max;
+    vehicles = vehicles.filter(v => v.year >= min && v.year <= max);
+    console.log(`Year filter: ${min}-${max} → ${vehicles.length} vehicles`);
+  }
+
   if (testMode) {
     vehicles = vehicles.slice(0, 5);
     console.log('TEST MODE: Only scraping first 5 vehicles\n');
   }
 
+  // Determine output file — use chunk-specific file if year range specified
+  const outputFile = (yearStart || yearEnd)
+    ? `${CONFIG.outputDir}/fitments-${yearStart || 'min'}-${yearEnd || 'max'}.json`
+    : CONFIG.fitmentsFile;
+
   // Load existing progress
   ensureOutputDir();
   let allFitments = [];
-  if (fs.existsSync(CONFIG.fitmentsFile)) {
-    allFitments = JSON.parse(fs.readFileSync(CONFIG.fitmentsFile, 'utf-8'));
-    console.log(`Loaded ${allFitments.length} existing fitment records`);
+  if (fs.existsSync(outputFile)) {
+    allFitments = JSON.parse(fs.readFileSync(outputFile, 'utf-8'));
+    console.log(`Loaded ${allFitments.length} existing fitment records from ${path.basename(outputFile)}`);
   }
 
   const completedSlugs = new Set(allFitments.map(f =>
@@ -724,8 +737,8 @@ async function scrapeFitments(testMode = false) {
 
         // Save progress every 10 vehicles
         if (scraped % 10 === 0) {
-          fs.writeFileSync(CONFIG.fitmentsFile, JSON.stringify(allFitments, null, 2));
-          console.log(`  [Progress saved: ${scraped}/${remaining.length}, ${allFitments.length} fitment records]\n`);
+          fs.writeFileSync(outputFile, JSON.stringify(allFitments, null, 2));
+          console.log(`  [Progress saved: ${scraped}/${remaining.length}, ${allFitments.length} fitment records → ${path.basename(outputFile)}]\n`);
         }
 
       } catch (err) {
@@ -742,7 +755,7 @@ async function scrapeFitments(testMode = false) {
 
   } finally {
     // Final save
-    fs.writeFileSync(CONFIG.fitmentsFile, JSON.stringify(allFitments, null, 2));
+    fs.writeFileSync(outputFile, JSON.stringify(allFitments, null, 2));
     await browser.close();
   }
 
@@ -843,6 +856,8 @@ async function seedDatabase() {
 // ---------------------------------------------------------------------------
 
 const command = process.argv[2] || 'help';
+const arg3 = process.argv[3];
+const arg4 = process.argv[4];
 
 switch (command) {
   case 'vehicles':
@@ -857,9 +872,56 @@ switch (command) {
     await scrapeFitments(true);
     break;
 
-  case 'scrape':
-    await scrapeFitments(false);
+  case 'scrape': {
+    // Support: scrape 2005 2010  (year range for parallel workers)
+    const yearStart = arg3 ? parseInt(arg3) : null;
+    const yearEnd = arg4 ? parseInt(arg4) : null;
+    if (yearStart) console.log(`\nWorker mode: years ${yearStart}-${yearEnd || 'max'}\n`);
+    await scrapeFitments(false, yearStart, yearEnd);
     break;
+  }
+
+  case 'merge': {
+    // Merge all fitments-*.json chunk files into fitments.json
+    const chunkFiles = fs.readdirSync(CONFIG.outputDir)
+      .filter(f => f.startsWith('fitments-') && f.endsWith('.json'))
+      .sort();
+
+    if (chunkFiles.length === 0) {
+      console.log('No chunk files found to merge.');
+      break;
+    }
+
+    let merged = [];
+    // Also include existing fitments.json if present
+    if (fs.existsSync(CONFIG.fitmentsFile)) {
+      const existing = JSON.parse(fs.readFileSync(CONFIG.fitmentsFile, 'utf-8'));
+      merged.push(...existing);
+      console.log(`Base: ${existing.length} records from fitments.json`);
+    }
+
+    for (const file of chunkFiles) {
+      const chunk = JSON.parse(fs.readFileSync(`${CONFIG.outputDir}/${file}`, 'utf-8'));
+      console.log(`  + ${chunk.length} records from ${file}`);
+      merged.push(...chunk);
+    }
+
+    // Deduplicate by vehicle slug
+    const seen = new Map();
+    for (const record of merged) {
+      const slug = `${record.vehicle.year}-${slugify(record.vehicle.make)}-${slugify(record.vehicle.model)}`;
+      seen.set(slug, record); // last write wins (newer data)
+    }
+    merged = [...seen.values()].sort((a, b) => {
+      if (a.vehicle.year !== b.vehicle.year) return a.vehicle.year - b.vehicle.year;
+      if (a.vehicle.make !== b.vehicle.make) return a.vehicle.make.localeCompare(b.vehicle.make);
+      return a.vehicle.model.localeCompare(b.vehicle.model);
+    });
+
+    fs.writeFileSync(CONFIG.fitmentsFile, JSON.stringify(merged, null, 2));
+    console.log(`\nMerged: ${merged.length} unique vehicles → fitments.json`);
+    break;
+  }
 
   case 'seed':
     await seedDatabase();
@@ -867,14 +929,24 @@ switch (command) {
 
   default:
     console.log(`
-BayReady Fitment Scraper v2 (Playwright + Crawlee)
+BayReady Fitment Scraper v2 (Patchright + Stealth)
 
 Usage:
-  node scraper.mjs vehicles    Build vehicle list from NHTSA API
-  node scraper.mjs inspect     Open one page in browser, dump HTML
-  node scraper.mjs test        Scrape first 5 vehicles (test mode)
-  node scraper.mjs scrape      Full scrape (resumable)
-  node scraper.mjs seed        Push fitments to BayReady database
+  node scraper.mjs vehicles         Build vehicle list from NHTSA API
+  node scraper.mjs inspect          Open one page in browser, dump HTML
+  node scraper.mjs test             Scrape first 5 vehicles (test mode)
+  node scraper.mjs scrape           Full scrape (resumable)
+  node scraper.mjs scrape 2005 2010 Scrape only years 2005-2010 (parallel worker)
+  node scraper.mjs merge            Merge all chunk files into fitments.json
+  node scraper.mjs seed             Push fitments to BayReady database
+
+Parallel scraping (open 4 terminals):
+  node scraper.mjs scrape 2000 2006
+  node scraper.mjs scrape 2007 2012
+  node scraper.mjs scrape 2013 2019
+  node scraper.mjs scrape 2020 2026
+  # When all finish:
+  node scraper.mjs merge
 
 Workflow:
   1. npm install && npm run setup
