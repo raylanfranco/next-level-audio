@@ -5,6 +5,7 @@ import { useRef, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useBookingModal } from './BookingModalContext';
 import BrandMarquee from './BrandMarquee';
+import CloseoutCarousel from './CloseoutCarousel';
 
 const DEFAULT_VIDEO_URL = '/videos/hero-video.mp4';
 
@@ -126,35 +127,43 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
       <div className="absolute inset-0 cyber-grid z-0"></div>
 
       {/* Content with Staggered Entrance */}
-      <div className="relative z-10 container mx-auto px-4 text-center">
-        <div className="max-w-4xl mx-auto">
-          <p className="hero-stagger hero-stagger-1 text-[#E01020] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft font-oxanium">
-            {t('welcome')}
-          </p>
-          <h1 className="hero-stagger hero-stagger-2 text-5xl md:text-7xl lg:text-8xl font-bold mb-6 text-white leading-tight neon-glow font-oxanium">
-            {t('elevate')}
-            <span className="block text-[#E01020] neon-glow-soft">{t('yourJourney')}</span>
-            <span className="block text-sm md:text-lg text-white font-normal mt-2">
-              <TypewriterText text={t('typewriter')} />
-            </span>
-          </h1>
-          <p className="hero-stagger hero-stagger-3 text-lg md:text-xl text-white mb-10 max-w-2xl mx-auto leading-relaxed font-mono">
-            {t('description')}<br />
-            {t('description2')}
-          </p>
-          <div className="hero-stagger hero-stagger-4 flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <button
-              onClick={openModal}
-              className="px-8 py-4 bg-[#E01020]/20 text-white border-2 border-[#E01020] font-semibold text-lg hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button cursor-pointer font-oxanium"
-            >
-              {tc('bookAppointment')}
-            </button>
-            <Link
-              href="/services"
-              className="px-8 py-4 bg-black/40 backdrop-blur-sm text-white border-2 border-[#E01020]/50 font-semibold text-lg hover:border-[#E01020] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button font-oxanium"
-            >
-              {tc('ourServices')}
-            </Link>
+      <div className="relative z-10 container mx-auto px-4">
+        <div className="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+          {/* Left: Hero text */}
+          <div className="flex-1 text-center lg:text-left">
+            <p className="hero-stagger hero-stagger-1 text-[#E01020] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft font-oxanium">
+              {t('welcome')}
+            </p>
+            <h1 className="hero-stagger hero-stagger-2 text-5xl md:text-7xl lg:text-7xl xl:text-8xl font-bold mb-6 text-white leading-tight neon-glow font-oxanium">
+              {t('elevate')}
+              <span className="block text-[#E01020] neon-glow-soft">{t('yourJourney')}</span>
+              <span className="block text-sm md:text-lg text-white font-normal mt-2">
+                <TypewriterText text={t('typewriter')} />
+              </span>
+            </h1>
+            <p className="hero-stagger hero-stagger-3 text-lg md:text-xl text-white mb-10 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-mono">
+              {t('description')}<br />
+              {t('description2')}
+            </p>
+            <div className="hero-stagger hero-stagger-4 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start items-center">
+              <button
+                onClick={openModal}
+                className="px-8 py-4 bg-[#E01020]/20 text-white border-2 border-[#E01020] font-semibold text-lg hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button cursor-pointer font-oxanium"
+              >
+                {tc('bookAppointment')}
+              </button>
+              <Link
+                href="/services"
+                className="px-8 py-4 bg-black/40 backdrop-blur-sm text-white border-2 border-[#E01020]/50 font-semibold text-lg hover:border-[#E01020] hover:bg-black/60 transition-all duration-300 transform hover:scale-105 neon-border-soft cyber-button font-oxanium"
+              >
+                {tc('ourServices')}
+              </Link>
+            </div>
+          </div>
+
+          {/* Right: Closeout carousel (desktop) */}
+          <div className="hero-stagger hero-stagger-4 hidden lg:block flex-shrink-0 w-full max-w-md">
+            <CloseoutCarousel />
           </div>
         </div>
       </div>

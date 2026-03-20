@@ -145,14 +145,39 @@ function buildSearchQuery(item: CloverItem): string | null {
   return `${query} product`;
 }
 
+// Track whether Google is blocked (CAPTCHA) so we auto-switch to Bing
+let googleBlocked = false;
+
+/**
+ * Detect if the current page is a Google CAPTCHA/block page.
+ */
+async function isGoogleCaptcha(page: Page): Promise<boolean> {
+  return page.evaluate(() => {
+    return !!(
+      document.querySelector('#captcha-form, .g-recaptcha, #recaptcha') ||
+      document.title.includes('unusual traffic') ||
+      document.body?.innerText?.includes('unusual traffic')
+    );
+  });
+}
+
 /**
  * Search Google Images using Playwright and return the first product image URL.
  * Clicks on the first thumbnail to reveal the full-resolution source URL.
  */
 async function searchGoogleImages(page: Page, query: string): Promise<string | null> {
+  if (googleBlocked) return null;
+
   try {
     const searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}&tbm=isch&udm=2`;
     await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
+
+    // Check for CAPTCHA before proceeding
+    if (await isGoogleCaptcha(page)) {
+      console.log('  ⚠ Google CAPTCHA detected — switching to Bing Images for remaining items');
+      googleBlocked = true;
+      return null;
+    }
 
     // Wait for thumbnails to appear
     await page.waitForSelector('#search img, #islrg img, [data-ri] img', { timeout: 8000 }).catch(() => {});
@@ -259,14 +284,73 @@ async function extractAnyImageUrl(page: Page): Promise<string | null> {
 }
 
 /**
- * Try UPC-based Google search first (more accurate), then name-based.
+ * Search Bing Images — more lenient with bot detection than Google.
+ * Extracts the source URL from Bing's image metadata (m attribute in JSON).
+ */
+async function searchBingImages(page: Page, query: string): Promise<string | null> {
+  try {
+    const searchUrl = `https://www.bing.com/images/search?q=${encodeURIComponent(query)}&form=HDRSC2`;
+    await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
+
+    // Wait for image results
+    await page.waitForSelector('.iusc, .imgpt, .mimg', { timeout: 8000 }).catch(() => {});
+    await sleep(1000);
+
+    // Extract image URL from Bing's data attributes
+    const imageUrl = await page.evaluate(() => {
+      // Bing stores full-res URLs in a JSON 'm' attribute on image containers
+      const containers = document.querySelectorAll('a.iusc, div.iusc, a.imgpt');
+      for (const el of containers) {
+        const mAttr = el.getAttribute('m');
+        if (mAttr) {
+          try {
+            const data = JSON.parse(mAttr);
+            if (data.murl && data.murl.startsWith('http')) {
+              return data.murl;
+            }
+          } catch {}
+        }
+      }
+
+      // Fallback: look for image thumbnails with data-src-hq or src
+      const imgs = document.querySelectorAll('.mimg, .iusc img, .imgpt img');
+      for (const img of imgs) {
+        const el = img as HTMLImageElement;
+        const src = el.getAttribute('data-src-hq') || el.getAttribute('src2') || el.src;
+        if (
+          src &&
+          src.startsWith('http') &&
+          !src.includes('bing.com') &&
+          !src.includes('bing.net') &&
+          !src.includes('microsoft.com')
+        ) {
+          return src;
+        }
+      }
+
+      return null;
+    });
+
+    return imageUrl;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Try Google first (UPC then name), fall back to Bing if Google is blocked.
  */
 async function findProductImage(
   page: Page,
   item: CloverItem
 ): Promise<{ imageUrl: string | null; source: CacheEntry['source'] }> {
-  // Try UPC search first if available
-  if (item.code && item.code.length >= 8) {
+  const query = buildSearchQuery(item);
+  if (!query) {
+    return { imageUrl: null, source: 'skipped' };
+  }
+
+  // Try UPC-based Google search first if available
+  if (!googleBlocked && item.code && item.code.length >= 8) {
     const upcUrl = await searchGoogleImages(page, `${item.code} product`);
     if (upcUrl) {
       return { imageUrl: upcUrl, source: 'google_upc' };
@@ -274,16 +358,29 @@ async function findProductImage(
     await sleep(DELAY_BETWEEN_SEARCHES_MS);
   }
 
-  // Fall back to name search
-  const query = buildSearchQuery(item);
-  if (!query) {
-    return { imageUrl: null, source: 'skipped' };
+  // Try Google name search
+  if (!googleBlocked) {
+    const googleUrl = await searchGoogleImages(page, query);
+    if (googleUrl) {
+      return { imageUrl: googleUrl, source: 'google_images' };
+    }
+    await sleep(DELAY_BETWEEN_SEARCHES_MS);
   }
 
-  const nameUrl = await searchGoogleImages(page, query);
+  // Fall back to Bing Images
+  // Try UPC on Bing first
+  if (item.code && item.code.length >= 8) {
+    const bingUpcUrl = await searchBingImages(page, `${item.code} product`);
+    if (bingUpcUrl) {
+      return { imageUrl: bingUpcUrl, source: 'google_upc' }; // reuse source label for cache compat
+    }
+    await sleep(DELAY_BETWEEN_SEARCHES_MS);
+  }
+
+  const bingUrl = await searchBingImages(page, query);
   return {
-    imageUrl: nameUrl,
-    source: nameUrl ? 'google_images' : 'not_found',
+    imageUrl: bingUrl,
+    source: bingUrl ? 'google_images' : 'not_found', // reuse source label for cache compat
   };
 }
 

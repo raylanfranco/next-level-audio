@@ -71,8 +71,21 @@ export default function Header() {
     >
       <TopBanner />
       <div className="container mx-auto px-4">
-        <div className="hidden lg:flex items-center justify-center h-28 relative">
-          {/* Centered Navigation Group: links + logo + links */}
+        <div className="hidden lg:flex items-center h-20">
+          {/* Logo — left aligned */}
+          <Link href="/" className="flex items-center flex-shrink-0 mr-10">
+            <Image
+              src="/images/logo.webp"
+              alt="Next Level Audio"
+              width={945}
+              height={745}
+              className="h-16 lg:h-20 w-auto transition-all duration-300 hover:scale-105"
+              priority
+              fetchPriority="high"
+            />
+          </Link>
+
+          {/* Navigation — fills center */}
           <nav className="flex items-center space-x-8">
             <Link
               href="/"
@@ -130,21 +143,6 @@ export default function Header() {
               {t('products')}
               {navUnderline}
             </Link>
-          </nav>
-
-          <Link href="/" className="flex items-center justify-center flex-shrink-0 mx-8 mt-8">
-            <Image
-              src="/images/logo.webp"
-              alt="Next Level Audio"
-              width={945}
-              height={745}
-              className="h-24 lg:h-32 w-auto transition-all duration-300 hover:scale-105"
-              priority
-              fetchPriority="high"
-            />
-          </Link>
-
-          <nav className="flex items-center space-x-8">
             <Link
               href="/gallery"
               className={navLinkClass}
@@ -168,8 +166,8 @@ export default function Header() {
             </button>
           </nav>
 
-          {/* Account + Cart + Contact — absolute so they don't shift the centered group */}
-          <div className="absolute right-0 flex items-center space-x-6">
+          {/* Account + Cart + Contact — pushed to right */}
+          <div className="ml-auto flex items-center space-x-6">
             <Link
               href={user ? '/account' : '/account/login'}
               className={`${navLinkClass} relative`}
