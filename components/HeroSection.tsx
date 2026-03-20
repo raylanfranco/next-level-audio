@@ -134,7 +134,7 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
             <p className="hero-stagger hero-stagger-1 text-[#E01020] text-sm uppercase tracking-widest mb-4 font-semibold neon-glow-soft font-oxanium">
               {t('welcome')}
             </p>
-            <h1 className="hero-stagger hero-stagger-2 text-5xl md:text-7xl lg:text-7xl xl:text-8xl font-bold mb-6 text-white leading-tight neon-glow font-oxanium">
+            <h1 className="hero-stagger hero-stagger-2 text-[clamp(2.5rem,6vw,6rem)] font-bold mb-6 text-white leading-tight neon-glow font-oxanium">
               {t('elevate')}
               <span className="block text-[#E01020] neon-glow-soft">{t('yourJourney')}</span>
               <span className="block text-sm md:text-lg text-white font-normal mt-2">
