@@ -7,7 +7,7 @@ interface BookingWizardModalProps {
   onClose: () => void;
 }
 
-const BOOKING_URL = 'https://bayready.vercel.app/book/cmlh31wyn000068j37couyy08';
+const BOOKING_URL = 'https://bayready-core.vercel.app/book/cmn7rxnc6000001ofxq4dea0q';
 
 export default function BookingWizardModal({ isOpen, onClose }: BookingWizardModalProps) {
   const [iframeLoaded, setIframeLoaded] = useState(false);
@@ -72,7 +72,7 @@ export default function BookingWizardModal({ isOpen, onClose }: BookingWizardMod
             src={BOOKING_URL}
             title="Book an Appointment"
             className={`w-full h-full border-0 ${iframeError ? 'hidden' : ''}`}
-            style={{ filter: 'hue-rotate(145deg)' }}
+            style={{}}
             onLoad={() => setIframeLoaded(true)}
             onError={() => setIframeError(true)}
             allow="payment"
