@@ -1,57 +1,98 @@
-# Current Work — Handoff Note
+# Session Handoff — 2026-03-25/26
 
-## Last Updated: 2026-03-07
+## What Was Done
 
-## Completed This Session (QA Fixes + Chatbot)
+### 1. Victory Rush Package Ecosystem
+- Created `victory-rush` GitHub org (free tier)
+- **`@victory-rush/bayready-core@0.1.0`** — published to GitHub Packages
+  - Repo: `victory-rush/bayready-core` (forked from `raylanfranco/bayready-core`)
+  - 108 files, 215kB — full NestJS + React + Prisma booking platform
+  - GitHub Actions workflow auto-publishes on release
+- **`@victory-rush/bayready-automotive@0.1.0`** — published to GitHub Packages
+  - Repo: `victory-rush/bayready-automotive`
+  - 25 files, 11.3kB — vehicle intake, fitment DB, tint zones, parts tracking
 
-### QA Fixes — All 13 Items DONE
-1. **EN/ES language toggle** — `window.location.href` hard refresh (was `router.replace`)
-2. **Saturday hours** — updated to 3PM everywhere (footer i18n, chatbot config, BayReady availability)
-3. **BayReady Saturday booking** — PATCH'd availability rules to 09:00-15:00
-4. **Filter Unknown customers** — `.filter(c => c.firstName || c.lastName)` in admin
-5. **Phone formatting** — `lib/formatPhone.ts` → 5 forms (contact, careers, checkout, inquiry, quote flow)
-6. **Careers 500 fix** — created `career_applications` table, removed job_listings entirely
-7. **Quote calculator** — rewritten with $125/hr × hour ranges per service
-8. **Order details** — expandable rows with line items, notes, payment state, timestamps
-9. **Orders CRUD** — `app/api/clover/orders/[id]/route.ts` (GET/PATCH/DELETE), admin UI
-10. **Customer cards** — card grid with email/phone from Clover expand, marketing badge
-11. **Contact form** — verified Resend wiring is correct
-12. **BayReady service images** — 9 category fallback images in `public/images/services/`
-13. **Supabase redirect** — user configured Site URL in dashboard
+### 2. Infrastructure Renames
+- Railway: `bayready-bdccb` → `bayready-core` (domain: `bayready-core-production.up.railway.app`)
+- Vercel: `bayready-bdccb` → `bayready-core` (frontend: `bayready-core.vercel.app`)
+- VITE_API_URL and FRONTEND_URL updated accordingly
 
-### Chatbot Enhancements
-- **Disabled Check Fitment** — removed button, simplified tool to "call us" response
-- **Embedded Google Map** — new `map` screen with iframe + "GET DIRECTIONS" CTA
-- **Dynamic pricing** — `getQuoteEstimate` tool returns real $125/hr pricing from `servicePricing` array
-- **Updated Saturday hours** in chatbot config to 3PM
-- **Full test suite** — 10 query types validated (pricing, combos, services, hours, location, booking, fitment)
+### 3. Billy's BayReady Instance (Bad Decisions Motorcycle & Boat)
+- Merchant registered: `cmn6u870r000001n6gicohrsc`
+- 4 services: Custom Paint, Powder Coating, Metal Fabrication, Cycle Repair (60-min, $0 TBD)
+- Availability: Mon-Fri 9-5, Sat 9-1, Sun closed
+- Full E2E booking flow tested and working
+- PWA installed on iPad — push notifications confirmed working
 
-### User Configured (Dashboard)
-- `SUPABASE_SERVICE_ROLE_KEY` added to `.env.local`
-- `RESEND_API_KEY` added to Vercel
-- `career_applications` table + `resumes` bucket created in Supabase
-- Supabase Auth Site URL + Redirect URLs set for production
+### 4. Bug Fixes (committed to `raylanfranco/bayready-core`)
+- Vehicle step conditional: `merchant.settings.vertical === 'automotive'`
+- Calendar UTC rendering: `getUTCHours()`/`getUTCMinutes()` for booking positioning
+- Week range off-by-one: replaced `toISOString()` with `toLocalDateString()` helper
+- Dashboard content area scrolling: added `overflow-y-auto` to main content
 
-## Still Running
-- **Fitment scraper** — optimized: 28 popular makes, max 5 pages/vehicle (~16,613 vehicles)
-  - When done: `npm run seed` → re-enable Check Fitment in config + chat route
+### 5. Stripe Connect (Standard) — Multi-Tenant Payments
+- **Backend:** OAuth flow (`GET /stripe/connect`, callback, disconnect, status)
+- **Backend:** `StripeService.createPaymentIntent` uses `Stripe-Account` header for connected merchants
+- **Frontend:** SettingsPage Payments section (Connect/Disconnect buttons + toast)
+- **Frontend:** BookingPage fetches per-merchant publishable key dynamically
+- **Prisma migration:** `stripeAccessToken`, `stripePublishableKey`, `stripeConnected`, `stripeConnectedAt`
+- **Env vars added:** `STRIPE_CLIENT_ID`, `STRIPE_REDIRECT_URI` on Railway
+- **Stripe Connect verified working** — OAuth flow completes, returns to dashboard
+- Live keys activated after Stripe Connect approval came through
 
-## Key Files Changed
-- `components/LanguageSwitcher.tsx`, `messages/en.json`, `messages/es.json`
-- `lib/formatPhone.ts` (NEW), applied to 5 form files
-- `app/api/careers/applications/route.ts` (rewritten), `app/api/careers/jobs/` (DELETED)
-- `types/career.ts`, `types/clover.ts` (updated)
-- `app/admin/page.tsx` (major: orders detail/CRUD, customer cards, removed jobs)
-- `app/api/clover/orders/[id]/route.ts` (NEW), `app/api/clover/customers/route.ts`
-- `components/QuoteCalculator.tsx` (rewritten)
-- `lib/chatbot/config.ts`, `app/api/chat/route.ts` (pricing tool + fitment disabled)
-- `components/ChatWidget.tsx`, `components/chat-widget/ContactActionBar.tsx`, `types.ts`
-- `bayready/frontend/src/pages/BookingPage.tsx`, `ServicesPage.tsx` (default images)
-- `bayready/frontend/public/images/services/` (9 new images)
+### 6. PWA Icons
+- Generated 192px, 512px, and 180px (apple-touch-icon) PNGs from logo.svg
+- Manifest and index.html updated
+
+### 7. Product Images
+- Ran `fill-missing-images.ts` against UPCitemdb API
+- Filled previously-null entries with retailer image URLs
+- Script added to `scripts/` for future use
+
+### 8. UI Revamp — ATTEMPTED, REVERTED
+- Extracted dark amber design system from Variant exports into CSS
+- Rewrote DashboardLayout with dark theme (looked good)
+- Attempted sed-based reskin of BookingsPage, ServicesPage, CustomersPage, SettingsPage
+- **sed on JSX caused pervasive syntax errors** — orphaned double quotes, broken className/style splits
+- **Reverted all UI changes** to restore working light theme
+- Variant design exports preserved in `bayready-ui-revamp/` for future session
+
+**Lesson learned:** Never use sed to modify JSX/TSX files. Use the Write tool to rewrite components completely, or use Python scripts with proper string handling.
+
+## Current State
+
+### Deployed & Working
+- **BayReady Core Backend:** `bayready-core-production.up.railway.app`
+- **BayReady Core Frontend:** `bayready-core.vercel.app` (light theme, fully functional)
+- **Public booking URL:** `bayready-core.vercel.app/book/cmn6u870r000001n6gicohrsc`
+- **Dashboard login:** `bayready-core.vercel.app/login`
+
+### Stripe Connect
+- Live keys active, OAuth flow working
+- Billy needs to connect his Stripe via the dashboard Settings page
+- Ben needs Stripe keys wired when he migrates to core
 
 ## Next Session Priorities
-1. Fitment scraper complete → seed → re-enable Check Fitment
-2. Deploy BayReady frontend (service images)
-3. Android Phases 4-7
-4. Product image fixes in `data/product-images.json`
-5. Wire up auth protection for account pages
+
+### 1. UI Revamp (Dark Amber Theme) — REDO
+- Variant exports ready in `bayready-ui-revamp/`
+- Approach: rewrite each component file completely (Write tool), NOT sed
+- Order: DashboardLayout → BookingsPage → ServicesPage → CustomersPage → SettingsPage
+- Design system CSS already extracted (revert undid it, but it's in bayready-ui-revamp/index.css)
+
+### 2. Billy's Stripe Test
+- Connect Stripe via dashboard Settings
+- Test booking with deposit using test card 4242...
+- Verify PaymentIntent in Billy's Stripe dashboard
+
+### 3. Ben (NLA) Migration
+- Get Stripe API keys
+- Set `merchant.settings.vertical = 'automotive'`
+- Update BookingWizardModal iframe URL
+- Test automotive booking flow
+
+### 4. Outstanding Items
+- Product images: some still wrong/null in `data/product-images.json`
+- Wire up auth protection for NLA account pages
+- Fitment migration + seed on Railway
+- Android Phases 4-7
