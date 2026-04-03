@@ -10155,5 +10155,47 @@
     "name": "Cable Worx Braided 1.2  AC BK1",
     "upc": "649910386905",
     "fetchedAt": "2026-03-26T16:04:26.586Z"
+  },
+  "9DVH84VFWS43R": {
+    "imageUrl": "/images/products/jeep-wrangler.jpg",
+    "source": "local",
+    "name": "For Jeep Wrangler Unlimited 2007-2017 Radio Upgrade",
+    "upc": null,
+    "fetchedAt": "2026-04-03T16:40:41.307Z"
+  },
+  "8MHNC9DARG7GE": {
+    "imageUrl": "/images/products/2009-2014-f150-250.jpg",
+    "source": "local",
+    "name": "13\" Android Vertical Screen Navigation Radio For Ford F150/F250",
+    "upc": null,
+    "fetchedAt": "2026-04-03T16:40:41.316Z"
+  },
+  "KPVBBY147NPTM": {
+    "imageUrl": "/images/products/2014-2019-chevy-silverado.jpg",
+    "source": "local",
+    "name": "Android 13/14 Special Edition 12.1 Fast Boot Navi Radio Silverado/Sierra",
+    "upc": null,
+    "fetchedAt": "2026-04-03T16:40:41.316Z"
+  },
+  "ZQATF2T0V94A8": {
+    "imageUrl": "/images/products/ford-f150.jpg",
+    "source": "local",
+    "name": "14.4 Android/CarPlay Headunit Tesla Radio Ford F150/250 2009-2014",
+    "upc": null,
+    "fetchedAt": "2026-04-03T16:40:41.316Z"
+  },
+  "WH066ANAKTC70": {
+    "imageUrl": "/images/products/2012-2016-buick-encore.jpg",
+    "source": "local",
+    "name": "2013-2016 Buick Encore Android/CarPlay Headunit",
+    "upc": null,
+    "fetchedAt": "2026-04-03T16:40:41.316Z"
+  },
+  "MY2CSWTFG0X5E": {
+    "imageUrl": "/images/products/dodge-ram-1500-2009-2018.jpg",
+    "source": "local",
+    "name": "12.1/13 Android/CarPlay Radio Dodge Ram 1500-3500 2009-2018",
+    "upc": null,
+    "fetchedAt": "2026-04-03T16:40:41.316Z"
   }
 }
