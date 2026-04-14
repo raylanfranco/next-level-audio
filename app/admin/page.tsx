@@ -115,6 +115,7 @@ function AdminDashboard() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [applications, setApplications] = useState<CareerApplication[]>([]);
+  const [selectedApplication, setSelectedApplication] = useState<CareerApplication | null>(null);
 
   // Best sellers state
   interface BestSellerRow {
@@ -1575,7 +1576,13 @@ function AdminDashboard() {
                           </td>
                           <td className="px-6 py-3">
                             {app.cover_letter ? (
-                              <div className={`${textMuted} text-xs max-w-xs truncate italic`}>&ldquo;{app.cover_letter}&rdquo;</div>
+                              <button
+                                onClick={() => setSelectedApplication(app)}
+                                className={`${textAccent} text-xs underline text-left max-w-xs truncate italic cursor-pointer hover:opacity-80`}
+                                title="Click to view full cover letter"
+                              >
+                                &ldquo;{app.cover_letter}&rdquo;
+                              </button>
                             ) : (
                               <span className={`${textMuted} text-xs`}>None</span>
                             )}
@@ -1609,6 +1616,69 @@ function AdminDashboard() {
                   </div>
                 )}
               </div>
+
+              {selectedApplication && (
+                <div
+                  className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
+                  onClick={() => setSelectedApplication(null)}
+                >
+                  <div
+                    className={`${bgCard} border ${borderColor} rounded-lg max-w-2xl w-full max-h-[85vh] overflow-hidden flex flex-col`}
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className={`flex items-start justify-between p-6 border-b ${borderColor}`}>
+                      <div>
+                        <h3 className={`text-xl font-bold ${textPrimary}`}>{selectedApplication.applicant_name}</h3>
+                        <div className={`${textSecondary} text-sm mt-1`}>{selectedApplication.applicant_email}</div>
+                        {selectedApplication.applicant_phone && (
+                          <div className={`${textMuted} text-sm`}>{selectedApplication.applicant_phone}</div>
+                        )}
+                        <div className={`${textSecondary} text-sm mt-2`}>
+                          <span className={textMuted}>Position: </span>
+                          {selectedApplication.position || 'General Application'}
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => setSelectedApplication(null)}
+                        className={`${textMuted} hover:${textPrimary} text-2xl leading-none px-2`}
+                        aria-label="Close"
+                      >
+                        &times;
+                      </button>
+                    </div>
+                    <div className="p-6 overflow-y-auto flex-1">
+                      <div className={`${textSecondary} text-xs uppercase tracking-wide font-medium mb-2`}>Cover Letter</div>
+                      {selectedApplication.cover_letter ? (
+                        <div className={`${textPrimary} text-sm whitespace-pre-wrap leading-relaxed`}>
+                          {selectedApplication.cover_letter}
+                        </div>
+                      ) : (
+                        <div className={`${textMuted} text-sm italic`}>No cover letter provided.</div>
+                      )}
+                    </div>
+                    <div className={`flex items-center justify-between gap-3 p-4 border-t ${borderColor}`}>
+                      {selectedApplication.resume_url ? (
+                        <a
+                          href={selectedApplication.resume_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`${textAccent} text-sm underline`}
+                        >
+                          Download Resume
+                        </a>
+                      ) : (
+                        <span className={`${textMuted} text-sm`}>No resume attached</span>
+                      )}
+                      <button
+                        onClick={() => setSelectedApplication(null)}
+                        className={`px-4 py-2 border ${borderColor} ${textPrimary} text-sm ${btnHover} transition-colors`}
+                      >
+                        Close
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
