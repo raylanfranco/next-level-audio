@@ -87,6 +87,17 @@ export default function Footer() {
           <p className="text-white/60 text-sm font-mono">
             {t('copyright', { year: new Date().getFullYear() })}
           </p>
+          <p className="text-white/40 text-xs font-mono mt-2">
+            Designed &amp; developed by{' '}
+            <a
+              href="https://www.victoryrush.dev"
+              target="_blank"
+              rel="noopener"
+              className="text-white/60 hover:text-[#E01020] transition-colors neon-glow-soft"
+            >
+              Victory Rush
+            </a>
+          </p>
         </div>
       </div>
     </footer>
