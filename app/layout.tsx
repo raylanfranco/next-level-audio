@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Oxanium } from "next/font/google";
+import { Geist, Geist_Mono, Oxanium, Teko, Rajdhani } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import "./globals.css";
@@ -23,6 +23,21 @@ const oxanium = Oxanium({
   subsets: ["latin"],
   display: "swap",
   weight: ["600", "700"],
+});
+
+// V2 revamp — Variant design system fonts (Teko display + Rajdhani body)
+const teko = Teko({
+  variable: "--font-teko",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
+});
+
+const rajdhani = Rajdhani({
+  variable: "--font-rajdhani",
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -127,7 +142,7 @@ export default async function RootLayout({
         />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${oxanium.variable} antialiased bg-black`}
+        className={`${geistSans.variable} ${geistMono.variable} ${oxanium.variable} ${teko.variable} ${rajdhani.variable} antialiased bg-black`}
       >
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ClientLayout>

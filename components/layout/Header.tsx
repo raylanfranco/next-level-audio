@@ -50,15 +50,11 @@ export default function Header() {
     return () => { document.body.style.overflow = ''; };
   }, [isMenuOpen]);
 
-  const navLinkClass = `relative transition-all duration-300 font-medium text-sm group/link font-oxanium ${
-    isScrolled
-      ? 'text-white/80 hover:text-[#FF2A3A] neon-glow-soft cursor-pointer'
-      : 'text-[#E01020] hover:text-[#FF2A3A] neon-glow-soft cursor-pointer'
-  }`;
-
-  const navUnderline = (
-    <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-[#E01020] transition-all duration-300 group-hover/link:w-full shadow-[0_0_6px_#E01020]" />
-  );
+  // V2: Variant navbar link styling — chrome→white with red underglow,
+  // uppercase Rajdhani. The .nav-link class supplies the animated underline,
+  // so no separate navUnderline span is needed.
+  const navLinkClass =
+    'nav-link font-ui text-sm font-bold tracking-widest uppercase cursor-pointer';
 
   return (
     <>
@@ -66,33 +62,34 @@ export default function Header() {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
         isScrolled
           ? 'bg-black/95 backdrop-blur-md shadow-lg border-[#E01020]/20'
-          : 'bg-transparent border-[#E01020]/10'
+          : 'bg-gradient-to-b from-black/80 to-transparent backdrop-blur-[2px] border-transparent'
       }`}
     >
       <TopBanner />
-      <div className="container mx-auto px-4">
+      <div className="px-6 lg:px-12">
         <div className="hidden lg:flex items-center h-20">
-          {/* Logo — left aligned */}
-          <Link href="/" className="flex items-center flex-shrink-0 mr-10">
-            <Image
-              src="/images/logo.webp"
-              alt="Next Level Audio"
-              width={945}
-              height={745}
-              className="h-16 lg:h-20 w-auto transition-all duration-300 hover:scale-105"
-              priority
-              fetchPriority="high"
-            />
-          </Link>
+          {/* Logo — far left (flex-1 zone so nav can truly center) */}
+          <div className="flex-1 flex items-center">
+            <Link href="/" className="flex items-center flex-shrink-0">
+              <Image
+                src="/images/logo.webp"
+                alt="Next Level Audio"
+                width={945}
+                height={745}
+                className="h-16 lg:h-20 w-auto transition-all duration-300 hover:scale-105"
+                priority
+                fetchPriority="high"
+              />
+            </Link>
+          </div>
 
-          {/* Navigation — fills center */}
-          <nav className="flex items-center space-x-8">
+          {/* Navigation — centered */}
+          <nav className="flex items-center justify-center space-x-8">
             <Link
               href="/"
               className={navLinkClass}
             >
               {t('home')}
-              {navUnderline}
             </Link>
 
             {/* Services dropdown */}
@@ -110,24 +107,23 @@ export default function Header() {
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                 </svg>
-                {navUnderline}
               </Link>
 
               {/* Dropdown panel */}
               <div className="absolute top-full left-1/2 -translate-x-1/2 pt-3 opacity-0 invisible group-hover/dropdown:opacity-100 group-hover/dropdown:visible transition-all duration-200">
-                <div className="bg-black/95 backdrop-blur-md border-2 border-[#E01020]/30 min-w-[200px] py-2 shadow-[0_0_20px_rgba(224,16,32,0.15)]">
+                <div className="bg-graphite/95 backdrop-blur-md border border-white/10 min-w-[200px] py-2 shadow-[0_0_20px_rgba(0,0,0,0.6)]">
                   <Link
                     href="/services"
-                    className="block px-5 py-2.5 text-white/60 hover:text-[#E01020] hover:bg-[#E01020]/5 transition-colors text-xs tracking-widest font-oxanium"
+                    className="block px-5 py-2.5 font-ui text-chrome-500 hover:text-electric-red hover:bg-white/5 transition-colors text-xs tracking-widest uppercase"
                   >
                     {t('allServices')}
                   </Link>
-                  <div className="border-t border-[#E01020]/10 mx-3 my-1" />
+                  <div className="border-t border-white/10 mx-3 my-1" />
                   {serviceSubLinks.map((sub) => (
                     <Link
                       key={sub.href}
                       href={sub.href}
-                      className="block px-5 py-2.5 text-white/80 hover:text-[#FF2A3A] hover:bg-[#E01020]/5 transition-colors text-xs tracking-widest font-oxanium"
+                      className="block px-5 py-2.5 font-ui text-chrome-300 hover:text-white hover:bg-white/5 transition-colors text-xs tracking-widest uppercase"
                     >
                       {sub.label.toUpperCase()}
                     </Link>
@@ -141,36 +137,32 @@ export default function Header() {
               className={navLinkClass}
             >
               {t('products')}
-              {navUnderline}
             </Link>
             <Link
               href="/gallery"
               className={navLinkClass}
             >
               {t('gallery')}
-              {navUnderline}
             </Link>
             <Link
               href="/careers"
               className={navLinkClass}
             >
               {t('careers')}
-              {navUnderline}
             </Link>
             <button
               onClick={openModal}
               className={navLinkClass}
             >
               {t('book')}
-              {navUnderline}
             </button>
           </nav>
 
-          {/* Account + Cart + Contact — pushed to right */}
-          <div className="ml-auto flex items-center space-x-6">
+          {/* Account + Cart + Contact — right zone (flex-1 to balance the logo zone) */}
+          <div className="flex-1 flex items-center justify-end space-x-6">
             <Link
               href={user ? '/account' : '/account/login'}
-              className={`${navLinkClass} relative`}
+              className="relative text-chrome-300 hover:text-electric-red transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric-red focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               aria-label={user ? t('myAccount') : tc('signIn')}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -179,25 +171,21 @@ export default function Header() {
             </Link>
             <button
               onClick={openCheckout}
-              className={`${navLinkClass} relative`}
+              className="relative text-chrome-300 hover:text-electric-red transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric-red focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               aria-label={t('shoppingCart')}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
               </svg>
               {itemCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-[#E01020] text-black text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                <span className="absolute -top-2 -right-2 bg-electric-red text-black text-[10px] font-bold w-5 h-5 flex items-center justify-center">
                   {itemCount > 9 ? '9+' : itemCount}
                 </span>
               )}
             </button>
             <Link
               href="/contact"
-              className={`px-4 py-2 border-2 transition-all duration-300 font-medium text-sm cyber-button ${
-                isScrolled
-                  ? 'bg-[#E01020]/20 text-white border-[#E01020] hover:bg-[#E01020]/30 neon-border-soft'
-                  : 'bg-[#E01020]/10 text-white border-[#E01020]/50 hover:bg-[#E01020]/20 neon-border-soft'
-              } font-oxanium`}
+              className="btn-glow font-ui px-8 py-3 text-sm font-bold tracking-[0.2em] uppercase text-white flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               {t('contact')}
             </Link>
@@ -219,9 +207,7 @@ export default function Header() {
             />
           </Link>
           <button
-            className={`p-2 transition-colors cursor-pointer ${
-              isScrolled ? 'text-[#E01020]' : 'text-[#E01020] drop-shadow-lg'
-            }`}
+            className="p-2 text-chrome-100 transition-colors cursor-pointer"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label={t('toggleMenu')}
           >
@@ -262,7 +248,7 @@ export default function Header() {
             />
           </Link>
           <button
-            className="p-2 text-[#E01020] cursor-pointer"
+            className="p-2 text-chrome-100 cursor-pointer"
             onClick={() => setIsMenuOpen(false)}
             aria-label={t('closeMenu')}
           >
@@ -284,7 +270,7 @@ export default function Header() {
               key={href}
               href={href}
               onClick={() => setIsMenuOpen(false)}
-              className="text-[#E01020] hover:text-[#FF2A3A] text-2xl tracking-widest neon-glow-soft transition-colors font-oxanium"
+              className="nav-link font-ui font-bold text-chrome-100 hover:text-white text-2xl tracking-widest uppercase transition-colors"
             >
               {label}
             </Link>
@@ -295,7 +281,7 @@ export default function Header() {
             <Link
               href="/services"
               onClick={() => setIsMenuOpen(false)}
-              className="text-[#E01020] hover:text-[#FF2A3A] text-2xl tracking-widest neon-glow-soft transition-colors font-oxanium"
+              className="nav-link font-ui font-bold text-chrome-100 hover:text-white text-2xl tracking-widest uppercase transition-colors"
             >
               {t('services')}
             </Link>
@@ -305,7 +291,7 @@ export default function Header() {
                   key={sub.href}
                   href={sub.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className="text-white/50 hover:text-[#FF2A3A] text-sm tracking-widest transition-colors font-oxanium"
+                  className="font-ui text-chrome-500 hover:text-electric-red text-sm tracking-widest uppercase transition-colors"
                 >
                   {sub.label.toUpperCase()}
                 </Link>
@@ -315,7 +301,7 @@ export default function Header() {
 
           <button
             onClick={() => { openModal(); setIsMenuOpen(false); }}
-            className="text-[#E01020] hover:text-[#FF2A3A] text-2xl tracking-widest neon-glow-soft transition-colors cursor-pointer font-oxanium"
+            className="nav-link font-ui font-bold text-chrome-100 hover:text-white text-2xl tracking-widest uppercase transition-colors cursor-pointer"
           >
             {t('book')}
           </button>
@@ -326,7 +312,7 @@ export default function Header() {
           <Link
             href={user ? '/account' : '/account/login'}
             onClick={() => setIsMenuOpen(false)}
-            className="text-[#E01020] hover:text-[#FF2A3A] transition-colors cursor-pointer"
+            className="text-chrome-300 hover:text-electric-red transition-colors cursor-pointer"
             aria-label={user ? t('myAccount') : tc('signIn')}
           >
             <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
@@ -335,14 +321,14 @@ export default function Header() {
           </Link>
           <button
             onClick={() => { openCheckout(); setIsMenuOpen(false); }}
-            className="text-[#E01020] hover:text-[#FF2A3A] transition-colors relative cursor-pointer"
+            className="text-chrome-300 hover:text-electric-red transition-colors relative cursor-pointer"
             aria-label={t('shoppingCart')}
           >
             <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25a1.125 1.125 0 01-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
             </svg>
             {itemCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-[#E01020] text-black text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">
+              <span className="absolute -top-2 -right-2 bg-electric-red text-black text-[10px] font-bold w-5 h-5 flex items-center justify-center">
                 {itemCount > 9 ? '9+' : itemCount}
               </span>
             )}
@@ -350,7 +336,7 @@ export default function Header() {
           <Link
             href="/contact"
             onClick={() => setIsMenuOpen(false)}
-            className="px-6 py-3 border-2 border-[#E01020] text-[#E01020] text-sm tracking-widest hover:bg-[#E01020]/10 transition-colors cyber-button font-oxanium"
+            className="btn-glow font-ui px-6 py-3 text-sm font-bold tracking-[0.2em] uppercase text-white transition-colors"
           >
             {t('contact')}
           </Link>

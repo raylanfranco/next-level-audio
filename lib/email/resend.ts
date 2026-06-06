@@ -99,6 +99,36 @@ export async function sendContactNotification(data: ContactEmailData) {
   return { success: true };
 }
 
+export async function sendNewsletterSignup(email: string) {
+  if (!resend) {
+    console.warn('Resend not configured, skipping email');
+    return { success: false, error: 'Email not configured' };
+  }
+
+  const { error } = await resend.emails.send({
+    from: FROM_EMAIL,
+    to: [ADMIN_EMAIL],
+    replyTo: email,
+    subject: `[Newsletter Signup] ${email}`,
+    html: `
+      <div style="font-family: monospace; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #E01020;">New Newsletter Signup</h2>
+        <hr style="border-color: #E01020;" />
+        <p><strong>Email:</strong> <a href="mailto:${email}">${email}</a></p>
+        <hr style="border-color: #E01020;" />
+        <p style="color: #888;">Sent from Next Level Audio website footer</p>
+      </div>
+    `,
+  });
+
+  if (error) {
+    console.error('Failed to send newsletter signup email:', error);
+    return { success: false, error: error.message };
+  }
+
+  return { success: true };
+}
+
 export interface CareerApplicationEmailData {
   applicantName: string;
   applicantEmail: string;
