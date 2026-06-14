@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cloverFetch, isCloverConfigured } from "@/lib/clover/client";
+import { requireAdmin } from "@/lib/auth/requireAdmin";
 import type { CloverPaymentsResponse } from "@/types/clover";
 
+// Admin only — payment data is sensitive.
 export async function GET(request: NextRequest) {
+  const auth = await requireAdmin();
+  if (!auth.ok) return auth.response;
+
   if (!isCloverConfigured) {
     return NextResponse.json({ error: "Clover API not configured", payments: [] }, { status: 503 });
   }

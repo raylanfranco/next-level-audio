@@ -1,18 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { searchAllDistributors } from '@/lib/price-compare';
+import { requireAdmin } from '@/lib/auth/requireAdmin';
 
 export async function POST(request: NextRequest) {
+  // Defense-in-depth: verify admin role at the route (not just the gate).
+  const auth = await requireAdmin();
+  if (!auth.ok) return auth.response;
+
   try {
-    // Auth check — admin panel is already behind middleware auth,
-    // so just verify the user is logged in
-    const supabase = await createSupabaseServerClient();
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
     // Parse query
     const body = await request.json();
     const { query } = body;

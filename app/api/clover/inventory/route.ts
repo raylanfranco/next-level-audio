@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cloverFetch, isCloverConfigured } from "@/lib/clover/client";
+import { requireAdmin } from "@/lib/auth/requireAdmin";
 import type { CloverItem, CloverItemsResponse } from "@/types/clover";
 
+// POST creates a product — admin only. (GET stays public for the storefront.)
 export async function POST(request: NextRequest) {
+  const auth = await requireAdmin();
+  if (!auth.ok) return auth.response;
+
   if (!isCloverConfigured) {
     return NextResponse.json({ error: "Clover API not configured" }, { status: 503 });
   }

@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cloverFetch, isCloverConfigured } from "@/lib/clover/client";
+import { requireAdmin } from "@/lib/auth/requireAdmin";
 import type { CloverOrdersResponse } from "@/types/clover";
 
+// Admin only — order data is sensitive.
 export async function GET(request: NextRequest) {
+  const auth = await requireAdmin();
+  if (!auth.ok) return auth.response;
+
   if (!isCloverConfigured) {
     return NextResponse.json({ error: "Clover API not configured", orders: [] }, { status: 503 });
   }

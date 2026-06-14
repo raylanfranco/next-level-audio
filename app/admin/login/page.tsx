@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser';
 
@@ -106,12 +107,12 @@ export default function AdminLoginPage() {
         </form>
 
         <div className="mt-8 text-center">
-          <a
+          <Link
             href="/"
             className="text-white/40 hover:text-white/70 text-xs font-mono transition-colors"
           >
             &larr; Back to site
-          </a>
+          </Link>
         </div>
       </div>
     </div>

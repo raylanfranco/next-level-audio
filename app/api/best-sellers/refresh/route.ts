@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase/client";
 import { fetchAndAggregate } from "@/lib/best-sellers/aggregate";
+import { requireAdmin } from "@/lib/auth/requireAdmin";
 
+// Admin only — recalculates rankings from Clover orders. (GET stays public.)
 export async function POST() {
+  const auth = await requireAdmin();
+  if (!auth.ok) return auth.response;
+
   try {
     const aggregated = await fetchAndAggregate();
 
