@@ -23,6 +23,7 @@ export function AdminThemeProvider({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     const stored = localStorage.getItem('admin-theme') as Theme | null;
     if (stored === 'light' || stored === 'dark') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- localStorage is browser-only, must read in an effect
       setTheme(stored);
     }
     setMounted(true);
@@ -34,16 +35,16 @@ export function AdminThemeProvider({ children }: { children: React.ReactNode }) 
     localStorage.setItem('admin-theme', next);
   };
 
-  // Prevent flash of wrong theme
+  // Prevent flash of wrong theme — placeholder uses the admin dark bg token.
   if (!mounted) {
-    return <div className="min-h-screen bg-slate-900" />;
+    return <div className="min-h-screen" style={{ backgroundColor: '#0a0a0a' }} />;
   }
 
+  // Use a dedicated admin theme class (NOT the global `.dark`, which is
+  // hardcoded on <html> by the root layout and would always win).
   return (
     <ThemeContext.Provider value={{ theme, toggleTheme }}>
-      <div className={theme === 'dark' ? 'dark' : ''}>
-        {children}
-      </div>
+      <div className={theme === 'dark' ? 'admin-dark' : 'admin-light'}>{children}</div>
     </ThemeContext.Provider>
   );
 }

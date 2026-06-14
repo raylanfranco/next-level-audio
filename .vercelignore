@@ -1,0 +1,11 @@
+# Large non-app folders that must not be uploaded to Vercel
+# (these are gitignored too, but CLI deploys upload the local tree)
+bayready/
+bayready-ui-revamp/
+variant-designs/
+node_modules/
+.next/
+.git/
+docs/
+.claude/
+*.7z

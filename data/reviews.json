@@ -1,0 +1,59 @@
+{
+  "_comment": "Curated real Google reviews for Next Level Audio. Shape mirrors a normalized review object so a live Google Places / GHL feed can drop in later. 'quote' is the card-display text (lightly trimmed for length where noted); 'quoteFull' preserves the original verbatim. aggregate.rating is the real Google rating.",
+  "aggregate": {
+    "rating": 4.1,
+    "source": "Google",
+    "url": "https://REPLACE_WITH_REAL_GOOGLE_REVIEWS_URL"
+  },
+  "reviews": [
+    {
+      "id": "ray-lanfranco",
+      "name": "Ray Lanfranco",
+      "stars": 5,
+      "quote": "Love the team here! I wanted to modify my MX-5 and the guys were super knowledgeable about exactly which LEDs fit my build. They even gave me some pointers on mods for my front bumper. Would easily recommend them to others looking to enter the car mod scene.",
+      "quoteFull": "Love the team here! I wanted to modify my MX-5 and the guys were super knowledgeable about exactly which LEDs fit my build. They even gave me some fillers on mods for my front bumper. Would easily recommend them to others looking to enter the car mod scene, and will certainly be back for more."
+    },
+    {
+      "id": "anthony-caligiuri",
+      "name": "Anthony Caligiuri",
+      "stars": 5,
+      "quote": "Dealing with the staff, especially the gentleman Benjamin that I dealt with — truly professionals. Picked up my car today and it sounds amazing. They made my daughter, who's an excellent student, extremely happy.",
+      "quoteFull": "Dealing with the staff, especially the gentleman Benjamin that I dealt with truly professionals. Picked up my car today and it sounds amazing. They made my daughter. Who's an excellent student. Extremely happy.\n\nSincerely, anthony C"
+    },
+    {
+      "id": "kyle-cougle",
+      "name": "Kyle Cougle",
+      "stars": 5,
+      "quote": "Brought my truck in for a radio replacement and wiring harness repair. Ben is very knowledgeable and obviously has a good crew. Once the truck was pulled into the garage the repair took less than 2 hours. I am very impressed. They have earned a customer.",
+      "quoteFull": "Brought my truck in for a radio replacement and wiring harness repair.\n\nBen is very knowledgeable and obviously has a good crew.\n\nOnce the truck was pulled into the garage the repair took less than 2 hours. I am very impressed.\n\nThey have earned a customer"
+    },
+    {
+      "id": "maridela-rivas",
+      "name": "Maridela Rivas",
+      "stars": 5,
+      "quote": "Benjamin and all his crew helped my daughter enormously! Great, compassionate, humble, hard working people. They took my daughter in last minute on a busy day in cold weather. Best pricing for every occasion — mechanical, technical, punctual and skillfully done.",
+      "quoteFull": "today on 8 dec 2025 Benjamin and all his crew helped my daughter ENORMOUSLY! God is so good . Great compassionate, humble, hard working people. Hospitality is beyond caring. They took my daughter Selena in Last Min on a Busy Day in COLD 🥶 Weather!! Best pricing for every occasion——>Mechanical , technicality with technology ,punctuality , SKILLFULLY Wonderfully made ! Jesus walks behind these noble mens and woman."
+    },
+    {
+      "id": "mikie-smith",
+      "name": "Mikie Smith",
+      "stars": 5,
+      "quote": "Amazing job and great service. I even arrived late on my appointment and they took my car anyway, no problem. Even added extra work for free.",
+      "quoteFull": "Amazing job and great service. I even arrived late on my appointment and they took my car anyway, no problem. Even added extra work for free."
+    },
+    {
+      "id": "mayo-monkey",
+      "name": "Mayo Monkey",
+      "stars": 5,
+      "quote": "The owner and staff are exceptional professionals who prioritize your needs without pushing unnecessary upsells. They worked diligently within my budget, delivering outstanding results. The owner kept me fully informed throughout. The quality of their work is truly Tier 1.",
+      "quoteFull": "The owner and staff are exceptional professionals who prioritize your needs without pushing unnecessary upsells. They worked diligently within my budget, delivering outstanding results. My project took longer than expected due to vehicle specific challenges, but the owner kept me fully informed, clearly explaining the reasons and process. The waiting area is comfortable, and the quality of their work is truly Tier 1. I'm thrilled with the outcome and highly recommend their services"
+    },
+    {
+      "id": "zach",
+      "name": "Zach",
+      "stars": 5,
+      "quote": "These guys are all super nice and easy going people. Got my windows done here and it looks great, I'm super happy with it. I've recommended other people here and I will continue to do so in the future.",
+      "quoteFull": "These guys are all super nice and easy going people. Got my windows done here and it looks great, I'm super happy with it. I've recommended other people to here and the auto shop in the back and I will continue to do so in the future."
+    }
+  ]
+}

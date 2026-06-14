@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { requireAdmin } from '@/lib/auth/requireAdmin';
 
 const BAYREADY_API = process.env.BAYREADY_API_URL || 'https://bayready-production.up.railway.app';
 
+// Admin only — changing booking status / deleting bookings.
 export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin();
+  if (!auth.ok) return auth.response;
+
   const { id } = await params;
 
   try {
@@ -40,6 +45,9 @@ export async function DELETE(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin();
+  if (!auth.ok) return auth.response;
+
   const { id } = await params;
 
   try {

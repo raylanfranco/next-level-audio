@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getAuthedUser } from '@/lib/auth/requireAdmin';
 
 const BAYREADY_API = process.env.BAYREADY_API_URL || 'https://bayready-production.up.railway.app';
 const BAYREADY_MERCHANT_ID = process.env.BAYREADY_MERCHANT_ID || 'cmlh31wyn000068j37couyy08';
 
+// Role-aware: admins see all bookings; a regular authenticated user sees only
+// bookings matching THEIR OWN profile email (server-side filtered — the client
+// cannot request someone else's bookings).
 export async function GET(request: NextRequest) {
+  const auth = await getAuthedUser();
+  if (!auth.ok) return auth.response;
+
   const { searchParams } = new URL(request.url);
   const status = searchParams.get('status');
   const from = searchParams.get('from');
@@ -73,7 +80,14 @@ export async function GET(request: NextRequest) {
       };
     });
 
-    return NextResponse.json({ bookings });
+    // Non-admins only see their own bookings (by profile email).
+    const scoped = auth.isAdmin
+      ? bookings
+      : bookings.filter(
+          (b) => auth.email && b.customer_email?.toLowerCase() === auth.email.toLowerCase()
+        );
+
+    return NextResponse.json({ bookings: scoped });
   } catch (error) {
     console.error('Error fetching bookings from BayReady:', error);
     return NextResponse.json({ bookings: [] });

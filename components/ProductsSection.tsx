@@ -145,43 +145,50 @@ export default function ProductsSection() {
 
   return (
     <section className="py-20 md:py-32 bg-black relative overflow-hidden">
-      <div className="absolute inset-0 cyber-grid opacity-20"></div>
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="absolute inset-0 bg-noise z-0"></div>
+      <div className="max-w-[1440px] mx-auto px-6 lg:px-12 relative z-10">
 
-        {/* Heading */}
+        {/* Heading — Variant eyebrow + chrome headline */}
         <AnimateOnScroll animation="fade-up">
-          <div className="text-center mb-12">
+          <div className="mb-12">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-[2px] bg-electric-red shadow-[0_0_10px_#e60012]"></div>
+              <span className="font-ui text-chrome-300 font-bold tracking-[0.4em] uppercase text-xs">
+                {t('premiumInventory')}
+              </span>
+            </div>
             <h2
-              className="text-4xl md:text-6xl font-bold text-white mb-6 neon-glow hover-glitch font-oxanium"
+              className="font-display text-chrome uppercase leading-none text-[clamp(2.5rem,6vw,5rem)]"
+              data-text={activeTab === 'all' && bestSellerIds.size > 0 ? t('bestSellers') : t('shopByCategory')}
             >
               {activeTab === 'all' && bestSellerIds.size > 0 ? t('bestSellers') : t('shopByCategory')}
             </h2>
-            <p className="text-white/80 max-w-2xl mx-auto text-lg font-mono">
+            <p className="text-chrome-500 font-ui max-w-2xl text-lg mt-4">
               {activeTab === 'all' && bestSellerIds.size > 0
                 ? t('bestSellersDesc')
                 : t('shopByCategoryDesc')}
             </p>
-            <p className="text-white/50 max-w-xl mx-auto text-sm font-mono mt-2">
+            <p className="text-chrome-700 font-ui max-w-xl text-sm mt-2">
               {t('inStorePickup')}
             </p>
           </div>
         </AnimateOnScroll>
 
-        {/* Tab Bar */}
+        {/* Tab Bar — Variant underline style */}
         <AnimateOnScroll animation="fade-up" delay={0.1}>
           <div
             ref={tabsRef}
-            className="flex gap-2 mb-10 overflow-x-auto pb-2 scrollbar-hide justify-center flex-wrap"
+            className="flex gap-8 mb-10 overflow-x-auto pb-2 scrollbar-hide flex-nowrap items-center border-y border-white/5 py-5"
             style={{ WebkitOverflowScrolling: 'touch' } as React.CSSProperties}
           >
             {visibleTabs.map(tab => (
               <button
                 key={tab.key}
                 onClick={() => handleTabClick(tab.key)}
-                className={`flex-shrink-0 px-5 py-2.5 border-2 font-mono text-xs font-semibold uppercase tracking-wider transition-all duration-300 cursor-pointer whitespace-nowrap ${
+                className={`flex-shrink-0 font-ui text-xs font-bold uppercase tracking-[0.2em] transition-colors duration-300 cursor-pointer whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric-red focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
                   activeTab === tab.key
-                    ? 'bg-[#E01020]/20 text-[#E01020] border-[#E01020] neon-border-soft'
-                    : 'bg-transparent text-white/50 border-[#E01020]/20 hover:border-[#E01020]/50 hover:text-white/80'
+                    ? 'text-white border-b border-electric-red pb-1'
+                    : 'text-chrome-500 hover:text-white'
                 }`}
               >
                 {tab.label}
@@ -193,79 +200,83 @@ export default function ProductsSection() {
         {/* Product Grid */}
         <div key={animKey} className="min-h-[400px]">
           {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="bg-black border-2 border-[#E01020]/10 animate-pulse">
-                  <div className="aspect-square bg-[#E01020]/5" />
-                  <div className="p-6 space-y-3">
-                    <div className="h-5 bg-[#E01020]/10 w-3/4" />
-                    <div className="h-4 bg-[#E01020]/5 w-1/2" />
+                <div key={i} className="break-inside-avoid bg-graphite border border-white/10 animate-pulse">
+                  <div className="aspect-square bg-white/5" />
+                  <div className="p-8 space-y-3">
+                    <div className="h-6 bg-white/10 w-3/4" />
+                    <div className="h-5 bg-white/5 w-1/2" />
                   </div>
                 </div>
               ))}
             </div>
           ) : items.length === 0 ? (
             <div className="text-center py-16">
-              <p className="text-white/40 font-mono text-lg">{t('noProducts')}</p>
+              <p className="text-chrome-500 font-ui text-lg">{t('noProducts')}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+            <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8 mb-12">
               {[...items].sort((a, b) => {
                 const aHas = productImages[a.id] ? 0 : 1;
                 const bHas = productImages[b.id] ? 0 : 1;
                 return aHas - bHas;
-              }).slice(0, 12).map((item, index) => (
+              }).slice(0, 12).map((item) => (
                 <div
                   key={item.id}
-                  className="animate-fade-up bg-black border-2 border-[#E01020]/30 overflow-hidden hover:border-[#E01020] transition-all duration-500 transform hover:-translate-y-2 group neon-border-soft"
-                  style={{ animationDelay: `${index * 0.06}s`, animationFillMode: 'both' }}
+                  className="prod-card break-inside-avoid relative group overflow-hidden border border-white/10 bg-graphite"
                 >
-                  <div className="relative aspect-square bg-[#0a0a0a] overflow-hidden">
+                  <div className="relative overflow-hidden">
                     {productImages[item.id] ? (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={(productImages[item.id] as string).replace('http://', 'https://')}
                         alt={item.onlineName || item.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        className="w-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
                         loading="lazy"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <svg className="w-16 h-16 text-[#E01020]/15" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1}>
+                      <div className="w-full aspect-square flex items-center justify-center bg-[#0a0a0a]">
+                        <svg className="w-16 h-16 text-white/10" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909M3.75 21h16.5A2.25 2.25 0 0022.5 18.75V5.25A2.25 2.25 0 0020.25 3H3.75A2.25 2.25 0 001.5 5.25v13.5A2.25 2.25 0 003.75 21z" />
                         </svg>
                       </div>
                     )}
+                    {/* Variant chrome overlay + shine sweep */}
+                    <div className="absolute inset-0 prod-overlay mix-blend-multiply pointer-events-none"></div>
+                    <div className="prod-shine"></div>
+
                     {/* Best seller badge */}
                     {bestSellerIds.has(item.id) && (
-                      <div className="absolute top-3 left-3 z-10 flex items-center gap-1 px-2 py-1 bg-[#FFD700]/90 text-black text-[10px] font-bold font-mono uppercase tracking-wider">
+                      <div className="absolute top-3 left-3 z-10 flex items-center gap-1 px-2 py-1 bg-[#FFD700]/90 text-black text-[10px] font-bold font-ui uppercase tracking-wider">
                         <svg className="w-3 h-3" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                         </svg>
                         {t('bestSeller')}
                       </div>
                     )}
-                  </div>
 
-                  <div className="p-6">
-                    <h3
-                      className="text-lg font-bold text-[#E01020] mb-2 line-clamp-2 neon-glow-soft font-oxanium"
-                    >
-                      {(item.onlineName || item.name).toUpperCase()}
-                    </h3>
-                    <div className="flex items-center justify-between">
-                      <span className="text-2xl font-bold text-[#E01020] font-mono neon-glow-soft">
-                        {formatCents(item.price)}
-                      </span>
-                      <button
-                        onClick={() => handleAddToCart(item)}
-                        className={`px-4 py-2 border-2 font-semibold font-mono text-xs transition-all duration-300 cursor-pointer ${
-                          addedItemId === item.id
-                            ? 'bg-green-400/20 text-green-400 border-green-400'
-                            : 'bg-[#E01020]/20 text-[#E01020] border-[#E01020] hover:bg-[#E01020]/30 neon-border-soft cyber-button'
-                        }`}
-                      >
-                        {addedItemId === item.id ? t('added') : t('addToCart')}
-                      </button>
+                    {/* Bottom-anchored content (Variant style) */}
+                    <div className="absolute bottom-0 left-0 p-6 lg:p-8 w-full z-[4] transform translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
+                      <h3 className="font-display text-2xl lg:text-3xl uppercase text-white leading-none mb-3 line-clamp-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+                        {(item.onlineName || item.name).toUpperCase()}
+                      </h3>
+                      <div className="flex items-center justify-between gap-4">
+                        <span className="text-white font-display text-2xl drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+                          {formatCents(item.price)}
+                        </span>
+                        <button
+                          onClick={() => handleAddToCart(item)}
+                          aria-label={`${t('addToCart')} — ${item.onlineName || item.name}`}
+                          className={`font-ui px-4 py-2 border text-[11px] font-bold uppercase tracking-[0.15em] transition-all duration-300 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black ${
+                            addedItemId === item.id
+                              ? 'bg-green-400/20 text-green-400 border-green-400'
+                              : 'bg-electric-red text-white border-electric-red hover:bg-hot-red'
+                          }`}
+                        >
+                          {addedItemId === item.id ? t('added') : t('addToCart')}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -274,13 +285,13 @@ export default function ProductsSection() {
           )}
         </div>
 
-        {/* View All link */}
+        {/* View All link — Variant CTA */}
         {!loading && items.length > 0 && (
           <AnimateOnScroll animation="fade-up" delay={0.2}>
             <div className="text-center">
               <Link
                 href="/products"
-                className="inline-block px-8 py-4 bg-[#E01020]/20 text-[#E01020] border-2 border-[#E01020] font-semibold text-lg font-mono hover:bg-[#E01020]/30 transition-all duration-300 transform hover:scale-105 neon-border-soft pulse-glow cyber-button font-oxanium"
+                className="inline-block bg-electric-red hover:bg-hot-red text-white px-10 py-4 font-ui font-bold tracking-[0.2em] uppercase text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
               >
                 {tc('viewAll')}
               </Link>

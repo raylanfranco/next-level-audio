@@ -20,9 +20,28 @@ export async function middleware(request: NextRequest) {
       if (!isLoginPage && !session) {
         return NextResponse.redirect(new URL('/admin/login', request.url));
       }
-      if (isLoginPage && session) {
-        return NextResponse.redirect(new URL('/admin', request.url));
+
+      // A valid session is NOT enough — the user must have the admin role.
+      // Admin login and customer signup share one auth pool, so a signed-in
+      // customer must be blocked here. RLS lets a user read their own profile
+      // (auth.uid() = id), so this role read works for the current user only.
+      if (session) {
+        const { data: profile } = await supabase
+          .from('profiles')
+          .select('role')
+          .eq('id', session.user.id)
+          .single();
+        const isAdmin = profile?.role === 'admin';
+
+        if (!isLoginPage && !isAdmin) {
+          // Non-admin (e.g. a customer) — send them to login, not the dashboard.
+          return NextResponse.redirect(new URL('/admin/login', request.url));
+        }
+        if (isLoginPage && isAdmin) {
+          return NextResponse.redirect(new URL('/admin', request.url));
+        }
       }
+
       return response;
     }
 

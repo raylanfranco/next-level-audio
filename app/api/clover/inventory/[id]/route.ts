@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cloverFetch, isCloverConfigured } from "@/lib/clover/client";
+import { requireAdmin } from "@/lib/auth/requireAdmin";
 import type { CloverItem } from "@/types/clover";
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin();
+  if (!auth.ok) return auth.response;
+
   if (!isCloverConfigured) {
     return NextResponse.json({ error: "Clover API not configured" }, { status: 503 });
   }
@@ -70,6 +74,9 @@ export async function DELETE(
   _request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const auth = await requireAdmin();
+  if (!auth.ok) return auth.response;
+
   if (!isCloverConfigured) {
     return NextResponse.json({ error: "Clover API not configured" }, { status: 503 });
   }

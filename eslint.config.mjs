@@ -12,6 +12,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Raw Variant design exports — demo code, not app source (V2 revamp scratch)
+    "variant-designs/**",
+    // Legacy / separate-repo folders that live here during development
+    "bayready/**",
+    "bayready-ui-revamp/**",
   ]),
 ]);
 

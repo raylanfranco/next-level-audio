@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { createServerClient } from '@/lib/supabase/client';
 import { sendInquiryNotification } from '@/lib/email/resend';
+import { requireAdmin } from '@/lib/auth/requireAdmin';
 
 const inquirySchema = z.object({
   product_id: z.string().min(1),
@@ -81,7 +82,11 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// Admin only — lists all customer inquiries. (POST stays public for submissions.)
 export async function GET(request: NextRequest) {
+  const auth = await requireAdmin();
+  if (!auth.ok) return auth.response;
+
   try {
     const supabase = createServerClient();
     const { searchParams } = new URL(request.url);

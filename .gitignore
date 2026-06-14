@@ -39,6 +39,7 @@ yarn-error.log*
 # product image cache (allow product-images.json for Vercel deployment)
 /data/*
 !/data/product-images.json
+!/data/reviews.json
 
 # typescript
 *.tsbuildinfo
@@ -58,3 +59,8 @@ dashboard.png
 nul
 context.md
 ROADMAP.md
+
+# Variant design exports for V2 revamp — deletable once V2 is live
+/variant-designs/
+
+.vercel
