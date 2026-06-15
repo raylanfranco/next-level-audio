@@ -454,11 +454,14 @@ input[type="time"]::-webkit-outer-spin-button {
 }
 
 .text-chrome {
-  background: linear-gradient(180deg, #ffffff 0%, #b3b3b3 35%, #050505 45%, #808080 50%, #ffffff 100%);
+  /* Softer brushed-steel gradient (matches the stats "Hear the Difference"
+     look, with the dark band lightened further from #1f2228 to #2e3440 so the
+     metallic 'cut' is gentler than the old harsh near-black #050505 band). */
+  background: linear-gradient(180deg, #ffffff 0%, #e5e7eb 35%, #2e3440 50%, #9ca3af 55%, #ffffff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  filter: drop-shadow(0px 4px 10px rgba(0,0,0,0.8));
+  filter: drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.9)) drop-shadow(0px -1px 1px rgba(255, 255, 255, 0.3));
   position: relative;
 }
 .text-chrome::after {

@@ -33,15 +33,19 @@ export default function BrandMarquee() {
         {allLogos.map((brand, idx) => (
           <div
             key={`${brand.name}-${idx}`}
-            className="flex-shrink-0 mx-6 md:mx-10 flex items-center justify-center brightness-0 invert opacity-30 hover:opacity-80 hover:brightness-100 hover:invert-0 transition-all duration-500"
+            className="flex-shrink-0 mx-4 md:mx-6 flex items-center justify-center opacity-90 hover:opacity-100 transition-opacity duration-500"
           >
-            <Image
-              src={brand.src}
-              alt={brand.name}
-              width={120}
-              height={48}
-              className="h-7 md:h-9 w-auto object-contain"
-            />
+            {/* Subtle light chip so dark/black logos stay visible in color
+                against the near-black marquee bar. */}
+            <div className="px-4 py-2 bg-white/[0.07] backdrop-blur-[1px] border border-white/[0.04]">
+              <Image
+                src={brand.src}
+                alt={brand.name}
+                width={120}
+                height={48}
+                className="h-7 md:h-9 w-auto object-contain"
+              />
+            </div>
           </div>
         ))}
       </div>
