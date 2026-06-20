@@ -33,11 +33,12 @@ export default function BrandMarquee() {
         {allLogos.map((brand, idx) => (
           <div
             key={`${brand.name}-${idx}`}
-            className="flex-shrink-0 mx-4 md:mx-6 flex items-center justify-center opacity-90 hover:opacity-100 transition-opacity duration-500"
+            className="flex-shrink-0 mx-4 md:mx-6 flex items-center justify-center opacity-95 hover:opacity-100 transition-opacity duration-500"
           >
-            {/* Subtle light chip so dark/black logos stay visible in color
-                against the near-black marquee bar. */}
-            <div className="px-4 py-2 bg-white/[0.07] backdrop-blur-[1px] border border-white/[0.04]">
+            {/* Near-white chip — the brand PNGs are inconsistent (black-text
+                logos, plus some with un-transparent white blotches like Viper),
+                so a light panel is the only background that flatters them all. */}
+            <div className="px-5 py-2.5 bg-[#f4f4f5] shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
               <Image
                 src={brand.src}
                 alt={brand.name}

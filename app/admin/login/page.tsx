@@ -19,13 +19,36 @@ export default function AdminLoginPage() {
 
     try {
       const supabase = createSupabaseBrowserClient();
-      const { error: authError } = await supabase.auth.signInWithPassword({
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (authError) {
+      if (authError || !authData.user) {
         setError('Invalid credentials');
+        setLoading(false);
+        return;
+      }
+
+      // Verify admin role BEFORE navigating, so a non-admin account doesn't get
+      // bounced by the middleware and leave the button stuck on "Signing In…".
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', authData.user.id)
+        .single();
+
+      if (profileError) {
+        await supabase.auth.signOut();
+        setError('Could not verify your account. Please try again.');
+        setLoading(false);
+        return;
+      }
+
+      if (profile?.role !== 'admin') {
+        // Authenticated, but not an admin — sign back out and explain.
+        await supabase.auth.signOut();
+        setError('This account does not have admin access.');
         setLoading(false);
         return;
       }
