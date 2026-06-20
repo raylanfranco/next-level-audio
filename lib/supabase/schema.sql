@@ -1,4 +1,17 @@
 -- Database schema for Next Level Audio booking system
+--
+-- ⚠️ REFERENCE ONLY — this file is the INTENDED schema, not a guaranteed
+-- mirror of production. It drifted once: the `profiles` table + its signup
+-- trigger below were never actually applied to the live DB (production had a
+-- malformed { id bigint, created_at } stub instead), which silently broke the
+-- account area and later the admin role gate. Fixed via
+-- lib/supabase/migrations/001_fix_profiles_table.sql.
+--
+-- Treat the PRODUCTION database as the source of truth. Before relying on any
+-- table here, verify it against the live schema:
+--   select column_name, data_type from information_schema.columns
+--   where table_name = 'profiles' order by ordinal_position;
+-- Apply structural changes through dated files in lib/supabase/migrations/.
 
 -- Bookings table
 CREATE TABLE IF NOT EXISTS bookings (
