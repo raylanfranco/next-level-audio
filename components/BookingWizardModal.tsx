@@ -7,7 +7,7 @@ interface BookingWizardModalProps {
   onClose: () => void;
 }
 
-const BOOKING_URL = 'https://bayready-core.vercel.app/book/cmn7rxnc6000001ofxq4dea0q';
+const BOOKING_URL = 'https://whos-next-frontend.vercel.app/book/cmn7rxnc6000001ofxq4dea0q';
 
 export default function BookingWizardModal({ isOpen, onClose }: BookingWizardModalProps) {
   const [iframeLoaded, setIframeLoaded] = useState(false);

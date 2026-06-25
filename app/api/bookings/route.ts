@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthedUser } from '@/lib/auth/requireAdmin';
 
-const BAYREADY_API = process.env.BAYREADY_API_URL || 'https://bayready-production.up.railway.app';
-const BAYREADY_MERCHANT_ID = process.env.BAYREADY_MERCHANT_ID || 'cmlh31wyn000068j37couyy08';
+const BAYREADY_API = process.env.BAYREADY_API_URL || 'https://whos-next-production.up.railway.app';
+const BAYREADY_MERCHANT_ID = process.env.BAYREADY_MERCHANT_ID || 'cmn7rxnc6000001ofxq4dea0q';
 
 // Role-aware: admins see all bookings; a regular authenticated user sees only
 // bookings matching THEIR OWN profile email (server-side filtered — the client

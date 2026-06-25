@@ -39,9 +39,9 @@ export default function BookingsPage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <p className="font-body text-sm" style={{ color: 'var(--adm-text-muted)' }}>Live appointments from BayReady</p>
-        <a href="https://bayready.vercel.app" target="_blank" rel="noopener noreferrer" className="adm-btn-ghost font-heading text-xs px-5 py-2.5 uppercase tracking-wider">
-          Open BayReady →
+        <p className="font-body text-sm" style={{ color: 'var(--adm-text-muted)' }}>Live appointments from Who&apos;s Next?</p>
+        <a href="https://whos-next-frontend.vercel.app/dashboard" target="_blank" rel="noopener noreferrer" className="adm-btn-ghost font-heading text-xs px-5 py-2.5 uppercase tracking-wider">
+          Open Who&apos;s Next? →
         </a>
       </div>
 
@@ -98,7 +98,7 @@ export default function BookingsPage() {
             </tbody>
           </table>
         </div>
-        {!loading && bookings.length === 0 && <div className="text-center py-12 text-sm font-body" style={{ color: 'var(--adm-text-muted)' }}>No bookings found. Appointments from BayReady will appear here.</div>}
+        {!loading && bookings.length === 0 && <div className="text-center py-12 text-sm font-body" style={{ color: 'var(--adm-text-muted)' }}>No bookings found. Appointments from Who&apos;s Next? will appear here.</div>}
         {loading && <div className="text-center py-12 text-sm font-body" style={{ color: 'var(--adm-text-muted)' }}>Loading…</div>}
       </InstrumentPanel>
     </div>
