@@ -384,6 +384,85 @@ async function findProductImage(
   };
 }
 
+// --- QA email (new products since last run) ---
+interface NewItemReport {
+  id: string;
+  name: string;
+  upc: string | null;
+  imageUrl: string | null;
+  source: CacheEntry['source'];
+}
+
+/**
+ * Email a QA summary of products that were newly discovered this run.
+ * "New" = items present in Clover but not previously in the image cache — i.e.
+ * products the client just added. Requires RESEND_API_KEY + IMAGE_QA_EMAIL.
+ * Uses a dynamic import so local runs without `resend` installed don't crash.
+ */
+async function sendQaEmail(newItems: NewItemReport[], opts: { force: boolean }) {
+  // Only products worth eyeballing — drop service/labor items we deliberately skip.
+  const qaItems = newItems.filter((i) => i.source !== 'skipped');
+
+  if (opts.force) {
+    console.log(`\nSkipping QA email (--force reprocessed the whole cache; ${qaItems.length} items would have been reported).`);
+    return;
+  }
+  if (qaItems.length === 0) {
+    console.log('\nNo new products this run — skipping QA email.');
+    return;
+  }
+
+  const apiKey = process.env.RESEND_API_KEY;
+  const to = process.env.IMAGE_QA_EMAIL;
+  const from = process.env.IMAGE_QA_FROM || 'onboarding@resend.dev';
+
+  if (!apiKey || !to) {
+    console.log(`\n⚠ RESEND_API_KEY or IMAGE_QA_EMAIL not set — skipping email. ${qaItems.length} new product(s) found this run.`);
+    return;
+  }
+
+  const found = qaItems.filter((i) => i.imageUrl);
+  const missing = qaItems.filter((i) => !i.imageUrl);
+
+  const esc = (s: string) =>
+    s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+  const row = (i: NewItemReport) => `
+    <tr>
+      <td style="padding:8px;border-bottom:1px solid #333;vertical-align:top;">
+        ${i.imageUrl ? `<a href="${esc(i.imageUrl)}"><img src="${esc(i.imageUrl)}" alt="" width="72" height="72" style="object-fit:cover;border:1px solid #444;"/></a>` : '<span style="color:#e01020;">— none —</span>'}
+      </td>
+      <td style="padding:8px;border-bottom:1px solid #333;vertical-align:top;font-family:monospace;">
+        <strong>${esc(i.name)}</strong><br/>
+        <span style="color:#888;">UPC: ${esc(i.upc || 'n/a')} · ${esc(i.source)}</span>
+      </td>
+    </tr>`;
+
+  const html = `
+    <div style="font-family:system-ui,Arial,sans-serif;max-width:640px;color:#eee;background:#0a0a0a;padding:24px;">
+      <h2 style="color:#e01020;margin:0 0 4px;">Next Level Audio — Image QA</h2>
+      <p style="color:#aaa;margin:0 0 20px;">${qaItems.length} new product(s) detected this run · ${found.length} with an auto-fetched image · ${missing.length} need a manual image.</p>
+      ${found.length ? `<h3 style="color:#eee;">Auto-fetched images (please verify)</h3><table style="border-collapse:collapse;width:100%;">${found.map(row).join('')}</table>` : ''}
+      ${missing.length ? `<h3 style="color:#e01020;margin-top:24px;">No image found (needs manual upload)</h3><table style="border-collapse:collapse;width:100%;">${missing.map(row).join('')}</table>` : ''}
+      <p style="color:#666;font-size:12px;margin-top:24px;">Automated by the image-qa GitHub Actions workflow.</p>
+    </div>`;
+
+  const { Resend } = await import('resend');
+  const resend = new Resend(apiKey);
+  const { data, error } = await resend.emails.send({
+    from,
+    to,
+    subject: `🖼️ ${qaItems.length} new product(s) — image QA needed`,
+    html,
+  });
+
+  if (error) {
+    console.error('\n✗ Resend error sending QA email:', error);
+  } else {
+    console.log(`\n✓ QA email sent to ${to} (id: ${data?.id}) — ${found.length} found, ${missing.length} missing.`);
+  }
+}
+
 // --- Main ---
 async function main() {
   loadEnv();
@@ -449,6 +528,9 @@ async function main() {
     let skippedCount = 0;
     let notFoundCount = 0;
 
+    // Products newly discovered this run (for the QA email).
+    const newItems: NewItemReport[] = [];
+
     const toProcess = uncached.slice(0, maxToProcess);
 
     for (let i = 0; i < toProcess.length; i++) {
@@ -500,6 +582,14 @@ async function main() {
         fetchedAt: new Date().toISOString(),
       };
 
+      newItems.push({
+        id: item.id,
+        name: item.name,
+        upc: item.code || null,
+        imageUrl: result.imageUrl,
+        source: result.source,
+      });
+
       // Save every 10 items for crash resilience
       if ((i + 1) % 10 === 0) {
         saveCache(cache);
@@ -520,6 +610,9 @@ async function main() {
     console.log(`Total cached: ${Object.keys(cache).length}`);
     console.log(`Total with images: ${totalWithImages}`);
     console.log(`Remaining uncached: ${items.length - Object.keys(cache).length}`);
+
+    // Email a QA summary of the products that were new this run.
+    await sendQaEmail(newItems, { force: FORCE });
   } finally {
     if (browser) {
       await browser.close();
