@@ -60,6 +60,9 @@ jobs:
           CLOVER_API_BASE_URL: ${{ secrets.CLOVER_API_BASE_URL }}
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           IMAGE_QA_EMAIL: ${{ secrets.IMAGE_QA_EMAIL }}
+          # Optional: a verified-domain sender (e.g. noreply@yourdomain.com).
+          # Falls back to onboarding@resend.dev if the secret is unset.
+          IMAGE_QA_FROM: ${{ secrets.IMAGE_QA_FROM }}
         run: |
           ARGS=""
           if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then ARGS="$ARGS --dry-run"; fi
