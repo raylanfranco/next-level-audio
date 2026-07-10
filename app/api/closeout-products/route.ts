@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { cloverFetch, isCloverConfigured } from "@/lib/clover/client";
+import { resolveProductImages } from "@/lib/productImages";
 import type { CloverItemsResponse } from "@/types/clover";
 import * as fs from "fs";
 import * as path from "path";
@@ -39,13 +40,18 @@ export async function GET() {
 
     const imageCache = getImageCache();
 
-    const items = (data.elements || [])
-      .filter((item) => !item.hidden && !item.deleted)
-      .map((item) => ({
-        ...item,
-        stockCount: item.itemStock?.quantity ?? item.stockCount ?? 0,
-        imageUrl: imageCache[item.id]?.imageUrl || null,
-      }));
+    const visible = (data.elements || []).filter(
+      (item) => !item.hidden && !item.deleted
+    );
+
+    // Resolve display images with admin overrides taking priority over the cache.
+    const resolved = await resolveProductImages(visible.map((item) => item.id));
+
+    const items = visible.map((item) => ({
+      ...item,
+      stockCount: item.itemStock?.quantity ?? item.stockCount ?? 0,
+      imageUrl: resolved[item.id] ?? imageCache[item.id]?.imageUrl ?? null,
+    }));
 
     return NextResponse.json({ items });
   } catch (error) {
