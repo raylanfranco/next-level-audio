@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cloverFetch, isCloverConfigured } from "@/lib/clover/client";
 import { createServerClient } from "@/lib/supabase/client";
+import { resolveProductImages } from "@/lib/productImages";
 import type { CloverItemsResponse } from "@/types/clover";
 import * as fs from "fs";
 import * as path from "path";
@@ -96,10 +97,13 @@ export async function GET(request: NextRequest) {
       selected = shuffle(allItems).slice(0, count);
     }
 
+    // Resolve display images with admin overrides taking priority over the cache.
+    const resolved = await resolveProductImages(selected.map((item) => item.id));
+
     return NextResponse.json({
       items: selected.map((item) => ({
         ...item,
-        imageUrl: imageCache[item.id].imageUrl,
+        imageUrl: resolved[item.id] ?? imageCache[item.id].imageUrl,
       })),
     });
   } catch (error) {

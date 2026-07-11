@@ -1,0 +1,85 @@
+name: Product Image QA
+
+# Pulls the Clover inventory, auto-fetches images for any NEW products the client
+# added since the last run, commits the refreshed cache, and emails a QA summary
+# (via Resend) so new products can be reviewed. Secrets are configured in
+# Settings > Secrets and variables > Actions.
+
+on:
+  schedule:
+    # Daily at 07:00 UTC (3am US Eastern / EDT). Adjust as needed.
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (list new products, no browser, no email, no commit)'
+        type: boolean
+        default: false
+      force:
+        description: 'Force reprocess the ENTIRE cache (slow; skips the QA email)'
+        type: boolean
+        default: false
+      limit:
+        description: 'Max products to process this run (blank = default batch of 200)'
+        type: string
+        default: ''
+
+# Needed so the job can commit the refreshed image cache back to the repo.
+permissions:
+  contents: write
+
+# Never run two of these at once (they both push the cache file).
+concurrency:
+  group: image-qa
+  cancel-in-progress: false
+
+jobs:
+  fetch-and-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Fetch images + email QA summary
+        env:
+          CLOVER_API_TOKEN: ${{ secrets.CLOVER_API_TOKEN }}
+          CLOVER_MERCHANT_ID: ${{ secrets.CLOVER_MERCHANT_ID }}
+          CLOVER_API_BASE_URL: ${{ secrets.CLOVER_API_BASE_URL }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          IMAGE_QA_EMAIL: ${{ secrets.IMAGE_QA_EMAIL }}
+          # Optional: a verified-domain sender (e.g. noreply@yourdomain.com).
+          # Falls back to onboarding@resend.dev if the secret is unset.
+          IMAGE_QA_FROM: ${{ secrets.IMAGE_QA_FROM }}
+        run: |
+          ARGS=""
+          if [ "${{ github.event.inputs.dry_run }}" = "true" ]; then ARGS="$ARGS --dry-run"; fi
+          if [ "${{ github.event.inputs.force }}" = "true" ]; then ARGS="$ARGS --force"; fi
+          if [ -n "${{ github.event.inputs.limit }}" ]; then ARGS="$ARGS --limit=${{ github.event.inputs.limit }}"; fi
+          echo "Running: tsx scripts/fetch-product-images.ts$ARGS"
+          npx -y tsx scripts/fetch-product-images.ts $ARGS
+
+      - name: Commit refreshed image cache
+        if: ${{ github.event.inputs.dry_run != 'true' }}
+        run: |
+          if [ -n "$(git status --porcelain data/product-images.json)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add data/product-images.json
+            git commit -m "chore: refresh product image cache [skip ci]"
+            git push
+          else
+            echo "No cache changes to commit."
+          fi
