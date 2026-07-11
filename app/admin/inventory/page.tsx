@@ -22,6 +22,15 @@ export default function InventoryPage() {
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
 
+  // Product image editing (Edit modal only)
+  const [imgUrl, setImgUrl] = useState<string | null>(null);
+  const [imgIsOverride, setImgIsOverride] = useState(false);
+  const [imgLoading, setImgLoading] = useState(false);
+  const [imgMode, setImgMode] = useState<'url' | 'upload'>('url');
+  const [imgUrlInput, setImgUrlInput] = useState('');
+  const [imgBusy, setImgBusy] = useState(false);
+  const [imgError, setImgError] = useState<string | null>(null);
+
   const fetchPage = useCallback(async (off: number, q?: string) => {
     setLoading(true);
     try {
@@ -59,6 +68,90 @@ export default function InventoryPage() {
     return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [search]);
+
+  // Load the current image whenever the Edit modal opens for an existing item.
+  useEffect(() => {
+    if (!showForm || !editing) {
+      setImgUrl(null);
+      setImgIsOverride(false);
+      setImgUrlInput('');
+      setImgError(null);
+      setImgMode('url');
+      return;
+    }
+    setImgLoading(true);
+    fetch(`/api/admin/product-image?id=${encodeURIComponent(editing.id)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d) {
+          setImgUrl(d.imageUrl ?? null);
+          setImgIsOverride(!!d.isOverride);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setImgLoading(false));
+  }, [showForm, editing]);
+
+  const setImageByUrl = async () => {
+    if (!editing || !imgUrlInput.trim()) return;
+    setImgBusy(true);
+    setImgError(null);
+    try {
+      const res = await fetch('/api/admin/product-image', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cloverItemId: editing.id, imageUrl: imgUrlInput.trim() }),
+      });
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(d.error || 'Failed to set image');
+      setImgUrl(d.imageUrl);
+      setImgIsOverride(true);
+      setImgUrlInput('');
+    } catch (e) {
+      setImgError(e instanceof Error ? e.message : 'Failed to set image');
+    } finally {
+      setImgBusy(false);
+    }
+  };
+
+  const uploadImage = async (file: File) => {
+    if (!editing) return;
+    setImgBusy(true);
+    setImgError(null);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      fd.append('cloverItemId', editing.id);
+      const res = await fetch('/api/admin/product-image', { method: 'POST', body: fd });
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(d.error || 'Upload failed');
+      setImgUrl(d.imageUrl);
+      setImgIsOverride(true);
+    } catch (e) {
+      setImgError(e instanceof Error ? e.message : 'Upload failed');
+    } finally {
+      setImgBusy(false);
+    }
+  };
+
+  const revertImage = async () => {
+    if (!editing) return;
+    setImgBusy(true);
+    setImgError(null);
+    try {
+      const res = await fetch(`/api/admin/product-image?id=${encodeURIComponent(editing.id)}`, {
+        method: 'DELETE',
+      });
+      const d = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(d.error || 'Failed to revert');
+      setImgUrl(d.imageUrl ?? null);
+      setImgIsOverride(false);
+    } catch (e) {
+      setImgError(e instanceof Error ? e.message : 'Failed to revert');
+    } finally {
+      setImgBusy(false);
+    }
+  };
 
   const resetForm = () => {
     setForm(emptyForm);
@@ -264,6 +357,78 @@ export default function InventoryPage() {
             <label className={labelCls} style={{ color: 'var(--adm-text-muted)' }}>Description</label>
             <textarea className={`${inputCls} resize-y`} rows={2} value={form.description} onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))} placeholder="Product description…" />
           </div>
+
+          {/* Product image — Edit only (needs an existing Clover item id) */}
+          {editing && (
+            <div className="mt-2 pt-4 border-t" style={{ borderColor: 'var(--adm-border)' }}>
+              <div className="flex items-center gap-2 mb-2">
+                <label className={labelCls} style={{ color: 'var(--adm-text-muted)', marginBottom: 0 }}>Product Image</label>
+                {imgIsOverride && (
+                  <span className="px-2 py-0.5 text-[10px] font-heading uppercase tracking-wider border" style={{ color: 'var(--adm-ok)', borderColor: 'var(--adm-ok)' }}>Custom</span>
+                )}
+              </div>
+              <div className="flex gap-4">
+                {/* Preview */}
+                <div className="shrink-0 w-24 h-24 border flex items-center justify-center overflow-hidden" style={{ borderColor: 'var(--adm-border)', background: 'var(--adm-bg)' }}>
+                  {imgLoading ? (
+                    <span className="text-[10px] font-body" style={{ color: 'var(--adm-text-faint)' }}>Loading…</span>
+                  ) : imgUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={imgUrl} alt="" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-[10px] font-body text-center px-1" style={{ color: 'var(--adm-text-faint)' }}>No image</span>
+                  )}
+                </div>
+                {/* Controls */}
+                <div className="flex-1 flex flex-col gap-2">
+                  <div className="flex gap-1">
+                    {(['url', 'upload'] as const).map((m) => (
+                      <button
+                        key={m}
+                        type="button"
+                        onClick={() => { setImgMode(m); setImgError(null); }}
+                        className="font-heading text-[10px] uppercase tracking-wider px-3 py-1 border cursor-pointer"
+                        style={imgMode === m
+                          ? { color: 'var(--adm-on-primary)', background: 'var(--adm-text)', borderColor: 'var(--adm-text)' }
+                          : { color: 'var(--adm-text-muted)', borderColor: 'var(--adm-border)' }}
+                      >
+                        {m === 'url' ? 'Paste URL' : 'Upload'}
+                      </button>
+                    ))}
+                  </div>
+                  {imgMode === 'url' ? (
+                    <div className="flex gap-2">
+                      <input className={inputCls} value={imgUrlInput} onChange={(e) => setImgUrlInput(e.target.value)} placeholder="https://…/image.jpg" disabled={imgBusy} />
+                      <button type="button" onClick={setImageByUrl} disabled={imgBusy || !imgUrlInput.trim()} className="adm-btn-primary font-heading text-xs font-bold px-4 py-2 uppercase tracking-wider cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed">
+                        {imgBusy ? '…' : 'Set'}
+                      </button>
+                    </div>
+                  ) : (
+                    <input
+                      type="file"
+                      accept="image/*"
+                      disabled={imgBusy}
+                      onChange={(e) => { const f = e.target.files?.[0]; if (f) uploadImage(f); e.target.value = ''; }}
+                      className="text-xs font-body"
+                      style={{ color: 'var(--adm-text-muted)' }}
+                    />
+                  )}
+                  <div className="flex items-center gap-3 min-h-[16px]">
+                    {imgIsOverride && (
+                      <button type="button" onClick={revertImage} disabled={imgBusy} className="font-heading text-[10px] uppercase tracking-wider cursor-pointer hover:opacity-70 disabled:opacity-30" style={{ color: 'var(--adm-text-muted)' }}>
+                        Revert to auto
+                      </button>
+                    )}
+                    {imgError ? (
+                      <span className="text-[10px] font-body" style={{ color: 'var(--adm-primary)' }}>{imgError}</span>
+                    ) : imgMode === 'upload' ? (
+                      <span className="text-[10px] font-body" style={{ color: 'var(--adm-text-faint)' }}>JPG/PNG/WebP · max 5 MB</span>
+                    ) : null}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </ModalShell>
       )}
     </div>
