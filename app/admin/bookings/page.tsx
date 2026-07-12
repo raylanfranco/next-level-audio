@@ -18,9 +18,18 @@ export default function BookingsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
       });
-      if (res.ok) refresh(); // resync data + sidebar badge
+      if (res.ok) {
+        refresh(); // resync data + sidebar badge
+      } else {
+        // Surface failures instead of silently snapping the dropdown back —
+        // this is exactly how the BayReady-vs-Who's Next? mismatch went unnoticed.
+        const { error } = await res.json().catch(() => ({ error: '' }));
+        console.error('Booking status update failed:', res.status, error);
+        alert(`Couldn't update status (${res.status}). ${error || 'Please try again.'}`);
+      }
     } catch (e) {
       console.error('Error updating booking status:', e);
+      alert('Network error updating status. Please try again.');
     }
   };
 

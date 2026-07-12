@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth/requireAdmin';
 
-const BAYREADY_API = process.env.BAYREADY_API_URL || 'https://bayready-production.up.railway.app';
+// Who's Next? backend (forked from BayReady) — matches the base used by the
+// GET/POST route in ../route.ts. This route was missed in the PR #1 platform
+// migration and was still pointing at the decommissioned BayReady backend,
+// which made status changes silently fail (the dropdown snapped back to its
+// old value on refresh). Same env var + default as the sibling route.
+const BAYREADY_API = process.env.BAYREADY_API_URL || 'https://whos-next-production.up.railway.app';
 
 // Admin only — changing booking status / deleting bookings.
 export async function PATCH(
