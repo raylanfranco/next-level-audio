@@ -10470,5 +10470,19 @@
     "name": "Powerbase Direct Fit Foe Gm OE652-GM",
     "upc": "823871009091",
     "fetchedAt": "2026-07-10T18:24:48.434Z"
+  },
+  "9VNTY9102KQT2": {
+    "imageUrl": "https://i.ebayimg.com/images/g/xsQAAOSw~I5lxPYQ/s-l1600.jpg",
+    "source": "google_upc",
+    "name": "TS800X 4 TARAMPS",
+    "upc": "7898556849043",
+    "fetchedAt": "2026-07-12T09:01:14.911Z"
+  },
+  "A265CACAMS4FA": {
+    "imageUrl": "https://tarampsmia.com/cdn/shop/files/TS-400x4-5_800x.jpg?v=1742840716",
+    "source": "google_upc",
+    "name": "Ts 400.4 Taramps",
+    "upc": "7908706600230",
+    "fetchedAt": "2026-07-12T09:01:21.564Z"
   }
 }
