@@ -10484,5 +10484,12 @@
     "name": "Ts 400.4 Taramps",
     "upc": "7908706600230",
     "fetchedAt": "2026-07-12T09:01:21.564Z"
+  },
+  "ZQWPBNT1SJKXJ": {
+    "imageUrl": "https://ae01.alicdn.com/kf/S7dd4c2749bec4885857c46f516ccca52s.jpg",
+    "source": "google_upc",
+    "name": "DS18AKIT4 GREEN",
+    "upc": "10120126054",
+    "fetchedAt": "2026-07-17T09:07:41.614Z"
   }
 }
