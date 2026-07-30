@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface BookingWizardModalProps {
   isOpen: boolean;
@@ -13,14 +13,36 @@ export default function BookingWizardModal({ isOpen, onClose }: BookingWizardMod
   const [iframeLoaded, setIframeLoaded] = useState(false);
   const [iframeError, setIframeError] = useState(false);
 
+  // Lock background scroll while open (prevents the double-scroll fight on
+  // mobile where the page scrolls behind the overlay) and allow Escape to close.
+  useEffect(() => {
+    if (!isOpen) return;
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => {
+      document.body.style.overflow = prevOverflow;
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-black border-2 border-[#E01020]/50 w-full max-w-3xl h-[90vh] flex flex-col neon-border-soft">
-        {/* Header */}
-        <div className="p-4 border-b-2 border-[#E01020]/30 flex justify-between items-center flex-shrink-0">
-          <h2 className="text-2xl font-bold text-[#E01020] neon-glow font-oxanium">
+    // Mobile + small tablet: full-bleed overlay, no padding. Desktop (md+): centered modal.
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center md:p-4">
+      {/*
+        Mobile/tablet: edge-to-edge, full dynamic-viewport height (dvh accounts
+        for the mobile browser address bar so the app isn't clipped), no border.
+        Desktop (md+): the original centered card with the neon border, unchanged.
+      */}
+      <div className="bg-black w-full h-[100dvh] flex flex-col md:max-w-3xl md:h-[90vh] md:border-2 md:border-[#E01020]/50 md:neon-border-soft">
+        {/* Header — slimmer on mobile to give the booking app more vertical room */}
+        <div className="p-3 md:p-4 border-b-2 border-[#E01020]/30 flex justify-between items-center flex-shrink-0">
+          <h2 className="text-xl md:text-2xl font-bold text-[#E01020] neon-glow font-oxanium">
             BOOK APPOINTMENT
           </h2>
           <button
