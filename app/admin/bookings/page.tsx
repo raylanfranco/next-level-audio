@@ -6,7 +6,22 @@ import { StatusBadge } from '../_components/StatusBadge';
 import { formatCents } from '../_lib/format';
 import type { BookingStatus } from '@/types/booking';
 
-const STATUS_OPTIONS: BookingStatus[] = ['pending', 'confirmed', 'in_progress', 'completed', 'cancelled', 'no_show'];
+// Mirrors VALID_TRANSITIONS in the Who's Next backend (booking.service.ts) —
+// the select only offers moves the API will accept. checked_in /
+// waiting_on_parts / in_progress are legacy statuses old bookings may still
+// hold; their entries only let those bookings exit.
+const STATUS_TRANSITIONS: Record<string, BookingStatus[]> = {
+  pending: ['confirmed', 'cancelled'],
+  confirmed: ['completed', 'cancelled', 'no_show'],
+  checked_in: ['completed', 'cancelled', 'no_show'],
+  waiting_on_parts: ['completed', 'cancelled'],
+  in_progress: ['completed', 'cancelled'],
+  completed: [],
+  cancelled: ['pending', 'confirmed'],
+  no_show: [],
+};
+
+const statusLabel = (s: string) => (s === 'cancelled' ? 'canceled' : s).replace(/_/g, ' ');
 
 export default function BookingsPage() {
   const { bookings, loading, refresh } = useAdminData();
@@ -18,9 +33,16 @@ export default function BookingsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status }),
       });
-      if (res.ok) refresh(); // resync data + sidebar badge
+      if (res.ok) {
+        refresh(); // resync data + sidebar badge
+      } else {
+        const body = await res.json().catch(() => null);
+        alert(body?.error || 'Failed to update booking status');
+        refresh(); // snap the select back to the real status
+      }
     } catch (e) {
       console.error('Error updating booking status:', e);
+      alert('Failed to update booking status');
     }
   };
 
@@ -87,7 +109,9 @@ export default function BookingsPage() {
                     <td className="px-6 py-3">
                       <div className="flex items-center gap-2">
                         <select value={b.status} onChange={(e) => updateStatus(b.id, e.target.value as BookingStatus)} className={selectCls}>
-                          {STATUS_OPTIONS.map((s) => (<option key={s} value={s}>{s.replace('_', ' ')}</option>))}
+                          {[b.status, ...(STATUS_TRANSITIONS[b.status] ?? [])].map((s) => (
+                            <option key={s} value={s}>{statusLabel(s)}</option>
+                          ))}
                         </select>
                         <button onClick={() => deleteBooking(b.id)} className="font-heading text-xs uppercase tracking-wider cursor-pointer hover:opacity-70" style={{ color: 'var(--adm-primary)' }}>Delete</button>
                       </div>

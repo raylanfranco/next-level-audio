@@ -59,7 +59,7 @@ const CONFIG = {
   fitmentsFile: './output/fitments.json',
 
   // BayReady API for seeding
-  bayreadyApi: 'https://bayready-production.up.railway.app',
+  whosNextApi: 'https://whos-next-production.up.railway.app',
   seedBatchSize: 100,
 
   // Browser
@@ -821,7 +821,7 @@ async function seedDatabase() {
     const batch = unique.slice(i, i + CONFIG.seedBatchSize);
 
     try {
-      const res = await fetch(`${CONFIG.bayreadyApi}/fitment/bulk`, {
+      const res = await fetch(`${CONFIG.whosNextApi}/fitment/bulk`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ entries: batch }),
@@ -848,7 +848,7 @@ async function seedDatabase() {
   console.log(`  Sent: ${sent}`);
   console.log(`  Failed: ${failed}`);
   console.log(`  Total: ${unique.length}`);
-  console.log(`\nVerify: curl "${CONFIG.bayreadyApi}/fitment?year=2018&make=Honda&model=Civic"`);
+  console.log(`\nVerify: curl "${CONFIG.whosNextApi}/fitment?year=2018&make=Honda&model=Civic"`);
 }
 
 // ---------------------------------------------------------------------------

@@ -11,7 +11,12 @@ interface FitmentFlowProps {
 const currentYear = new Date().getFullYear();
 const YEARS = Array.from({ length: currentYear - 1989 }, (_, i) => String(currentYear - i));
 
-const BAYREADY_API = process.env.NEXT_PUBLIC_BAYREADY_API_URL || 'https://bayready-production.up.railway.app';
+// Who's Next backend (formerly BayReady). NEXT_PUBLIC_BAYREADY_API_URL is a
+// legacy fallback — remove once Vercel is switched to NEXT_PUBLIC_WHOS_NEXT_API_URL.
+const WHOS_NEXT_API =
+  process.env.NEXT_PUBLIC_WHOS_NEXT_API_URL ||
+  process.env.NEXT_PUBLIC_BAYREADY_API_URL ||
+  'https://whos-next-production.up.railway.app';
 
 export default function FitmentFlow({ form, setForm, onBack, onNavigateQuote }: FitmentFlowProps) {
   const [step, setStep] = useState<FitmentStep>('vehicle-select');
@@ -28,7 +33,7 @@ export default function FitmentFlow({ form, setForm, onBack, onNavigateQuote }: 
         make: form.make,
         model: form.model,
       });
-      const res = await fetch(`${BAYREADY_API}/fitment?${params}`);
+      const res = await fetch(`${WHOS_NEXT_API}/fitment?${params}`);
       if (!res.ok) throw new Error('API error');
       const data = await res.json();
       setResults(data);
