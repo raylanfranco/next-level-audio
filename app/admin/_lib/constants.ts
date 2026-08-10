@@ -60,6 +60,7 @@ export const serviceNames: Record<string, string> = {
 export type NavKey =
   | 'overview'
   | 'inventory'
+  | 'images'
   | 'orders'
   | 'payments'
   | 'customers'
@@ -72,7 +73,7 @@ export type NavKey =
   | 'classes';
 
 // Which AdminDataProvider badge count feeds each nav item (if any).
-export type BadgeSource = 'bookings' | 'inquiries' | 'applications';
+export type BadgeSource = 'bookings' | 'inquiries' | 'applications' | 'images';
 
 export interface NavItemConfig {
   key: NavKey;
@@ -88,6 +89,7 @@ export const navItems: NavItemConfig[] = [
   { key: 'classes', label: 'Classes', href: '/admin/classes' },
   { key: 'customers', label: 'Customers', href: '/admin/customers' },
   { key: 'inventory', label: 'Inventory', href: '/admin/inventory' },
+  { key: 'images', label: 'Image Queue', href: '/admin/images', badgeSource: 'images' },
   { key: 'orders', label: 'Orders', href: '/admin/orders' },
   { key: 'payments', label: 'Payments', href: '/admin/payments' },
   { key: 'best-sellers', label: 'Best Sellers', href: '/admin/best-sellers' },

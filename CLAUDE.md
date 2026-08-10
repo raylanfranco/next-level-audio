@@ -79,7 +79,8 @@ next-level-audio/          ← NLA: Customer-facing website (Next.js on Vercel)
 | `/api/clover/pakms` | GET | Fetch PAKMS API key for Clover SDK initialization |
 | `/api/products` | GET | Fetch products (wrapper for Clover inventory) |
 | `/api/products/[id]` | GET | Fetch single product detail |
-| `/api/product-image` | GET | Get product image from cache/mapping |
+| `/api/product-image` | GET | Get product image from cache/mapping (approved/override images only) |
+| `/api/admin/image-queue` | GET/POST | List pending scraped images / approve or reject them (admin only) |
 | `/api/featured-products` | GET | Get featured products for homepage |
 | `/api/contact` | POST | Submit contact form (sends Resend email) |
 | `/api/inquiries` | GET/POST | List/create product inquiries |
@@ -704,6 +705,14 @@ allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-
 - Has its own theme system (`AdminThemeProvider`) with dark/light toggle.
 - **Authentication:** Supabase Auth with email/password via `middleware.ts`. Unauthenticated users are redirected to `/admin/login`. Login page at `app/admin/login/page.tsx`. Logout calls `supabase.auth.signOut()`.
 - Auth clients: `lib/supabase/browser.ts` (browser singleton), `lib/supabase/server.ts` (server-side with cookies), `lib/supabase/middleware.ts` (SSR client for middleware checks).
+
+### Product Image Approval Queue
+- **Scraped images NEVER go live automatically.** The nightly image-qa workflow writes new finds to `data/product-images.json` with `status: 'pending'`; `lib/productImages.ts` only serves baseline entries with `status: 'approved'` (fail closed — no status = not served). This was added after the scraper once published an explicit image to the live site.
+- **Approval flow:** Admin > Image Queue (`/admin/images`) lists pending images. Approve = the URL is pinned into Supabase `product_image_overrides` (goes live immediately; scraper can't clobber it). Reject = recorded in `product_image_reviews` so the item leaves the queue and the URL is never shown. The QA email links to the queue.
+- **Grandfathering:** all entries that existed before the queue shipped were bulk-marked `approved` (already live at the time). New entries only go live via explicit approval.
+- **`--force` on `fetch-product-images.ts` rebuilds the whole cache as pending** — every baseline image drops off the site until re-approved. Don't use it casually.
+- `scripts/fill-missing-images.ts` also writes `status: 'pending'` on anything it finds — same rule, no unvetted image goes live.
+- Manual images set via Admin > Inventory (upload or URL) are overrides and bypass the queue — they're human-chosen by definition.
 
 ### Environment Decoupling
 - NLA uses `CLOVER_CHARGE_ENV` to decouple charge routing from inventory API base URL. This allows switching between sandbox/production charges independently.
