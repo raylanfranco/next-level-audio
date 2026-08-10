@@ -69,7 +69,6 @@ export type NavKey =
   | 'applications'
   | 'best-sellers'
   | 'coupons'
-  | 'price-compare'
   | 'classes';
 
 // Which AdminDataProvider badge count feeds each nav item (if any).
@@ -95,6 +94,4 @@ export const navItems: NavItemConfig[] = [
   { key: 'best-sellers', label: 'Best Sellers', href: '/admin/best-sellers' },
   { key: 'coupons', label: 'Coupons', href: '/admin/coupons' },
   { key: 'requests', label: 'Requests', href: '/admin/requests', badgeSource: 'inquiries' },
-  { key: 'applications', label: 'Applications', href: '/admin/applications', badgeSource: 'applications' },
-  { key: 'price-compare', label: 'Price Compare', href: '/admin/price-compare' },
-];
+  { key: 'applications', label: 'Applications', href: '/admin/applications', badgeSource: 'applications' },];

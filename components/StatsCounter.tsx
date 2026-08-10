@@ -3,15 +3,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 
-// Chrome gradient for the stat numbers — ported verbatim from the Variant export.
-const chromeStyle: React.CSSProperties = {
-  background: 'linear-gradient(180deg, #ffffff 0%, #e5e7eb 35%, #1f2228 50%, #9ca3af 55%, #ffffff 100%)',
-  WebkitBackgroundClip: 'text',
-  WebkitTextFillColor: 'transparent',
-  backgroundClip: 'text',
-  filter: 'drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.9)) drop-shadow(0px -1px 1px rgba(255, 255, 255, 0.3))',
-};
-
 function formatNumber(num: number) {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
@@ -74,7 +65,7 @@ function StatCounter({
 
   return (
     <div ref={ref} className="flex flex-col items-center justify-center p-10 lg:py-16 relative z-10 group cursor-default">
-      <div className="font-display text-7xl md:text-8xl lg:text-9xl leading-[0.8] tracking-tighter" style={chromeStyle}>
+      <div className="font-display text-chrome text-7xl md:text-8xl lg:text-9xl leading-[0.8] tracking-tighter">
         {formatNumber(count)}
         <span className="text-4xl md:text-5xl lg:text-6xl text-[#e60012] drop-shadow-[0_0_8px_rgba(224,16,32,0.8)] ml-1 align-baseline">
           {suffix}
@@ -128,8 +119,6 @@ const bgGraphiteStyle: React.CSSProperties = {
   boxShadow: 'inset 0 0 60px rgba(0,0,0,0.9)',
 };
 
-const chromeHeadingStyle = chromeStyle;
-
 export default function StatsCounter() {
   const t = useTranslations('stats');
 
@@ -180,7 +169,7 @@ export default function StatsCounter() {
             <div className="absolute -top-6 -left-6 w-8 h-8 border-t-2 border-l-2 border-[#333] opacity-50" aria-hidden="true" />
             <h2 id="stats-heading" className="font-display text-3xl md:text-5xl lg:text-[3.5rem] font-bold uppercase tracking-wide leading-[1.1] text-white">
               {t('headingLine1')} <br />
-              {t('headingLine2')} <span className="block mt-3 lg:mt-4" style={chromeHeadingStyle}>{t('headingHighlight')}</span>
+              {t('headingLine2')} <span className="block mt-3 lg:mt-4 text-chrome">{t('headingHighlight')}</span>
             </h2>
             <div className="mt-8 flex items-center gap-4 w-full max-w-md">
               <div className="h-[2px] bg-gradient-to-r from-[#e60012] to-transparent flex-grow shadow-[0_0_8px_rgba(224,16,32,0.6)]" />
