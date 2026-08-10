@@ -1,4 +1,4 @@
-# Next Level Audio + BayReady — Complete Project Documentation
+# Next Level Audio + Who's Next — Complete Project Documentation
 
 This document is the single source of truth for whitelabeling and extending both projects. It instructs Claude Code sessions on exactly how to recreate, modify, and deploy everything.
 
@@ -8,8 +8,8 @@ This document is the single source of truth for whitelabeling and extending both
 
 1. [Architecture Overview](#architecture-overview)
 2. [NLA Website — Next.js Frontend](#nla-website)
-3. [BayReady — Booking Platform](#bayready)
-4. [BayReady Android — Clover Tablet App](#bayready-android)
+3. [Who's Next (formerly BayReady) — Booking Platform](#whos-next-formerly-bayready)
+4. [Who's Next Android — Clover Tablet App](#whos-next-android)
 5. [Clover POS Integration](#clover-pos-integration)
 6. [Design System](#design-system)
 7. [Environment Variables](#environment-variables)
@@ -21,27 +21,27 @@ This document is the single source of truth for whitelabeling and extending both
 
 ## Architecture Overview
 
-Two interconnected projects:
+Two interconnected projects, in **separate repos**:
 
 ```
-next-level-audio/          ← NLA: Customer-facing website (Next.js on Vercel)
+next-level-audio/          ← NLA: Customer-facing website (Next.js on Vercel) — THIS repo
 ├── app/                   ← Pages & API routes
 ├── components/            ← React components
 ├── lib/                   ← Clover client, Supabase, Resend email
 ├── types/                 ← TypeScript interfaces
 ├── hooks/                 ← Custom hooks
 ├── data/                  ← Static JSON data
-└── bayready/              ← BayReady: Booking platform (monorepo subfolder)
-    ├── backend/           ← NestJS API (Railway)
-    │   ├── src/           ← Modules: clover, merchant, service, booking, customer, vehicle, payment
-    │   └── prisma/        ← Schema + migrations
-    ├── frontend/          ← React + Vite (Vercel)
-    │   └── src/           ← Pages, components, types
-    └── android/           ← Native Android app for Clover tablets
-        └── app/src/main/  ← Kotlin MVVM with Hilt, Retrofit, ViewBinding
+└── fitment/               ← Fitment scraper (seeds the Who's Next fitment DB)
+
+whos-next/                 ← Who's Next (formerly BayReady): Booking platform — SEPARATE repo
+├── backend/               ← NestJS API (Railway: whos-next-production.up.railway.app)
+├── frontend/              ← React + Vite (Vercel: whos-next-frontend.vercel.app)
+└── android/               ← Native Android app for Clover tablets
 ```
 
-**How they connect:** NLA embeds BayReady's public booking page (`/book/:merchantId`) inside an iframe via `BookingWizardModal.tsx`. Product purchases go through NLA's own Clover checkout. Appointment bookings go through BayReady.
+**How they connect:** NLA embeds Who's Next's public booking page (`/book/:merchantId`) inside an iframe via `BookingWizardModal.tsx`, proxies its bookings API through `/api/bookings` (server-side), and queries its fitment API from the chat widget. Product purchases go through NLA's own Clover checkout. Appointment bookings go through Who's Next.
+
+**Naming note:** BayReady was renamed **Who's Next** and split out of this repo. Code uses `WHOS_NEXT_*` env vars with `BAYREADY_*` accepted as legacy fallbacks. The old `bayready-production.up.railway.app` Railway app is **dead** — never point anything at it; the production backend is `whos-next-production.up.railway.app`.
 
 ---
 
@@ -85,7 +85,7 @@ next-level-audio/          ← NLA: Customer-facing website (Next.js on Vercel)
 | `/api/contact` | POST | Submit contact form (sends Resend email) |
 | `/api/inquiries` | GET/POST | List/create product inquiries |
 | `/api/inquiries/[id]` | PATCH | Update inquiry status |
-| `/api/bookings` | GET/POST | List/create bookings (proxied from BayReady or direct) |
+| `/api/bookings` | GET/POST | List/create bookings (proxied to the Who's Next backend) |
 | `/api/bookings/[id]` | PATCH/DELETE | Update/delete bookings |
 
 ### Key Components
@@ -103,7 +103,7 @@ next-level-audio/          ← NLA: Customer-facing website (Next.js on Vercel)
 | `VideoSection` | `components/VideoSection.tsx` | Embedded video section |
 | `VideoLightbox` | `components/VideoLightbox.tsx` | Lightbox for video playback |
 | `QuoteCalculator` | `components/QuoteCalculator.tsx` | Service price estimator |
-| `BookingWizardModal` | `components/BookingWizardModal.tsx` | iFrame wrapper for BayReady booking page |
+| `BookingWizardModal` | `components/BookingWizardModal.tsx` | iFrame wrapper for the Who's Next booking page |
 | `BookingModalContext` | `components/BookingModalContext.tsx` | React context for booking modal open/close state |
 | `CheckoutModal` | `components/CheckoutModal.tsx` | Full product checkout flow with Clover card iframe |
 | `CartContext` | `components/CartContext.tsx` | Shopping cart state with localStorage persistence (`nla-cart`) |
@@ -146,7 +146,9 @@ next-level-audio/          ← NLA: Customer-facing website (Next.js on Vercel)
 
 ---
 
-## BayReady
+## Who's Next (formerly BayReady)
+
+> **Moved:** Who's Next lives in its own repo now (`whos-next`), split out of this one. Everything below is a snapshot kept for integration context — the whos-next repo's own docs are authoritative and this section may drift.
 
 ### Tech Stack
 - **Backend:** NestJS + Prisma v7 + PostgreSQL (Railway)
@@ -251,7 +253,9 @@ BlockedDate → belongs to Merchant
 
 ---
 
-## BayReady Android
+## Who's Next Android
+
+> **Moved:** lives in the separate whos-next repo (`android/`). Snapshot below; paths are relative to that repo.
 
 ### Tech Stack
 - **Language:** Kotlin
@@ -264,7 +268,7 @@ BlockedDate → belongs to Merchant
 ### Project Structure
 
 ```
-bayready/android/app/src/main/java/com/bayready/app/
+android/app/src/main/java/com/bayready/app/   (in the whos-next repo)
 ├── clover/                  ← Clover SDK integration (account, merchant resolution)
 ├── data/
 │   ├── api/                 ← BayReadyApi (Retrofit), DTOs (BookingDto, ServiceDto, etc.)
@@ -304,7 +308,7 @@ The Android UI mirrors BayReady's web dashboard (`DashboardLayout.tsx`, `Booking
 
 ```bash
 # Build (no gradlew — use cached gradle)
-cd bayready/android
+cd android   # (in the whos-next repo)
 ~/.gradle/wrapper/dists/gradle-8.11.1-bin/.../gradle-8.11.1/bin/gradle.bat assembleDebug
 
 # Install on Clover Mini emulator
@@ -330,8 +334,8 @@ Both configured without phone hardware (no GPS, cameras, battery, gyroscope) to 
 
 ### API Connection
 
-The Android app connects to the same BayReady backend (`bayready-production.up.railway.app`) via Retrofit. The base URL is configured in `build.gradle.kts`:
-- Debug: `https://bayready-production.up.railway.app` (production backend for emulator testing)
+The Android app connects to the same Who's Next backend (`whos-next-production.up.railway.app`) via Retrofit. The base URL is configured in `build.gradle.kts`:
+- Debug: `https://whos-next-production.up.railway.app` (production backend for emulator testing)
 - Release: same production URL
 
 Merchant resolution: `CloverAccountManager` tries `CloverAccount.getAccount()` first, falls back to hardcoded `FALLBACK_CLOVER_MERCHANT_ID = "E7ZRTEB8B2EE1"` when Clover SDK is unavailable (emulator). This resolves the BayReady internal merchant ID via `GET /merchants/by-clover-id/{cloverMerchantId}`.
@@ -523,9 +527,15 @@ SUPABASE_SERVICE_ROLE_KEY=      # Supabase service role key (for admin operation
 
 # Email
 RESEND_API_KEY=                 # Resend API key for sending emails
+
+# Who's Next booking backend (all optional — code defaults to production whos-next URLs;
+# BAYREADY_API_URL / BAYREADY_MERCHANT_ID / NEXT_PUBLIC_BAYREADY_API_URL are honored as legacy fallbacks)
+WHOS_NEXT_API_URL=              # https://whos-next-production.up.railway.app
+WHOS_NEXT_MERCHANT_ID=          # Who's Next internal merchant id (for /api/bookings proxy)
+NEXT_PUBLIC_WHOS_NEXT_API_URL=  # Same backend, client-side (chat-widget fitment lookups)
 ```
 
-### BayReady Backend (.env on Railway)
+### Who's Next Backend (.env on Railway)
 
 ```bash
 DATABASE_URL=                   # Railway internal PostgreSQL URL
@@ -537,10 +547,10 @@ FRONTEND_URL=                   # Comma-separated allowed origins for CORS
 PORT=                           # Railway assigns this (default 3001 locally)
 ```
 
-### BayReady Frontend (.env on Vercel)
+### Who's Next Frontend (.env on Vercel)
 
 ```bash
-VITE_API_URL=                   # Backend API URL (https://bayready-production.up.railway.app)
+VITE_API_URL=                   # Backend API URL (https://whos-next-production.up.railway.app)
 VITE_CLOVER_ECOMM_PUBLIC_KEY=   # Ecomm public key for iframe SDK
 VITE_CLOVER_MERCHANT_ID=        # Merchant ID for SDK initialization
 ```
@@ -557,17 +567,17 @@ VITE_CLOVER_MERCHANT_ID=        # Merchant ID for SDK initialization
 - **Root:** `/` (project root)
 - **Node version:** 18+ required
 
-### BayReady Backend (Railway)
+### Who's Next Backend (Railway)
 
-- **Repo:** `raylanfranco/bayready`, root: `/backend`
+- **Repo:** `raylanfranco/whos-next`, root: `/backend`
 - **Build:** `prisma generate && nest build`
 - **Start:** `node dist/src/main` (specified in `Procfile`)
 - **Must bind `0.0.0.0`** in `main.ts` for Railway
 - **Prisma v7 note:** Uses adapter pattern — `@prisma/adapter-pg` + `pg` pool. No `datasourceUrl` in Prisma client options.
 
-### BayReady Frontend (Vercel)
+### Who's Next Frontend (Vercel)
 
-- **Repo:** `raylanfranco/bayready`, root: `/frontend`
+- **Repo:** `raylanfranco/whos-next`, root: `/frontend`
 - **Framework:** Vite (React)
 - **Build:** `npm run build`
 - **Requires `vercel.json`** with SPA rewrites:
@@ -577,12 +587,12 @@ VITE_CLOVER_MERCHANT_ID=        # Merchant ID for SDK initialization
 
 ### CORS Configuration
 
-BayReady backend needs `FRONTEND_URL` env var with comma-separated origins:
+Who's Next backend needs `FRONTEND_URL` env var with comma-separated origins:
 ```
-https://bayready.vercel.app,https://next-level-audio.vercel.app,http://localhost:5173
+https://whos-next-frontend.vercel.app,https://nextlevelaudiopa.com,http://localhost:5173
 ```
 
-NLA embeds BayReady in an iframe — the iframe's `sandbox` attribute must include:
+NLA embeds Who's Next in an iframe — the iframe's `sandbox` attribute must include:
 ```
 allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox
 ```
@@ -705,6 +715,10 @@ allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-
 - Has its own theme system (`AdminThemeProvider`) with dark/light toggle.
 - **Authentication:** Supabase Auth with email/password via `middleware.ts`. Unauthenticated users are redirected to `/admin/login`. Login page at `app/admin/login/page.tsx`. Logout calls `supabase.auth.signOut()`.
 - Auth clients: `lib/supabase/browser.ts` (browser singleton), `lib/supabase/server.ts` (server-side with cookies), `lib/supabase/middleware.ts` (SSR client for middleware checks).
+
+### Who's Next Integration
+- The admin bookings status dropdown (`app/admin/bookings/page.tsx`) has a `STATUS_TRANSITIONS` map that must mirror `VALID_TRANSITIONS` in the Who's Next backend's `booking.service.ts` — if transitions change there, update it here or the dropdown will offer moves the API rejects (the error is surfaced, but still).
+- Booking/fitment code defaults to `whos-next-production.up.railway.app`; `WHOS_NEXT_*` env vars override, `BAYREADY_*` are legacy fallbacks. `bayready-production.up.railway.app` is a dead Railway app.
 
 ### Product Image Approval Queue
 - **Scraped images NEVER go live automatically.** The nightly image-qa workflow writes new finds to `data/product-images.json` with `status: 'pending'`; `lib/productImages.ts` only serves baseline entries with `status: 'approved'` (fail closed — no status = not served). This was added after the scraper once published an explicit image to the live site.
