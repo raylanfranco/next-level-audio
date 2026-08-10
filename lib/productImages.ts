@@ -9,18 +9,25 @@ import { createServerClient } from '@/lib/supabase/client';
  * nightly scraper's baseline in `data/product-images.json`. This lets an admin
  * pin a stable, self-hosted image that the scraper can never clobber.
  *
+ * Baseline entries are only served when status === 'approved'. The scraper
+ * writes new finds as 'pending'; they surface in the admin Image Queue
+ * (/admin/images) and go live via product_image_overrides on approval. An
+ * entry with no status is treated as pending (fail closed) — a scraped image
+ * must never reach the storefront without a human sign-off.
+ *
  * All lookups are keyed by Clover item id.
  */
 
-interface CacheEntry {
+export interface BaselineCacheEntry {
   imageUrl: string | null;
   source: string;
   name: string;
   upc: string | null;
   fetchedAt: string;
+  status?: 'pending' | 'approved';
 }
 
-type ImageCache = Record<string, CacheEntry>;
+type ImageCache = Record<string, BaselineCacheEntry>;
 
 let jsonCache: ImageCache | null = null;
 let jsonLoadedAt = 0;
@@ -43,6 +50,14 @@ function getJsonCache(): ImageCache {
   jsonCache = {};
   jsonLoadedAt = now;
   return jsonCache;
+}
+
+/**
+ * Full baseline cache (all statuses). Server-only — used by the admin image
+ * queue to list pending entries. Not filtered by approval.
+ */
+export function getBaselineEntries(): ImageCache {
+  return getJsonCache();
 }
 
 /**
@@ -80,7 +95,10 @@ export async function resolveProductImages(
   const overrides = await getOverrides(ids);
   const out: Record<string, string | null> = {};
   for (const id of ids) {
-    out[id] = overrides[id] ?? json[id]?.imageUrl ?? null;
+    const baseline = json[id];
+    const approvedBaseline =
+      baseline?.status === 'approved' ? baseline.imageUrl : null;
+    out[id] = overrides[id] ?? approvedBaseline ?? null;
   }
   return out;
 }

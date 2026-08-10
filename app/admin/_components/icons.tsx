@@ -52,6 +52,14 @@ export function NavIcon({ id, className }: { id: NavKey; className?: string }) {
           <path strokeLinecap="square" strokeLinejoin="miter" d="M12 22.08V12" />
         </svg>
       );
+    case 'images':
+      return (
+        <svg {...props}>
+          <path strokeLinecap="square" strokeLinejoin="miter" d="M3 4h18v16H3V4z" />
+          <path strokeLinecap="square" strokeLinejoin="miter" d="M3 15l5-5 4 4 3-3 6 6" />
+          <path strokeLinecap="square" strokeLinejoin="miter" d="M15.5 8.5h.01" strokeWidth="2.5" />
+        </svg>
+      );
     case 'orders':
       return (
         <svg {...props}>

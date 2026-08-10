@@ -28,6 +28,7 @@ interface AdminData {
   pendingBookings: number;
   pendingInquiries: number;
   pendingApplications: number;
+  pendingImages: number;
   loading: boolean;
   refresh: () => Promise<void>;
 }
@@ -50,13 +51,14 @@ export function AdminDataProvider({ children }: { children: React.ReactNode }) {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [applications, setApplications] = useState<CareerApplication[]>([]);
+  const [pendingImages, setPendingImages] = useState(0);
   const [loading, setLoading] = useState(true);
 
   // Preserve the original Promise.allSettled partial-failure tolerance verbatim.
   const refresh = useCallback(async () => {
     setLoading(true);
     try {
-      const [invRes, catRes, ordRes, payRes, custRes, bookRes, inqRes, appsRes] =
+      const [invRes, catRes, ordRes, payRes, custRes, bookRes, inqRes, appsRes, imgRes] =
         await Promise.allSettled([
           fetch(`/api/clover/inventory?limit=${PAGE_SIZE}&offset=0`),
           fetch('/api/clover/categories'),
@@ -66,6 +68,7 @@ export function AdminDataProvider({ children }: { children: React.ReactNode }) {
           fetch('/api/bookings'),
           fetch('/api/inquiries'),
           fetch('/api/careers/applications'),
+          fetch('/api/admin/image-queue'),
         ]);
 
       if (invRes.status === 'fulfilled' && invRes.value.ok) {
@@ -101,6 +104,10 @@ export function AdminDataProvider({ children }: { children: React.ReactNode }) {
         const d = await appsRes.value.json();
         setApplications(d.applications || []);
       }
+      if (imgRes.status === 'fulfilled' && imgRes.value.ok) {
+        const d = await imgRes.value.json();
+        setPendingImages((d.pending || []).length);
+      }
     } catch (error) {
       console.error('Error loading dashboard data:', error);
     } finally {
@@ -125,6 +132,7 @@ export function AdminDataProvider({ children }: { children: React.ReactNode }) {
     pendingBookings: bookings.filter((b) => b.status === 'pending').length,
     pendingInquiries: inquiries.filter((i) => i.status === 'pending').length,
     pendingApplications: applications.filter((a) => a.status === 'pending').length,
+    pendingImages,
     loading,
     refresh,
   };

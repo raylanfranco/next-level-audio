@@ -10,6 +10,9 @@ interface CacheEntry {
   name: string;
   upc: string | null;
   fetchedAt: string;
+  // Any image this script finds is unvetted — it must go back through the
+  // admin Image Queue (/admin/images), so every write here sets 'pending'.
+  status?: 'pending' | 'approved';
 }
 
 interface ImageCache {
@@ -145,7 +148,7 @@ async function main() {
 
     if (imageUrl) {
       found++;
-      cache[id] = { ...entry, imageUrl, source: 'upcitemdb', fetchedAt: new Date().toISOString() };
+      cache[id] = { ...entry, imageUrl, source: 'upcitemdb', fetchedAt: new Date().toISOString(), status: 'pending' };
       console.log(`  ✓ ${imageUrl.substring(0, 80)}...`);
     } else {
       console.log(`  ✗ No image from UPCitemdb`);
@@ -173,7 +176,7 @@ async function main() {
 
     if (imageUrl) {
       brandFound++;
-      cache[id] = { ...entry, imageUrl, source: 'brand_cdn', fetchedAt: new Date().toISOString() };
+      cache[id] = { ...entry, imageUrl, source: 'brand_cdn', fetchedAt: new Date().toISOString(), status: 'pending' };
       console.log(`    ✓ ${imageUrl}`);
     } else {
       console.log(`    ✗ No brand CDN match`);
@@ -194,7 +197,7 @@ async function main() {
     const imageUrl = await tryBrandCDN(entry.name);
     if (imageUrl) {
       phase3Found++;
-      cache[id] = { ...entry, imageUrl, source: 'brand_cdn', fetchedAt: new Date().toISOString() };
+      cache[id] = { ...entry, imageUrl, source: 'brand_cdn', fetchedAt: new Date().toISOString(), status: 'pending' };
       console.log(`  ✓ ${entry.name} → ${imageUrl}`);
     }
   }

@@ -18,6 +18,10 @@ interface CacheEntry {
   name: string;
   upc: string | null;
   fetchedAt: string;
+  // Scraped images are written as 'pending' and are NOT served on the site
+  // until approved in the admin Image Queue (/admin/images). 'approved' is
+  // only ever set by the grandfather migration or a human decision.
+  status: 'pending' | 'approved';
 }
 
 interface ImageCache {
@@ -132,7 +136,7 @@ function buildSearchQuery(item: CloverItem): string | null {
   if (skipPatterns.test(item.name)) return null;
 
   // Clean name: remove brackets, extra whitespace, "NLA" prefix (Next Level Audio internal)
-  let query = item.name
+  const query = item.name
     .replace(/\[.*?\]/g, '') // remove bracketed text like [Full SUV]
     .replace(/\bNLA\b/gi, '')
     .replace(/\b(w\/|w\/o)\b/gi, '')
@@ -438,12 +442,16 @@ async function sendQaEmail(newItems: NewItemReport[], opts: { force: boolean }) 
       </td>
     </tr>`;
 
+  const queueUrl = 'https://nextlevelaudiopa.com/admin/images';
+
   const html = `
     <div style="font-family:system-ui,Arial,sans-serif;max-width:640px;color:#eee;background:#0a0a0a;padding:24px;">
-      <h2 style="color:#e01020;margin:0 0 4px;">Next Level Audio — Image QA</h2>
-      <p style="color:#aaa;margin:0 0 20px;">${qaItems.length} new product(s) detected this run · ${found.length} with an auto-fetched image · ${missing.length} need a manual image.</p>
-      ${found.length ? `<h3 style="color:#eee;">Auto-fetched images (please verify)</h3><table style="border-collapse:collapse;width:100%;">${found.map(row).join('')}</table>` : ''}
-      ${missing.length ? `<h3 style="color:#e01020;margin-top:24px;">No image found (needs manual upload)</h3><table style="border-collapse:collapse;width:100%;">${missing.map(row).join('')}</table>` : ''}
+      <h2 style="color:#e01020;margin:0 0 4px;">Next Level Audio — Image Approval Queue</h2>
+      <p style="color:#aaa;margin:0 0 12px;">${qaItems.length} new product(s) detected this run · ${found.length} auto-fetched image(s) awaiting approval · ${missing.length} need a manual image.</p>
+      <p style="color:#eee;margin:0 0 20px;"><strong>Nothing below is live yet.</strong> Auto-fetched images stay hidden from the site until approved in the admin Image Queue.</p>
+      <p style="margin:0 0 24px;"><a href="${queueUrl}" style="display:inline-block;background:#e01020;color:#fff;text-decoration:none;padding:12px 24px;font-weight:bold;">Review Image Queue</a></p>
+      ${found.length ? `<h3 style="color:#eee;">Awaiting approval</h3><table style="border-collapse:collapse;width:100%;">${found.map(row).join('')}</table>` : ''}
+      ${missing.length ? `<h3 style="color:#e01020;margin-top:24px;">No image found (needs manual upload via Admin &gt; Inventory)</h3><table style="border-collapse:collapse;width:100%;">${missing.map(row).join('')}</table>` : ''}
       <p style="color:#666;font-size:12px;margin-top:24px;">Automated by the image-qa GitHub Actions workflow.</p>
     </div>`;
 
@@ -452,7 +460,7 @@ async function sendQaEmail(newItems: NewItemReport[], opts: { force: boolean }) 
   const { data, error } = await resend.emails.send({
     from,
     to,
-    subject: `🖼️ ${qaItems.length} new product(s) — image QA needed`,
+    subject: `🖼️ ${qaItems.length} new product(s) — images awaiting your approval`,
     html,
   });
 
@@ -473,6 +481,12 @@ async function main() {
   console.log(`Dry run: ${DRY_RUN}`);
   console.log(`Batch size: ${LIMIT || BATCH_SIZE}\n`);
 
+  if (FORCE) {
+    console.warn(
+      '⚠ --force rebuilds the ENTIRE cache as status:pending — every baseline image ' +
+        'disappears from the site until re-approved in /admin/images (admin overrides still show).\n'
+    );
+  }
   const items = await fetchAllCloverItems();
   const cache = FORCE ? {} : loadCache();
 
@@ -548,6 +562,7 @@ async function main() {
           name: item.name,
           upc: item.code || null,
           fetchedAt: new Date().toISOString(),
+          status: 'pending',
         };
         continue;
       }
@@ -580,6 +595,7 @@ async function main() {
         name: item.name,
         upc: item.code || null,
         fetchedAt: new Date().toISOString(),
+        status: 'pending',
       };
 
       newItems.push({

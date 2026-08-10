@@ -10,12 +10,13 @@ import { NavIcon } from './icons';
 export function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { pendingBookings, pendingInquiries, pendingApplications } = useAdminData();
+  const { pendingBookings, pendingInquiries, pendingApplications, pendingImages } = useAdminData();
 
   const badgeFor = (source?: BadgeSource): number | undefined => {
     if (source === 'bookings') return pendingBookings || undefined;
     if (source === 'inquiries') return pendingInquiries || undefined;
     if (source === 'applications') return pendingApplications || undefined;
+    if (source === 'images') return pendingImages || undefined;
     return undefined;
   };
 
