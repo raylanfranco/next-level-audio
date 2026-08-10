@@ -146,7 +146,7 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
             </div>
             {/* Headline fix: two clean clamped lines, no manual <br/> indent, no mid-gradient
                 black band slicing the text. "YOUR JOURNEY" picks up the electric-red accent. */}
-            <h1 className="font-display text-[clamp(3.5rem,11vw,11rem)] leading-[0.85] uppercase tracking-normal mb-6">
+            <h1 className="font-display text-[clamp(3rem,8vw,7.5rem)] leading-[0.85] uppercase tracking-normal mb-6">
               <span className="block text-chrome" data-text={t('elevate')}>{t('elevate')}</span>
               <span className="block text-electric-red drop-shadow-[0_0_20px_rgba(230,0,18,0.4)]">{t('yourJourney')}</span>
             </h1>
@@ -162,14 +162,14 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
           <div className="flex flex-col sm:flex-row items-center gap-6 hero-stagger hero-stagger-3">
             <button
               onClick={openModal}
-              className="btn-glow w-full sm:w-auto px-10 py-5 text-base font-bold tracking-[0.2em] uppercase text-white flex items-center justify-center gap-3 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              className="btn-glow w-full sm:w-auto px-8 py-4 text-sm font-bold tracking-[0.2em] uppercase text-white flex items-center justify-center gap-3 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               {tc('bookAppointment')}
             </button>
 
             <Link
               href="/services"
-              className="btn-ghost group w-full sm:w-auto px-10 py-5 text-base font-bold tracking-[0.2em] uppercase text-chrome-100 flex items-center justify-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              className="btn-ghost group w-full sm:w-auto px-8 py-4 text-sm font-bold tracking-[0.2em] uppercase text-chrome-100 flex items-center justify-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               <span className="relative z-10">{tc('ourServices')}</span>
             </Link>
@@ -180,12 +180,6 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
         <div className="hero-stagger hero-stagger-4 hidden lg:block flex-shrink-0 w-full max-w-md">
           <CloseoutCarousel />
         </div>
-      </div>
-
-      {/* Scroll indicator */}
-      <div className="absolute bottom-32 left-6 lg:left-16 flex flex-col items-center gap-2 hero-stagger hero-stagger-4 z-10">
-        <span className="font-ui text-[10px] tracking-[0.3em] text-chrome-500 uppercase rotate-[-90deg] origin-left translate-y-8 translate-x-3 whitespace-nowrap">Scroll</span>
-        <div className="w-[1px] h-16 bg-gradient-to-b from-electric-red to-transparent"></div>
       </div>
 
       {/* Brand marquee — V1 brand logo imagery in the Variant bottom bar */}

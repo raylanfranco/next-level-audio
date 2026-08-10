@@ -1,7 +1,7 @@
 import type { NavKey } from '../_lib/constants';
 
 // Nav icons ported from variant-designs/admin-panel.js getIcon().
-// Mapped to NLA's real nav keys (+ classes / best-sellers / coupons / price-compare).
+// Mapped to NLA's real nav keys (+ classes / best-sellers / coupons).
 export function NavIcon({ id, className }: { id: NavKey; className?: string }) {
   const props = {
     className: className ?? 'w-5 h-5',
@@ -104,12 +104,6 @@ export function NavIcon({ id, className }: { id: NavKey; className?: string }) {
           <path strokeLinecap="square" strokeLinejoin="miter" d="M6 2h9l5 5v15H6z" />
           <path strokeLinecap="square" strokeLinejoin="miter" d="M14 2v6h6" />
           <path strokeLinecap="square" strokeLinejoin="miter" d="M9 13h6M9 17h6" />
-        </svg>
-      );
-    case 'price-compare':
-      return (
-        <svg {...props}>
-          <path strokeLinecap="square" strokeLinejoin="miter" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
       );
     default:
