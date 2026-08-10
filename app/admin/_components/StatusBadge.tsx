@@ -8,7 +8,7 @@ export function StatusBadge({ status }: { status: string }) {
   const cls = colors ? (theme === 'dark' ? colors.dark : colors.light) : '';
   return (
     <span className={`px-2.5 py-1 text-xs border font-heading uppercase tracking-wide ${cls}`}>
-      {status.replace('_', ' ')}
+      {(status === 'cancelled' ? 'canceled' : status).replace(/_/g, ' ')}
     </span>
   );
 }

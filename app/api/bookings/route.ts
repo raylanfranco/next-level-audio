@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthedUser } from '@/lib/auth/requireAdmin';
 
-const BAYREADY_API = process.env.BAYREADY_API_URL || 'https://whos-next-production.up.railway.app';
-const BAYREADY_MERCHANT_ID = process.env.BAYREADY_MERCHANT_ID || 'cmn7rxnc6000001ofxq4dea0q';
+// Who's Next backend (formerly BayReady). BAYREADY_* env vars are legacy
+// fallbacks — remove once Vercel is switched to WHOS_NEXT_*.
+const WHOS_NEXT_API =
+  process.env.WHOS_NEXT_API_URL || process.env.BAYREADY_API_URL || 'https://whos-next-production.up.railway.app';
+const WHOS_NEXT_MERCHANT_ID =
+  process.env.WHOS_NEXT_MERCHANT_ID || process.env.BAYREADY_MERCHANT_ID || 'cmn7rxnc6000001ofxq4dea0q';
 
 // Role-aware: admins see all bookings; a regular authenticated user sees only
 // bookings matching THEIR OWN profile email (server-side filtered — the client
@@ -17,26 +21,26 @@ export async function GET(request: NextRequest) {
   const to = searchParams.get('to');
 
   try {
-    const params = new URLSearchParams({ merchantId: BAYREADY_MERCHANT_ID });
+    const params = new URLSearchParams({ merchantId: WHOS_NEXT_MERCHANT_ID });
     if (status) params.set('status', status);
     if (from) params.set('from', from);
     if (to) params.set('to', to);
 
-    const res = await fetch(`${BAYREADY_API}/bookings?${params}`, {
+    const res = await fetch(`${WHOS_NEXT_API}/bookings?${params}`, {
       headers: { 'Content-Type': 'application/json' },
       cache: 'no-store',
     });
 
     if (!res.ok) {
       const text = await res.text();
-      console.error('BayReady bookings fetch error:', res.status, text);
+      console.error("Who's Next bookings fetch error:", res.status, text);
       return NextResponse.json({ bookings: [] });
     }
 
-    const bayreadyBookings = await res.json();
+    const upstreamBookings = await res.json();
 
-    // Map BayReady booking shape to NLA admin shape
-    const bookings = (Array.isArray(bayreadyBookings) ? bayreadyBookings : []).map((b: {
+    // Map Who's Next booking shape to NLA admin shape
+    const bookings = (Array.isArray(upstreamBookings) ? upstreamBookings : []).map((b: {
       id: string;
       startsAt: string;
       status: string;
@@ -89,7 +93,7 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({ bookings: scoped });
   } catch (error) {
-    console.error('Error fetching bookings from BayReady:', error);
+    console.error("Error fetching bookings from Who's Next:", error);
     return NextResponse.json({ bookings: [] });
   }
 }
@@ -98,11 +102,11 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const res = await fetch(`${BAYREADY_API}/bookings`, {
+    const res = await fetch(`${WHOS_NEXT_API}/bookings`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        merchantId: BAYREADY_MERCHANT_ID,
+        merchantId: WHOS_NEXT_MERCHANT_ID,
         ...body,
       }),
     });
