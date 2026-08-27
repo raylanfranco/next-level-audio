@@ -12126,5 +12126,13 @@
     "upc": "STX20005D2025100009",
     "fetchedAt": "2026-08-11T08:08:33.535Z",
     "status": "pending"
+  },
+  "JC0Q2GHDK4ZRT": {
+    "imageUrl": null,
+    "source": "skipped",
+    "name": "Pipeman Installation Solution Is-pioss Side Step Module When Bypassing Parking Brake",
+    "upc": "784644751206",
+    "fetchedAt": "2026-08-27T18:03:51.415Z",
+    "status": "pending"
   }
 }
