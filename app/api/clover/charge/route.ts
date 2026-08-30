@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { createServerClient } from '@/lib/supabase/client';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { awardPoints, calculatePurchasePoints, processReferralBonus } from '@/lib/rewards';
+import { isActiveVip, VIP_DISCOUNT_PERCENT } from '@/lib/vip';
 
 const chargeSchema = z.object({
   token: z.string().min(1, 'Payment token is required'),
@@ -18,6 +19,7 @@ const chargeSchema = z.object({
     })),
     subtotal_cents: z.number(),
     discount_cents: z.number(),
+    vip_discount_cents: z.number().int().min(0).optional().default(0),
     total_cents: z.number(),
     coupon_id: z.string().nullable(),
     customer_name: z.string(),
@@ -45,6 +47,31 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     const validated = chargeSchema.parse(body);
+
+    // Resolve the signed-in user once — needed to verify a VIP discount
+    // before charging, and for points/referrals afterwards.
+    const supabaseAuth = await createSupabaseServerClient();
+    const { data: { user: authedUser } } = await supabaseAuth.auth.getUser();
+
+    // Verify any claimed VIP discount server-side before money moves:
+    // must be a signed-in active member, at most 10% of the subtotal, and
+    // not stacked with a coupon.
+    const vipDiscount = validated.orderData?.vip_discount_cents ?? 0;
+    if (vipDiscount > 0) {
+      const od = validated.orderData!;
+      const maxVip = Math.round((od.subtotal_cents * VIP_DISCOUNT_PERCENT) / 100);
+      const vipOk =
+        !!authedUser &&
+        vipDiscount <= maxVip &&
+        !od.coupon_id &&
+        (await isActiveVip(authedUser.id));
+      if (!vipOk) {
+        return NextResponse.json(
+          { error: 'VIP discount could not be verified' },
+          { status: 400 }
+        );
+      }
+    }
 
     // Get client IP for fraud prevention
     const clientIp =
@@ -91,10 +118,7 @@ export async function POST(request: NextRequest) {
       const od = validated.orderData;
 
       try {
-        // Check if user is authenticated
-        const supabase = await createSupabaseServerClient();
-        const { data: { user } } = await supabase.auth.getUser();
-
+        const user = authedUser;
         const adminClient = createServerClient();
 
         // Save order to Supabase

@@ -528,6 +528,12 @@ SUPABASE_SERVICE_ROLE_KEY=      # Supabase service role key (for admin operation
 # Email
 RESEND_API_KEY=                 # Resend API key for sending emails
 
+# Stripe — VIP membership subscriptions (Ben's own Stripe account, the same
+# one Who's Next booking deposits land in; plain API keys, NOT Connect)
+STRIPE_SECRET_KEY=              # sk_live_... from Ben's Stripe dashboard
+STRIPE_VIP_PRICE_ID=            # price_... for the $199/year VIP product
+STRIPE_WEBHOOK_SECRET=          # whsec_... for the /api/stripe/webhook endpoint
+
 # Who's Next booking backend (all optional — code defaults to production whos-next URLs;
 # BAYREADY_API_URL / BAYREADY_MERCHANT_ID / NEXT_PUBLIC_BAYREADY_API_URL are honored as legacy fallbacks)
 WHOS_NEXT_API_URL=              # https://whos-next-production.up.railway.app
@@ -715,6 +721,14 @@ allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-
 - Has its own theme system (`AdminThemeProvider`) with dark/light toggle.
 - **Authentication:** Supabase Auth with email/password via `middleware.ts`. Unauthenticated users are redirected to `/admin/login`. Login page at `app/admin/login/page.tsx`. Logout calls `supabase.auth.signOut()`.
 - Auth clients: `lib/supabase/browser.ts` (browser singleton), `lib/supabase/server.ts` (server-side with cookies), `lib/supabase/middleware.ts` (SSR client for middleware checks).
+
+### VIP Membership (Stripe)
+- **$199/year "Next Level VIP"** subscription via Stripe Checkout, on **Ben's own Stripe account** (same account Who's Next deposits land in — plain API keys, no Connect). Clover still handles all product charges; Stripe is only for the membership.
+- Tables: `vip_memberships` (one row per profile, stable `member_number`, status mirrors the Stripe subscription) and `vip_benefit_usage` (ledger for the 2 diagnostic visits + 2 checkups per membership year). Migration: `supabase/migrations/20260830_vip_memberships.sql`.
+- Flow: `/vip` marketing page → `/account/membership` (join CTA) → `POST /api/vip/checkout` (Stripe Checkout, subscription mode) → `POST /api/stripe/webhook` activates the row. `POST /api/vip/portal` opens the Stripe customer portal for card updates/cancels. `GET /api/vip/status` powers the account page and checkout discount.
+- **Checkout discount:** active VIPs get 10% off automatically in `CheckoutModal`; VIP and coupons do NOT stack (larger one wins). The charge route re-verifies the VIP portion server-side (`vip_discount_cents` must be ≤ 10% of subtotal, member must be active, no coupon_id) BEFORE charging.
+- Webhook events to configure in Stripe: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`. Stripe API 2025+ moved `current_period_*` onto the subscription item — `syncMembershipFromSubscription` in `lib/vip.ts` handles both shapes.
+- Not built yet (deliberately): admin UI for marking benefit usage (table exists), birthday perk (needs a birthday field Ben hasn't approved), monthly price option.
 
 ### Who's Next Integration
 - The admin bookings status dropdown (`app/admin/bookings/page.tsx`) has a `STATUS_TRANSITIONS` map that must mirror `VALID_TRANSITIONS` in the Who's Next backend's `booking.service.ts` — if transitions change there, update it here or the dropdown will offer moves the API rejects (the error is surfaced, but still).

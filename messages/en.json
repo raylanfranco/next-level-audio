@@ -49,7 +49,8 @@
     "myAccount": "My account",
     "shoppingCart": "Shopping cart",
     "closeMenu": "Close menu",
-    "toggleMenu": "Toggle menu"
+    "toggleMenu": "Toggle menu",
+    "vip": "VIP"
   },
   "footer": {
     "brandName": "NEXT LEVEL AUDIO",
@@ -510,10 +511,11 @@
     "yourReferrals": "Your Referrals",
     "noReferralsDesc": "Share your code and start earning!",
     "plusPts": "+100 PTS",
-    "pendingStatus": "PENDING"
+    "pendingStatus": "PENDING",
+    "membership": "Membership"
   },
   "carAudioPage": {
-    "location": "STROUDSBURG, PA \u2022 POCONO REGION",
+    "location": "STROUDSBURG, PA • POCONO REGION",
     "heroTitle": "CUSTOM CAR AUDIO INSTALLATION",
     "heroDesc": "From basic speaker upgrades to full custom builds, our experienced technicians deliver premium sound tailored to your vehicle and your budget.",
     "getFreeQuote": "GET A FREE QUOTE",
@@ -562,7 +564,7 @@
     "upgradeDesc": "Ready for premium car audio? Contact us for a free consultation and quote."
   },
   "windowTintingPage": {
-    "location": "STROUDSBURG, PA \u2022 POCONO REGION",
+    "location": "STROUDSBURG, PA • POCONO REGION",
     "heroTitle": "PROFESSIONAL WINDOW TINTING",
     "heroDesc": "Premium ceramic and carbon window films installed by experienced technicians. Protect your interior, reduce heat, and upgrade your vehicle's look — right here in Stroudsburg.",
     "getFreeQuote": "GET A FREE QUOTE",
@@ -662,5 +664,56 @@
     "welcomeRedirect": "Welcome to Next Level Audio! Redirecting to your account...",
     "createOne": "Create one",
     "backToSite": "Back to site"
+  },
+  "vip": {
+    "accountTitle": "VIP MEMBERSHIP",
+    "cardTagline": "More than a customer",
+    "cardMembership": "Membership",
+    "cardMemberName": "Member Name",
+    "cardMemberNumber": "Member #",
+    "cardValidThru": "Valid Thru",
+    "pastDueNotice": "Your renewal payment failed. Update your card in Manage Billing to keep your VIP benefits.",
+    "canceledNotice": "Your membership has ended. Rejoin any time to restore your VIP benefits.",
+    "benefitDiagnostic": "VIP Diagnostic Visits",
+    "benefitCheckup": "VIP System Checkups",
+    "remainingThisYear": "remaining this year",
+    "manageBilling": "Manage Billing",
+    "rejoinCta": "Rejoin VIP",
+    "joinHeading": "Become a Next Level",
+    "joinSubheading": "Not just a customer. You're VIP.",
+    "perYear": "/ year",
+    "perk10Products": "10% off car audio products, tint, security & accessories",
+    "perk10Install": "10% off installation services",
+    "perkDiagnostics": "2 VIP diagnostic visits per year",
+    "perkCheckups": "2 free VIP system checkups per year",
+    "perkPriority": "Priority scheduling over non-members",
+    "perkDeals": "Members-only deals & early access to sales",
+    "joinCta": "Join VIP — $199/year",
+    "comingSoon": "VIP signup is coming soon. Check back shortly!"
+  },
+  "vipPage": {
+    "kicker": "Next Level Audio",
+    "heading": "VIP Membership",
+    "slogan": "Not just a customer. You're VIP.",
+    "perYear": "per year",
+    "productsTitle": "10% Off Products",
+    "productsDesc": "Car audio, speakers, amplifiers, subwoofers, accessories, window tint and security products.",
+    "installTitle": "10% Off Installation",
+    "installDesc": "Audio installs, remote starts, security systems, tint and other eligible installation services.",
+    "diagnosticsTitle": "2 VIP Diagnostic Visits",
+    "diagnosticsDesc": "Audio troubleshooting, wiring & connection inspection and system performance checks — included twice a year.",
+    "checkupsTitle": "2 Free System Checkups",
+    "checkupsDesc": "We inspect your system and catch potential problems before they become expensive repairs.",
+    "priorityTitle": "Priority Service",
+    "priorityDesc": "Members get priority scheduling over non-members when appointments are available.",
+    "supportTitle": "VIP Customer Support",
+    "supportDesc": "Priority assistance for systems installed or serviced by Next Level Audio.",
+    "dealsTitle": "Members-Only Deals",
+    "dealsDesc": "Special promotions that are never advertised to the general public.",
+    "earlyTitle": "Early Access",
+    "earlyDesc": "First access to major sales, new products and special installation promotions.",
+    "finePrint": "Discounts apply to eligible products and services and cannot be combined with other promotions. Diagnostic visits cover up to 30 minutes of basic diagnosis; additional labor is quoted at the member rate. Membership is non-transferable, is attached to your account, and benefits end when the membership ends. Parts and products remain subject to manufacturer and warranty policies.",
+    "cta": "Become a VIP",
+    "ctaSub": "Join today — limited memberships available."
   }
 }
