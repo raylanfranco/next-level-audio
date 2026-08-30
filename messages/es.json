@@ -49,7 +49,8 @@
     "myAccount": "Mi cuenta",
     "shoppingCart": "Carrito de compras",
     "closeMenu": "Cerrar menú",
-    "toggleMenu": "Abrir menú"
+    "toggleMenu": "Abrir menú",
+    "vip": "VIP"
   },
   "footer": {
     "brandName": "NEXT LEVEL AUDIO",
@@ -510,10 +511,11 @@
     "yourReferrals": "Tus Referidos",
     "noReferralsDesc": "¡Comparte tu código y empieza a ganar!",
     "plusPts": "+100 PTOS",
-    "pendingStatus": "PENDIENTE"
+    "pendingStatus": "PENDIENTE",
+    "membership": "Membresía"
   },
   "carAudioPage": {
-    "location": "STROUDSBURG, PA \u2022 REGIÓN DE POCONO",
+    "location": "STROUDSBURG, PA • REGIÓN DE POCONO",
     "heroTitle": "INSTALACIÓN DE AUDIO PARA AUTOS",
     "heroDesc": "Desde mejoras básicas de bocinas hasta construcciones personalizadas completas, nuestros técnicos experimentados entregan sonido premium adaptado a tu vehículo y tu presupuesto.",
     "getFreeQuote": "COTIZACIÓN GRATIS",
@@ -562,7 +564,7 @@
     "upgradeDesc": "¿Listo para audio premium? Contáctanos para una consulta y cotización gratis."
   },
   "windowTintingPage": {
-    "location": "STROUDSBURG, PA \u2022 REGIÓN DE POCONO",
+    "location": "STROUDSBURG, PA • REGIÓN DE POCONO",
     "heroTitle": "POLARIZADO DE VENTANAS PROFESIONAL",
     "heroDesc": "Películas de ventanas de cerámica y carbón premium instaladas por técnicos experimentados. Protege tu interior, reduce el calor y mejora la apariencia de tu vehículo — aquí mismo en Stroudsburg.",
     "getFreeQuote": "COTIZACIÓN GRATIS",
@@ -662,5 +664,56 @@
     "welcomeRedirect": "¡Bienvenido a Next Level Audio! Redirigiendo a tu cuenta...",
     "createOne": "Crear una",
     "backToSite": "Volver al sitio"
+  },
+  "vip": {
+    "accountTitle": "MEMBRESÍA VIP",
+    "cardTagline": "Más que un cliente",
+    "cardMembership": "Membresía",
+    "cardMemberName": "Nombre del miembro",
+    "cardMemberNumber": "Miembro #",
+    "cardValidThru": "Válida hasta",
+    "pastDueNotice": "El pago de tu renovación falló. Actualiza tu tarjeta en Administrar Facturación para conservar tus beneficios VIP.",
+    "canceledNotice": "Tu membresía ha terminado. Únete de nuevo cuando quieras para recuperar tus beneficios VIP.",
+    "benefitDiagnostic": "Visitas de diagnóstico VIP",
+    "benefitCheckup": "Revisiones de sistema VIP",
+    "remainingThisYear": "restantes este año",
+    "manageBilling": "Administrar facturación",
+    "rejoinCta": "Volver a unirse a VIP",
+    "joinHeading": "Conviértete en Next Level",
+    "joinSubheading": "No solo un cliente. Eres VIP.",
+    "perYear": "/ año",
+    "perk10Products": "10% de descuento en productos de audio, polarizado, seguridad y accesorios",
+    "perk10Install": "10% de descuento en servicios de instalación",
+    "perkDiagnostics": "2 visitas de diagnóstico VIP al año",
+    "perkCheckups": "2 revisiones de sistema VIP gratis al año",
+    "perkPriority": "Prioridad en citas sobre no miembros",
+    "perkDeals": "Ofertas exclusivas para miembros y acceso anticipado a ventas",
+    "joinCta": "Únete a VIP — $199/año",
+    "comingSoon": "La inscripción VIP llegará pronto. ¡Vuelve en breve!"
+  },
+  "vipPage": {
+    "kicker": "Next Level Audio",
+    "heading": "Membresía VIP",
+    "slogan": "No solo un cliente. Eres VIP.",
+    "perYear": "al año",
+    "productsTitle": "10% en productos",
+    "productsDesc": "Audio para autos, bocinas, amplificadores, subwoofers, accesorios, polarizado y productos de seguridad.",
+    "installTitle": "10% en instalación",
+    "installDesc": "Instalaciones de audio, arranques remotos, sistemas de seguridad, polarizado y otros servicios elegibles.",
+    "diagnosticsTitle": "2 visitas de diagnóstico VIP",
+    "diagnosticsDesc": "Diagnóstico de audio, inspección de cableado y conexiones y revisión de rendimiento — incluidas dos veces al año.",
+    "checkupsTitle": "2 revisiones gratis",
+    "checkupsDesc": "Inspeccionamos tu sistema y detectamos problemas antes de que se conviertan en reparaciones costosas.",
+    "priorityTitle": "Servicio prioritario",
+    "priorityDesc": "Los miembros tienen prioridad en la agenda sobre los no miembros cuando hay citas disponibles.",
+    "supportTitle": "Soporte VIP",
+    "supportDesc": "Asistencia prioritaria para sistemas instalados o reparados por Next Level Audio.",
+    "dealsTitle": "Ofertas exclusivas",
+    "dealsDesc": "Promociones especiales que nunca se anuncian al público general.",
+    "earlyTitle": "Acceso anticipado",
+    "earlyDesc": "Acceso primero a grandes ventas, productos nuevos y promociones especiales de instalación.",
+    "finePrint": "Los descuentos aplican a productos y servicios elegibles y no se combinan con otras promociones. Las visitas de diagnóstico cubren hasta 30 minutos de diagnóstico básico; el trabajo adicional se cotiza con tarifa de miembro. La membresía es intransferible, está vinculada a tu cuenta y los beneficios terminan cuando termina la membresía. Las piezas y productos quedan sujetos a las políticas del fabricante y de garantía.",
+    "cta": "Conviértete en VIP",
+    "ctaSub": "Únete hoy — membresías limitadas."
   }
 }

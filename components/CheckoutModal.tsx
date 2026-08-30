@@ -56,10 +56,29 @@ export default function CheckoutModal() {
   const [couponError, setCouponError] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState<AppliedCoupon | null>(null);
 
+  // VIP membership — active members get 10% off automatically
+  const [vipActive, setVipActive] = useState(false);
+
   const merchantId = process.env.NEXT_PUBLIC_CLOVER_MERCHANT_ID || '';
 
-  const discountCents = appliedCoupon?.discountCents || 0;
+  // VIP and coupons don't stack (membership terms) — the customer gets
+  // whichever discount is larger. Server re-verifies the VIP portion.
+  const couponDiscountCents = appliedCoupon?.discountCents || 0;
+  const vipEligibleCents = vipActive ? Math.round(total * 0.1) : 0;
+  const vipApplied = vipEligibleCents > couponDiscountCents;
+  const discountCents = vipApplied ? vipEligibleCents : couponDiscountCents;
   const finalTotal = Math.max(total - discountCents, 0);
+
+  useEffect(() => {
+    if (!isCheckoutOpen || !user) {
+      setVipActive(false);
+      return;
+    }
+    fetch('/api/vip/status')
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => setVipActive(data?.membership?.status === 'active'))
+      .catch(() => setVipActive(false));
+  }, [isCheckoutOpen, user]);
 
   // Auto-fill customer info from profile when stepping to payment
   useEffect(() => {
@@ -224,8 +243,9 @@ export default function CheckoutModal() {
             items: items.map((i) => ({ name: i.name, quantity: i.quantity, price: i.price })),
             subtotal_cents: total,
             discount_cents: discountCents,
+            vip_discount_cents: vipApplied ? vipEligibleCents : 0,
             total_cents: finalTotal,
-            coupon_id: appliedCoupon?.id || null,
+            coupon_id: vipApplied ? null : appliedCoupon?.id || null,
             customer_name: customerInfo.name,
             customer_email: customerInfo.email,
           },
@@ -326,6 +346,16 @@ export default function CheckoutModal() {
                     ))}
                   </div>
 
+                  {/* VIP member discount (auto-applied, doesn't stack with coupons) */}
+                  {vipActive && (
+                    <div className="flex items-center justify-between bg-[#E01020]/5 border border-[#E01020]/40 px-3 py-2 mb-2">
+                      <span className="text-[#E01020] font-mono text-xs font-bold">♛ VIP MEMBER — 10% OFF</span>
+                      <span className="text-[#E01020]/70 font-mono text-xs">
+                        {vipApplied ? `-${formatCents(vipEligibleCents)}` : 'coupon applied instead'}
+                      </span>
+                    </div>
+                  )}
+
                   {/* Coupon Input */}
                   <div className="mb-4">
                     {appliedCoupon ? (
@@ -375,7 +405,7 @@ export default function CheckoutModal() {
                           <span className="text-white/50 font-mono text-sm">{formatCents(total)}</span>
                         </div>
                         <div className="flex justify-between items-center mb-2">
-                          <span className="text-green-400 font-mono text-sm">Discount</span>
+                          <span className="text-green-400 font-mono text-sm">{vipApplied ? 'VIP Discount (10%)' : 'Discount'}</span>
                           <span className="text-green-400 font-mono text-sm">-{formatCents(discountCents)}</span>
                         </div>
                       </>
@@ -417,7 +447,9 @@ export default function CheckoutModal() {
                 ))}
                 {discountCents > 0 && (
                   <div className="flex justify-between text-sm mt-1">
-                    <span className="text-green-400 font-mono">Coupon ({appliedCoupon?.code})</span>
+                    <span className="text-green-400 font-mono">
+                      {vipApplied ? 'VIP Discount (10%)' : `Coupon (${appliedCoupon?.code})`}
+                    </span>
                     <span className="text-green-400 font-mono">-{formatCents(discountCents)}</span>
                   </div>
                 )}

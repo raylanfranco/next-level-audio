@@ -145,6 +145,12 @@ export default function Header() {
               {t('gallery')}
             </Link>
             <Link
+              href="/vip"
+              className={`${navLinkClass} text-electric-red`}
+            >
+              {t('vip')}
+            </Link>
+            <Link
               href="/careers"
               className={navLinkClass}
             >
@@ -264,6 +270,7 @@ export default function Header() {
             { href: '/' as const, label: t('home') },
             { href: '/products' as const, label: t('products') },
             { href: '/gallery' as const, label: t('gallery') },
+            { href: '/vip' as const, label: t('vip') },
             { href: '/careers' as const, label: t('careers') },
           ].map(({ href, label }) => (
             <Link

@@ -12,6 +12,7 @@ export default function AccountLayout({ children }: { children: React.ReactNode 
 
   const accountNav = [
     { href: '/account' as const, label: t('dashboard'), icon: '◆' },
+    { href: '/account/membership' as const, label: t('membership'), icon: '♛' },
     { href: '/account/orders' as const, label: t('orders'), icon: '◈' },
     { href: '/account/appointments' as const, label: t('appointments'), icon: '◇' },
     { href: '/account/rewards' as const, label: t('rewards'), icon: '★' },
