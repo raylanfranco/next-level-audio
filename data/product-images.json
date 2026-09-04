@@ -12142,5 +12142,13 @@
     "upc": "769103104151",
     "fetchedAt": "2026-08-28T19:13:41.395Z",
     "status": "pending"
+  },
+  "STXKB4JTKZGR4": {
+    "imageUrl": "http://www.goodsania.com/cdn/shop/products/4901301263827_2_1200x1200.jpg?v=1678250153",
+    "source": "google_upc",
+    "name": "DS18 OFCKIT4",
+    "upc": "810005183635",
+    "fetchedAt": "2026-09-04T11:57:43.888Z",
+    "status": "pending"
   }
 }
