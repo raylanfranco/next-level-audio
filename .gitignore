@@ -64,3 +64,5 @@ ROADMAP.md
 /variant-designs/
 
 .vercel
+# Supabase CLI local cache
+supabase/.temp/

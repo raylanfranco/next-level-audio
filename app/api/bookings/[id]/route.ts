@@ -1,10 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin } from '@/lib/auth/requireAdmin';
 
-// Who's Next backend (formerly BayReady). BAYREADY_API_URL is a legacy
-// fallback — remove once Vercel is switched to WHOS_NEXT_API_URL.
-const WHOS_NEXT_API =
-  process.env.WHOS_NEXT_API_URL || process.env.BAYREADY_API_URL || 'https://whos-next-production.up.railway.app';
+import { WHOS_NEXT_API, bookingManagementHeaders } from '@/lib/whos-next';
 
 // Admin only — changing booking status / deleting bookings.
 export async function PATCH(
@@ -18,7 +15,7 @@ export async function PATCH(
 
   try {
     const body = await request.json();
-    const status = body.status?.toUpperCase();
+    const status = typeof body.status === 'string' ? body.status.toUpperCase() : null;
 
     if (!status) {
       return NextResponse.json({ error: 'Status is required' }, { status: 400 });
@@ -26,7 +23,8 @@ export async function PATCH(
 
     const res = await fetch(`${WHOS_NEXT_API}/bookings/${id}/status`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
+      headers: bookingManagementHeaders(),
+      signal: AbortSignal.timeout(15000),
       body: JSON.stringify({ status }),
     });
 
@@ -62,6 +60,8 @@ export async function DELETE(
   try {
     const res = await fetch(`${WHOS_NEXT_API}/bookings/${id}`, {
       method: 'DELETE',
+      headers: bookingManagementHeaders(),
+      signal: AbortSignal.timeout(15000),
     });
 
     if (!res.ok) {

@@ -240,7 +240,7 @@ export default function CheckoutModal() {
           receipt_email: customerInfo.email,
           // Order metadata for saving
           orderData: {
-            items: items.map((i) => ({ name: i.name, quantity: i.quantity, price: i.price })),
+            items: items.map((i) => ({ id: i.id, name: i.name, quantity: i.quantity, price: i.price })),
             subtotal_cents: total,
             discount_cents: discountCents,
             vip_discount_cents: vipApplied ? vipEligibleCents : 0,

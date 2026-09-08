@@ -4,6 +4,8 @@ import createNextIntlPlugin from "next-intl/plugin";
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 
 const nextConfig: NextConfig = {
+  // Keep unrelated lockfiles in parent directories out of this application's build.
+  turbopack: { root: process.cwd() },
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [

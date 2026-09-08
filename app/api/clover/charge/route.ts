@@ -3,20 +3,23 @@ import { z } from 'zod';
 import { createServerClient } from '@/lib/supabase/client';
 import { createSupabaseServerClient } from '@/lib/supabase/server';
 import { awardPoints, calculatePurchasePoints, processReferralBonus } from '@/lib/rewards';
-import { isActiveVip, VIP_DISCOUNT_PERCENT } from '@/lib/vip';
+import { cloverFetch } from '@/lib/clover/client';
+import { CheckoutValidationError, validateCheckout } from '@/lib/checkout-validation';
+import { isActiveVip } from '@/lib/vip';
 
 const chargeSchema = z.object({
   token: z.string().min(1, 'Payment token is required'),
   amount: z.number().int().min(1, 'Amount must be at least 1 cent'),
-  currency: z.string().default('usd'),
+  currency: z.literal('usd').default('usd'),
   description: z.string().optional().default(''),
   receipt_email: z.string().email().optional(),
   orderData: z.object({
     items: z.array(z.object({
+      id: z.string().regex(/^[A-Za-z0-9_-]+$/).max(100),
       name: z.string(),
-      quantity: z.number(),
+      quantity: z.number().int().min(1).max(100),
       price: z.number(),
-    })),
+    })).min(1).max(100),
     subtotal_cents: z.number(),
     discount_cents: z.number(),
     vip_discount_cents: z.number().int().min(0).optional().default(0),
@@ -24,7 +27,7 @@ const chargeSchema = z.object({
     coupon_id: z.string().nullable(),
     customer_name: z.string(),
     customer_email: z.string(),
-  }).optional(),
+  }),
 });
 
 export async function POST(request: NextRequest) {
@@ -53,25 +56,17 @@ export async function POST(request: NextRequest) {
     const supabaseAuth = await createSupabaseServerClient();
     const { data: { user: authedUser } } = await supabaseAuth.auth.getUser();
 
-    // Verify any claimed VIP discount server-side before money moves:
-    // must be a signed-in active member, at most 10% of the subtotal, and
-    // not stacked with a coupon.
-    const vipDiscount = validated.orderData?.vip_discount_cents ?? 0;
-    if (vipDiscount > 0) {
-      const od = validated.orderData!;
-      const maxVip = Math.round((od.subtotal_cents * VIP_DISCOUNT_PERCENT) / 100);
-      const vipOk =
-        !!authedUser &&
-        vipDiscount <= maxVip &&
-        !od.coupon_id &&
-        (await isActiveVip(authedUser.id));
-      if (!vipOk) {
-        return NextResponse.json(
-          { error: 'VIP discount could not be verified' },
-          { status: 400 }
-        );
-      }
-    }
+    // Resolve authoritative prices and discounts before any money moves.
+    const catalog = await Promise.all(validated.orderData.items.map(item =>
+      cloverFetch<{ id: string; name: string; price: number; deleted?: boolean; available?: boolean }>(`/items/${encodeURIComponent(item.id)}`)
+    ));
+    const couponResult = validated.orderData.coupon_id
+      ? await createServerClient().from('coupons').select('*').eq('id', validated.orderData.coupon_id).single()
+      : null;
+    if (couponResult?.error) throw new CheckoutValidationError('Coupon could not be verified');
+    const verified = validateCheckout(validated, catalog, couponResult?.data ?? null,
+      !!authedUser && validated.orderData.vip_discount_cents > 0 && await isActiveVip(authedUser.id));
+    Object.assign(validated.orderData, verified);
 
     // Get client IP for fraud prevention
     const clientIp =
@@ -88,7 +83,7 @@ export async function POST(request: NextRequest) {
         'x-forwarded-for': clientIp,
       },
       body: JSON.stringify({
-        amount: validated.amount,
+        amount: verified.total_cents,
         currency: validated.currency,
         source: validated.token,
         description: validated.description,
@@ -180,6 +175,7 @@ export async function POST(request: NextRequest) {
       pointsEarned,
     });
   } catch (error) {
+    if (error instanceof CheckoutValidationError) return NextResponse.json({ error: error.message }, { status: 409 });
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: 'Validation failed', details: error.issues },
