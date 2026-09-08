@@ -81,7 +81,7 @@ export async function getAuthedUser(): Promise<
   return {
     ok: true,
     userId: user.id,
-    email: profile?.email ?? user.email ?? null,
+    email: user.email ?? null,
     isAdmin: profile?.role === 'admin',
   };
 }

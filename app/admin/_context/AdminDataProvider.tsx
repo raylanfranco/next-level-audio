@@ -30,6 +30,7 @@ interface AdminData {
   pendingApplications: number;
   pendingImages: number;
   loading: boolean;
+  bookingError: string | null;
   refresh: () => Promise<void>;
 }
 
@@ -53,6 +54,7 @@ export function AdminDataProvider({ children }: { children: React.ReactNode }) {
   const [applications, setApplications] = useState<CareerApplication[]>([]);
   const [pendingImages, setPendingImages] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [bookingError, setBookingError] = useState<string | null>(null);
 
   // Preserve the original Promise.allSettled partial-failure tolerance verbatim.
   const refresh = useCallback(async () => {
@@ -95,6 +97,9 @@ export function AdminDataProvider({ children }: { children: React.ReactNode }) {
       if (bookRes.status === 'fulfilled' && bookRes.value.ok) {
         const d = await bookRes.value.json();
         setBookings(d.bookings || []);
+        setBookingError(null);
+      } else {
+        setBookingError('Appointments could not be refreshed. Previously loaded appointments may be out of date.');
       }
       if (inqRes.status === 'fulfilled' && inqRes.value.ok) {
         const d = await inqRes.value.json();
@@ -134,6 +139,7 @@ export function AdminDataProvider({ children }: { children: React.ReactNode }) {
     pendingApplications: applications.filter((a) => a.status === 'pending').length,
     pendingImages,
     loading,
+    bookingError,
     refresh,
   };
 

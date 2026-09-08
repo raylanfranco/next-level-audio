@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import type { Booking } from '@/types/booking';
 import { useAuth } from '@/components/AuthContext';
 
 interface Appointment {
@@ -17,8 +18,8 @@ interface Appointment {
 function formatDateTime(dateStr: string) {
   const d = new Date(dateStr);
   return {
-    date: d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }),
-    time: d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
+    date: d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', timeZone: 'America/New_York' }),
+    time: d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }),
   };
 }
 
@@ -38,35 +39,34 @@ function statusColor(status: string) {
 }
 
 export default function AccountAppointmentsPage() {
+  const { profile, isLoading } = useAuth();
+  if (isLoading) return <div role="status" className="py-20 text-center">Loading…</div>;
+  if (!profile) return <div role="alert">Your account could not be loaded. Please sign in again.</div>;
+  return <AppointmentsContent key={profile.id} />;
+}
+
+function AppointmentsContent() {
   const t = useTranslations('account');
-  const { profile } = useAuth();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
+  const [attempt, setAttempt] = useState(0);
 
   useEffect(() => {
-    if (!profile?.email) return;
+    const controller = new AbortController();
+    fetch('/api/bookings', { signal: controller.signal })
+      .then(res => { if (!res.ok) throw new Error('Unavailable'); return res.json(); })
+      .then(data => setAppointments(data.bookings.map((b: Booking) => ({
+        id: b.id, service_name: b.service_type, starts_at: b.starts_at, ends_at: b.ends_at,
+        status: b.status, vehicle_info: [b.vehicle_year, b.vehicle_make, b.vehicle_model, b.vehicle_trim].filter(Boolean).join(' ') || null,
+        notes: b.notes || null,
+      }))))
+      .catch(() => { if (!controller.signal.aborted) setError(true); })
+      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
+    return () => controller.abort();
+  }, [attempt]);
 
-    // Fetch appointments from BayReady via our proxy
-    fetch(`/api/bookings?email=${encodeURIComponent(profile.email)}`)
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data) => {
-        if (data?.bookings) {
-          setAppointments(
-            data.bookings.map((b: Record<string, unknown>) => ({
-              id: b.id,
-              service_name: (b.service as Record<string, unknown>)?.name || b.serviceName || 'Service',
-              starts_at: b.startsAt || b.starts_at,
-              ends_at: b.endsAt || b.ends_at,
-              status: b.status || 'pending',
-              vehicle_info: b.vehicleInfo || b.vehicle_info || null,
-              notes: b.notes || null,
-            }))
-          );
-        }
-      })
-      .catch(() => {})
-      .finally(() => setLoading(false));
-  }, [profile?.email]);
+  if (error) return <div role="alert">Appointments could not be loaded. <button className="underline" onClick={() => { setLoading(true); setError(false); setAttempt(n => n + 1); }}>Try again</button></div>;
 
   if (loading) {
     return (

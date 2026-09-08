@@ -1,12 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getAuthedUser } from '@/lib/auth/requireAdmin';
 
-// Who's Next backend (formerly BayReady). BAYREADY_* env vars are legacy
-// fallbacks — remove once Vercel is switched to WHOS_NEXT_*.
-const WHOS_NEXT_API =
-  process.env.WHOS_NEXT_API_URL || process.env.BAYREADY_API_URL || 'https://whos-next-production.up.railway.app';
-const WHOS_NEXT_MERCHANT_ID =
-  process.env.WHOS_NEXT_MERCHANT_ID || process.env.BAYREADY_MERCHANT_ID || 'cmn7rxnc6000001ofxq4dea0q';
+import { WHOS_NEXT_API, WHOS_NEXT_MERCHANT_ID, bookingManagementHeaders } from '@/lib/whos-next';
+import { mapBooking, type UpstreamBooking } from '@/lib/booking-contract';
 
 // Role-aware: admins see all bookings; a regular authenticated user sees only
 // bookings matching THEIR OWN profile email (server-side filtered — the client
@@ -22,67 +18,26 @@ export async function GET(request: NextRequest) {
 
   try {
     const params = new URLSearchParams({ merchantId: WHOS_NEXT_MERCHANT_ID });
-    if (status) params.set('status', status);
+    if (status) params.set('status', status.toUpperCase());
     if (from) params.set('from', from);
     if (to) params.set('to', to);
 
     const res = await fetch(`${WHOS_NEXT_API}/bookings?${params}`, {
-      headers: { 'Content-Type': 'application/json' },
+      headers: bookingManagementHeaders(),
+      signal: AbortSignal.timeout(15000),
       cache: 'no-store',
     });
 
     if (!res.ok) {
       const text = await res.text();
       console.error("Who's Next bookings fetch error:", res.status, text);
-      return NextResponse.json({ bookings: [] });
+      return NextResponse.json({ error: 'Appointments are temporarily unavailable' }, { status: 502 });
     }
 
     const upstreamBookings = await res.json();
 
-    // Map Who's Next booking shape to NLA admin shape
-    const bookings = (Array.isArray(upstreamBookings) ? upstreamBookings : []).map((b: {
-      id: string;
-      startsAt: string;
-      status: string;
-      notes?: string;
-      depositAmountCents?: number;
-      depositPaidAt?: string;
-      cloverChargeId?: string;
-      createdAt: string;
-      updatedAt: string;
-      service?: { name?: string; priceCents?: number; durationMins?: number };
-      customer?: { name?: string; email?: string; phone?: string };
-      vehicle?: { year?: number; make?: string; model?: string; trim?: string } | null;
-    }) => {
-      const startsAt = new Date(b.startsAt);
-      return {
-        id: b.id,
-        customer_name: b.customer?.name || 'Unknown',
-        customer_email: b.customer?.email || '',
-        customer_phone: b.customer?.phone || '',
-        service_type: b.service?.name || 'Unknown Service',
-        service_price_cents: b.service?.priceCents,
-        service_duration_mins: b.service?.durationMins,
-        vehicle_make: b.vehicle?.make,
-        vehicle_model: b.vehicle?.model,
-        vehicle_year: b.vehicle?.year,
-        vehicle_trim: b.vehicle?.trim,
-        appointment_date: startsAt.toISOString().split('T')[0],
-        appointment_time: startsAt.toLocaleTimeString('en-US', {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: false,
-          timeZone: 'America/New_York',
-        }),
-        notes: b.notes,
-        status: b.status.toLowerCase(),
-        deposit_amount_cents: b.depositAmountCents,
-        deposit_paid_at: b.depositPaidAt,
-        clover_charge_id: b.cloverChargeId,
-        created_at: b.createdAt,
-        updated_at: b.updatedAt,
-      };
-    });
+    if (!Array.isArray(upstreamBookings)) throw new Error('Invalid booking response');
+    const bookings = (upstreamBookings as UpstreamBooking[]).map(mapBooking);
 
     // Non-admins only see their own bookings (by profile email).
     const scoped = auth.isAdmin
@@ -94,7 +49,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ bookings: scoped });
   } catch (error) {
     console.error("Error fetching bookings from Who's Next:", error);
-    return NextResponse.json({ bookings: [] });
+    return NextResponse.json({ error: 'Appointments are temporarily unavailable' }, { status: 502 });
   }
 }
 
@@ -106,8 +61,8 @@ export async function POST(request: NextRequest) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        merchantId: WHOS_NEXT_MERCHANT_ID,
         ...body,
+        merchantId: WHOS_NEXT_MERCHANT_ID,
       }),
     });
 

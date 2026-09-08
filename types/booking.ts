@@ -1,4 +1,4 @@
-export type BookingStatus = 'pending' | 'confirmed' | 'in_progress' | 'completed' | 'cancelled' | 'no_show';
+export type BookingStatus = 'pending' | 'confirmed' | 'checked_in' | 'waiting_on_parts' | 'in_progress' | 'completed' | 'cancelled' | 'no_show';
 
 export interface Booking {
   id: string;
@@ -12,6 +12,9 @@ export interface Booking {
   vehicle_model?: string;
   vehicle_year?: number;
   vehicle_trim?: string;
+  starts_at: string;
+  ends_at: string;
+  allowed_statuses: BookingStatus[];
   appointment_date: string;
   appointment_time: string;
   notes?: string;

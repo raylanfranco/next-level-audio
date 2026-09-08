@@ -4,29 +4,19 @@ import { useAdminData } from '../_context/AdminDataProvider';
 import { InstrumentPanel } from '../_components/InstrumentPanel';
 import { StatusBadge } from '../_components/StatusBadge';
 import { formatCents } from '../_lib/format';
+import { useState } from 'react';
 import type { BookingStatus } from '@/types/booking';
-
-// Mirrors VALID_TRANSITIONS in the Who's Next backend (booking.service.ts) —
-// the select only offers moves the API will accept. checked_in /
-// waiting_on_parts / in_progress are legacy statuses old bookings may still
-// hold; their entries only let those bookings exit.
-const STATUS_TRANSITIONS: Record<string, BookingStatus[]> = {
-  pending: ['confirmed', 'cancelled'],
-  confirmed: ['completed', 'cancelled', 'no_show'],
-  checked_in: ['completed', 'cancelled', 'no_show'],
-  waiting_on_parts: ['completed', 'cancelled'],
-  in_progress: ['completed', 'cancelled'],
-  completed: [],
-  cancelled: ['pending', 'confirmed'],
-  no_show: [],
-};
 
 const statusLabel = (s: string) => (s === 'cancelled' ? 'canceled' : s).replace(/_/g, ' ');
 
 export default function BookingsPage() {
-  const { bookings, loading, refresh } = useAdminData();
+  const { bookings, loading, refresh, bookingError } = useAdminData();
+  const [busyId, setBusyId] = useState<string | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   const updateStatus = async (id: string, status: BookingStatus) => {
+    setBusyId(id);
+    setActionError(null);
     try {
       const res = await fetch(`/api/bookings/${id}`, {
         method: 'PATCH',
@@ -34,26 +24,30 @@ export default function BookingsPage() {
         body: JSON.stringify({ status }),
       });
       if (res.ok) {
-        refresh(); // resync data + sidebar badge
+        await refresh(); // resync data + sidebar badge
       } else {
         const body = await res.json().catch(() => null);
-        alert(body?.error || 'Failed to update booking status');
-        refresh(); // snap the select back to the real status
+        setActionError(body?.error || 'Failed to update booking status');
+        await refresh(); // snap the select back to the real status
       }
     } catch (e) {
       console.error('Error updating booking status:', e);
-      alert('Failed to update booking status');
-    }
+      setActionError('Failed to update booking status');
+    } finally { setBusyId(null); }
   };
 
   const deleteBooking = async (id: string) => {
     if (!confirm('Delete this booking? This cannot be undone.')) return;
+    setBusyId(id);
+    setActionError(null);
     try {
       const res = await fetch(`/api/bookings/${id}`, { method: 'DELETE' });
-      if (res.ok) refresh();
+      if (res.ok) await refresh();
+      else setActionError('Failed to delete booking. Please try again.');
     } catch (e) {
       console.error('Error deleting booking:', e);
-    }
+      setActionError('Failed to delete booking. Please try again.');
+    } finally { setBusyId(null); }
   };
 
   const selectCls = 'adm-input px-3 py-1.5 text-sm font-body cursor-pointer';
@@ -67,6 +61,7 @@ export default function BookingsPage() {
         </a>
       </div>
 
+      {(bookingError || actionError) && <div role="alert" className="adm-input p-4">{actionError || bookingError} <button onClick={() => refresh()} className="underline">Retry</button></div>}
       <InstrumentPanel className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -108,12 +103,12 @@ export default function BookingsPage() {
                     <td className="px-6 py-3"><StatusBadge status={b.status} /></td>
                     <td className="px-6 py-3">
                       <div className="flex items-center gap-2">
-                        <select value={b.status} onChange={(e) => updateStatus(b.id, e.target.value as BookingStatus)} className={selectCls}>
-                          {[b.status, ...(STATUS_TRANSITIONS[b.status] ?? [])].map((s) => (
+                        <select aria-label={`Status for ${b.customer_name}`} disabled={busyId !== null} value={b.status} onChange={(e) => updateStatus(b.id, e.target.value as BookingStatus)} className={selectCls}>
+                          {[b.status, ...(b.allowed_statuses ?? [])].map((s) => (
                             <option key={s} value={s}>{statusLabel(s)}</option>
                           ))}
                         </select>
-                        <button onClick={() => deleteBooking(b.id)} className="font-heading text-xs uppercase tracking-wider cursor-pointer hover:opacity-70" style={{ color: 'var(--adm-primary)' }}>Delete</button>
+                        <button disabled={busyId !== null} onClick={() => deleteBooking(b.id)} className="font-heading text-xs uppercase tracking-wider cursor-pointer hover:opacity-70" style={{ color: 'var(--adm-primary)' }}>Delete</button>
                       </div>
                     </td>
                   </tr>
@@ -122,7 +117,7 @@ export default function BookingsPage() {
             </tbody>
           </table>
         </div>
-        {!loading && bookings.length === 0 && <div className="text-center py-12 text-sm font-body" style={{ color: 'var(--adm-text-muted)' }}>No bookings found. Appointments from Who&apos;s Next? will appear here.</div>}
+        {!loading && !bookingError && bookings.length === 0 && <div className="text-center py-12 text-sm font-body" style={{ color: 'var(--adm-text-muted)' }}>No bookings found. Appointments from Who&apos;s Next? will appear here.</div>}
         {loading && <div className="text-center py-12 text-sm font-body" style={{ color: 'var(--adm-text-muted)' }}>Loading…</div>}
       </InstrumentPanel>
     </div>
