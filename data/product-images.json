@@ -12150,5 +12150,13 @@
     "upc": "810005183635",
     "fetchedAt": "2026-09-04T11:57:43.888Z",
     "status": "pending"
+  },
+  "5JP4EPYZ4NXG8": {
+    "imageUrl": "https://a.allegroimg.com/original/11757b/1d70f38b4e758b51b4f53fdd797c/KENWOOD-KSC-PSW7EQ-subwoofer-z-moca",
+    "source": "google_upc",
+    "name": "Kenwood KSC-PSW7EQ POWERED ENCLOSED SUBWOOFER.",
+    "upc": "019048235312",
+    "fetchedAt": "2026-09-12T11:27:01.021Z",
+    "status": "pending"
   }
 }
