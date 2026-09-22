@@ -12158,5 +12158,21 @@
     "upc": "019048235312",
     "fetchedAt": "2026-09-12T11:27:01.021Z",
     "status": "pending"
+  },
+  "X2MS36VBQ7426": {
+    "imageUrl": "https://m.media-amazon.com/images/I/81ZolK5CXnL._AC_.jpg",
+    "source": "google_upc",
+    "name": "Audio Pipe Power Capacitor Acap-D6000",
+    "upc": "784644767696",
+    "fetchedAt": "2026-09-22T12:19:34.871Z",
+    "status": "pending"
+  },
+  "GAM1BAA96HXA2": {
+    "imageUrl": "https://cdn.shopify.com/s/files/1/0288/8204/2962/t/2/assets/description_image_tipos_de_cabello_rizado.jpg?v=1589983435",
+    "source": "google_upc",
+    "name": "MET-FD4 DATA INTERFACE WITH SWC FORD",
+    "upc": "086429515110",
+    "fetchedAt": "2026-09-22T12:19:39.196Z",
+    "status": "pending"
   }
 }
