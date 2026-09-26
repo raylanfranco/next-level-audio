@@ -12174,5 +12174,29 @@
     "upc": "086429515110",
     "fetchedAt": "2026-09-22T12:19:39.196Z",
     "status": "pending"
+  },
+  "R5SHZ69KDPRZA": {
+    "imageUrl": "https://buongif.com/wp-content/uploads/2026/02/john-wick-meme-looking-down-image.jpg",
+    "source": "google_upc",
+    "name": "HDPA FRISTECH REMOTE STARTER HARNESS",
+    "upc": "840127710402",
+    "fetchedAt": "2026-09-26T12:02:08.663Z",
+    "status": "pending"
+  },
+  "CE1WDR41F7AYA": {
+    "imageUrl": "https://people.com/thmb/7G8JF_44FbM8cV4i_hkIxsVop7I=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc():focal(734x9:736x11)/priscilla-barnes-john-ritter-050523-5-850a13c8515e4c8486fa7b3effa2aadf.jpg",
+    "source": "google_upc",
+    "name": "MAP2 FIRSTECH",
+    "upc": "840127710426",
+    "fetchedAt": "2026-09-26T12:02:12.974Z",
+    "status": "pending"
+  },
+  "YJJZ4TDC2MSWM": {
+    "imageUrl": "https://m104216-ucdn.mp.lura.live/iupl_lin/EE8/465/EE8465219124D40FB624B6729C3ADC75.jpg?Expires=2082758400&KeyName=mcpkey1&Signature=FFtWOC92xp0MfC0clJgQOcwVt8o",
+    "source": "google_upc",
+    "name": "TLP3 2015-2020 TOYOTA / LEXUS PTS FIRSTECH",
+    "upc": "840127710242",
+    "fetchedAt": "2026-09-26T12:02:17.221Z",
+    "status": "pending"
   }
 }
