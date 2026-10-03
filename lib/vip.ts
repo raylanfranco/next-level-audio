@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { createServerClient } from '@/lib/supabase/client';
+import type { VipBenefitType, VipMembershipStatus } from '@/types/vip';
 
 /**
  * Next Level VIP membership ($199/year Stripe subscription).
@@ -18,16 +19,16 @@ export const VIP_BENEFITS = {
   checkup: 2,
 } as const;
 
-export type VipBenefitType = keyof typeof VIP_BENEFITS;
-
 export interface VipMembership {
   profile_id: string;
   member_number: number;
-  status: 'inactive' | 'active' | 'past_due' | 'canceled';
+  status: VipMembershipStatus;
   stripe_customer_id: string | null;
   stripe_subscription_id: string | null;
   current_period_start: string | null;
   current_period_end: string | null;
+  cancel_at_period_end: boolean;
+  canceled_at: string | null;
 }
 
 let stripeSingleton: Stripe | null = null;
@@ -68,7 +69,11 @@ export async function getMembership(profileId: string): Promise<VipMembership | 
 /** Active VIP = subscription in good standing right now. */
 export async function isActiveVip(profileId: string): Promise<boolean> {
   const m = await getMembership(profileId);
-  return m?.status === 'active';
+  if (m?.status !== 'active') return false;
+  if (!m.current_period_end) return true;
+
+  const periodEnd = Date.parse(m.current_period_end);
+  return Number.isFinite(periodEnd) && periodEnd > Date.now();
 }
 
 /**
@@ -87,6 +92,7 @@ export async function getBenefitUsage(
     .from('vip_benefit_usage')
     .select('benefit_type')
     .eq('profile_id', membership.profile_id)
+    .is('voided_at', null)
     .gte('used_at', periodStart);
 
   const counts: Record<string, number> = {};
@@ -138,6 +144,10 @@ export async function syncMembershipFromSubscription(
       stripe_subscription_id: subscription.id,
       current_period_start: periodStart ? new Date(periodStart * 1000).toISOString() : null,
       current_period_end: periodEnd ? new Date(periodEnd * 1000).toISOString() : null,
+      cancel_at_period_end: subscription.cancel_at_period_end,
+      canceled_at: subscription.canceled_at
+        ? new Date(subscription.canceled_at * 1000).toISOString()
+        : null,
       updated_at: new Date().toISOString(),
     } as never,
     { onConflict: 'profile_id' }
@@ -149,7 +159,7 @@ export async function syncMembershipFromSubscription(
   }
 }
 
-function mapStripeStatus(s: Stripe.Subscription.Status): VipMembership['status'] {
+function mapStripeStatus(s: Stripe.Subscription.Status): VipMembershipStatus {
   switch (s) {
     case 'active':
     case 'trialing':

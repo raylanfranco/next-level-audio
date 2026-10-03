@@ -9,6 +9,7 @@ interface VipStatus {
     status: 'active' | 'past_due' | 'canceled';
     memberNumber: string;
     currentPeriodEnd: string | null;
+    cancelAtPeriodEnd: boolean;
   } | null;
   benefits?: Record<'diagnostic' | 'checkup', { used: number; total: number }>;
   joinable: boolean;
@@ -32,9 +33,19 @@ export default function MembershipPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetch('/api/vip/status')
+    const params = new URLSearchParams(window.location.search);
+    const sessionId = params.get('session_id');
+    const statusUrl = sessionId
+      ? `/api/vip/status?session_id=${encodeURIComponent(sessionId)}`
+      : '/api/vip/status';
+
+    fetch(statusUrl)
       .then((res) => (res.ok ? res.json() : null))
-      .then((data) => data && setStatus(data))
+      .then((data) => {
+        if (!data) return;
+        setStatus(data);
+        if (sessionId) window.history.replaceState({}, '', window.location.pathname);
+      })
       .catch(() => {})
       .finally(() => setLoading(false));
   }, []);
@@ -129,6 +140,11 @@ export default function MembershipPage() {
             {!active && (
               <div className="mt-5 border border-amber-500/50 text-amber-400 font-mono text-xs px-3 py-2">
                 {membership.status === 'past_due' ? t('pastDueNotice') : t('canceledNotice')}
+              </div>
+            )}
+            {active && membership.cancelAtPeriodEnd && (
+              <div className="mt-5 border border-amber-500/50 text-amber-400 font-mono text-xs px-3 py-2">
+                {t('cancelScheduledNotice', { date: formatDate(membership.currentPeriodEnd) })}
               </div>
             )}
           </div>

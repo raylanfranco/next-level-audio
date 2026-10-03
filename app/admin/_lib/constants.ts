@@ -45,6 +45,22 @@ export const statusColors: Record<string, { dark: string; light: string }> = {
     dark: 'text-red-400 bg-red-400/10 border-red-400/30',
     light: 'text-red-600 bg-red-50 border-red-200',
   },
+  active: {
+    dark: 'text-emerald-400 bg-emerald-400/10 border-emerald-400/30',
+    light: 'text-emerald-600 bg-emerald-50 border-emerald-200',
+  },
+  past_due: {
+    dark: 'text-amber-400 bg-amber-400/10 border-amber-400/30',
+    light: 'text-amber-700 bg-amber-50 border-amber-200',
+  },
+  canceled: {
+    dark: 'text-red-400 bg-red-400/10 border-red-400/30',
+    light: 'text-red-600 bg-red-50 border-red-200',
+  },
+  inactive: {
+    dark: 'text-slate-400 bg-slate-400/10 border-slate-400/30',
+    light: 'text-slate-600 bg-slate-50 border-slate-200',
+  },
 };
 
 export const serviceNames: Record<string, string> = {
@@ -64,6 +80,7 @@ export type NavKey =
   | 'orders'
   | 'payments'
   | 'customers'
+  | 'vip'
   | 'bookings'
   | 'requests'
   | 'applications'
@@ -87,6 +104,7 @@ export const navItems: NavItemConfig[] = [
   { key: 'bookings', label: 'Bookings', href: '/admin/bookings', badgeSource: 'bookings' },
   { key: 'classes', label: 'Classes', href: '/admin/classes' },
   { key: 'customers', label: 'Customers', href: '/admin/customers' },
+  { key: 'vip', label: 'VIP Members', href: '/admin/vip' },
   { key: 'inventory', label: 'Inventory', href: '/admin/inventory' },
   { key: 'images', label: 'Image Queue', href: '/admin/images', badgeSource: 'images' },
   { key: 'orders', label: 'Orders', href: '/admin/orders' },

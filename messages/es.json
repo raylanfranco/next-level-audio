@@ -674,6 +674,7 @@
     "cardValidThru": "Válida hasta",
     "pastDueNotice": "El pago de tu renovación falló. Actualiza tu tarjeta en Administrar Facturación para conservar tus beneficios VIP.",
     "canceledNotice": "Tu membresía ha terminado. Únete de nuevo cuando quieras para recuperar tus beneficios VIP.",
+    "cancelScheduledNotice": "Tu membresía terminará el {date}. Los beneficios permanecen activos hasta entonces.",
     "benefitDiagnostic": "Visitas de diagnóstico VIP",
     "benefitCheckup": "Revisiones de sistema VIP",
     "remainingThisYear": "restantes este año",

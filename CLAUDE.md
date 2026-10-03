@@ -6,7 +6,7 @@ product/design reference, not a deployment runbook.
 
 ## Runtime
 
-- Node.js 20.9 or newer
+- Node.js 22 or newer
 - Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4
 - English routes use the unprefixed URL; Spanish routes use `/es`
 - Vercel hosts this app

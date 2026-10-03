@@ -16,7 +16,7 @@ Who's Next is a separate service. This repository embeds its public booking flow
 
 ## Stack
 
-- Node.js 22.19+
+- Node.js 22+
 - Next.js, React, TypeScript, Tailwind CSS
 - Supabase
 - Clover

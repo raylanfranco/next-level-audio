@@ -674,6 +674,7 @@
     "cardValidThru": "Valid Thru",
     "pastDueNotice": "Your renewal payment failed. Update your card in Manage Billing to keep your VIP benefits.",
     "canceledNotice": "Your membership has ended. Rejoin any time to restore your VIP benefits.",
+    "cancelScheduledNotice": "Your membership is set to end on {date}. Benefits remain active until then.",
     "benefitDiagnostic": "VIP Diagnostic Visits",
     "benefitCheckup": "VIP System Checkups",
     "remainingThisYear": "remaining this year",

@@ -48,3 +48,11 @@ alter table public.vip_memberships enable row level security;
 alter table public.vip_benefit_usage enable row level security;
 -- No policies on purpose: service-role key bypasses RLS; all access goes
 -- through the API routes.
+
+-- Keep these ledgers off the public/authenticated Data API surface. The
+-- server-side service role is the only database principal used by the app.
+revoke all on table public.vip_memberships from anon, authenticated;
+revoke all on table public.vip_benefit_usage from anon, authenticated;
+grant select, insert, update, delete on table public.vip_memberships to service_role;
+grant select, insert, update, delete on table public.vip_benefit_usage to service_role;
+grant usage, select on sequence public.vip_member_number_seq to service_role;

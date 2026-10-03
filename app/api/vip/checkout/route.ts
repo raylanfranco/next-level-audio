@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       line_items: [{ price: process.env.STRIPE_VIP_PRICE_ID!, quantity: 1 }],
-      success_url: `${origin}/account/membership?vip=success`,
+      success_url: `${origin}/account/membership?vip=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/account/membership?vip=cancelled`,
       client_reference_id: user.id,
       // Reuse the Stripe customer across a lapse/rejoin so Ben's Stripe
