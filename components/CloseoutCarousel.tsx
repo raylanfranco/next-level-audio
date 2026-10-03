@@ -17,7 +17,6 @@ export default function CloseoutCarousel() {
   const [items, setItems] = useState<CloseoutItem[]>([]);
   const [current, setCurrent] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [direction, setDirection] = useState<'next' | 'prev'>('next');
   const [isTransitioning, setIsTransitioning] = useState(false);
   const { addItem } = useCart();
   const timerRef = useRef<ReturnType<typeof setInterval>>(undefined);
@@ -31,10 +30,9 @@ export default function CloseoutCarousel() {
       .catch(() => {});
   }, []);
 
-  const transition = useCallback((newIndex: number, dir: 'next' | 'prev') => {
+  const transition = useCallback((newIndex: number) => {
     if (isTransitioning) return;
     setIsTransitioning(true);
-    setDirection(dir);
     // Brief fade out, then switch
     setTimeout(() => {
       setCurrent(newIndex);
@@ -43,11 +41,11 @@ export default function CloseoutCarousel() {
   }, [isTransitioning]);
 
   const next = useCallback(() => {
-    transition((current + 1) % items.length, 'next');
+    transition((current + 1) % items.length);
   }, [current, items.length, transition]);
 
   const prev = useCallback(() => {
-    transition((current - 1 + items.length) % items.length, 'prev');
+    transition((current - 1 + items.length) % items.length);
   }, [current, items.length, transition]);
 
   // Auto-rotate every 5s
@@ -183,7 +181,7 @@ export default function CloseoutCarousel() {
             {items.map((_, i) => (
               <button
                 key={i}
-                onClick={() => transition(i, i > current ? 'next' : 'prev')}
+                onClick={() => transition(i)}
                 className={`h-[3px] transition-all duration-300 cursor-pointer ${
                   i === current
                     ? 'w-6 bg-[#E01020] shadow-[0_0_8px_#E01020]'

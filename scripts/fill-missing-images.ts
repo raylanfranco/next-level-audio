@@ -100,21 +100,6 @@ async function tryBrandCDN(name: string): Promise<string | null> {
   return null;
 }
 
-// ── Google Shopping fallback via SerpAPI-style search ──────
-
-async function searchCseImage(query: string): Promise<string | null> {
-  // Use Google's public favicon/thumbnail service as a last resort
-  // This won't work for all, but try a direct product search on known retailers
-  const retailers = [
-    `https://www.sonicelectronix.com/query.php?query=${encodeURIComponent(query)}`,
-    `https://www.crutchfield.com/S-${encodeURIComponent(query.replace(/\s/g, ''))}/`,
-  ];
-
-  // For now, skip retailer scraping — just return null
-  // The UPC lookup covers most cases
-  return null;
-}
-
 // ── Main ──────────────────────────────────────────────────
 
 async function main() {
@@ -122,14 +107,14 @@ async function main() {
 
   // Find null-image entries that aren't skipped
   const nullEntries = Object.entries(cache).filter(
-    ([_, v]) => v.imageUrl === null && v.source !== 'skipped'
+    ([, v]) => v.imageUrl === null && v.source !== 'skipped'
   );
 
   console.log(`=== Fill Missing Images ===`);
   console.log(`Total null entries (not skipped): ${nullEntries.length}`);
 
-  const withUpc = nullEntries.filter(([_, v]) => v.upc && v.upc.length >= 8);
-  const noUpc = nullEntries.filter(([_, v]) => !v.upc || v.upc.length < 8);
+  const withUpc = nullEntries.filter(([, v]) => v.upc && v.upc.length >= 8);
+  const noUpc = nullEntries.filter(([, v]) => !v.upc || v.upc.length < 8);
 
   console.log(`With valid UPC: ${withUpc.length}`);
   console.log(`Without UPC: ${noUpc.length}\n`);
@@ -187,7 +172,7 @@ async function main() {
 
   // Phase 3: Re-check remaining nulls that had UPCs but UPCitemdb missed — try brand CDN too
   const stillNull = Object.entries(cache).filter(
-    ([_, v]) => v.imageUrl === null && v.source !== 'skipped'
+    ([, v]) => v.imageUrl === null && v.source !== 'skipped'
   );
 
   console.log(`\n── Phase 3: Brand CDN for remaining ${stillNull.length} nulls ──\n`);

@@ -50,8 +50,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   // Hydrate from localStorage on mount
   useEffect(() => {
-    setItems(loadCart());
-    setHydrated(true);
+    let cancelled = false;
+    const frame = window.requestAnimationFrame(() => {
+      if (cancelled) return;
+      setItems(loadCart());
+      setHydrated(true);
+    });
+
+    return () => {
+      cancelled = true;
+      window.cancelAnimationFrame(frame);
+    };
   }, []);
 
   // Persist to localStorage on change

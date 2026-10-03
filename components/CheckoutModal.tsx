@@ -143,7 +143,7 @@ export default function CheckoutModal() {
         cardPostalCode.mount('#card-postal-code');
         elementsRef.current.mounted = true;
       }, 100);
-    } catch (err) {
+    } catch {
       setSdkError(true);
     }
   }, [sdkLoaded, merchantId]);

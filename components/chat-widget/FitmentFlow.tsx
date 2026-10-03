@@ -22,11 +22,9 @@ export default function FitmentFlow({ form, setForm, onBack, onNavigateQuote }: 
   const [step, setStep] = useState<FitmentStep>('vehicle-select');
   const [results, setResults] = useState<FitmentResult[]>([]);
   const [searching, setSearching] = useState(false);
-  const [noResults, setNoResults] = useState(false);
 
   async function handleSearch() {
     setSearching(true);
-    setNoResults(false);
     try {
       const params = new URLSearchParams({
         year: form.year,
@@ -37,12 +35,10 @@ export default function FitmentFlow({ form, setForm, onBack, onNavigateQuote }: 
       if (!res.ok) throw new Error('API error');
       const data = await res.json();
       setResults(data);
-      setNoResults(data.length === 0);
       setStep('results');
     } catch {
       // API unavailable or error — show fallback
       setResults([]);
-      setNoResults(true);
       setStep('results');
     } finally {
       setSearching(false);
@@ -171,7 +167,7 @@ export default function FitmentFlow({ form, setForm, onBack, onNavigateQuote }: 
             </p>
             <div className="flex gap-2">
               <button
-                onClick={() => { setStep('vehicle-select'); setResults([]); setNoResults(false); }}
+                onClick={() => { setStep('vehicle-select'); setResults([]); }}
                 className="flex-1 py-2 border border-[#E01020]/30 text-white/60 text-xs tracking-wider hover:border-[#E01020]/60 hover:text-[#E01020] transition-colors cursor-pointer font-oxanium"
               >
                 SEARCH AGAIN

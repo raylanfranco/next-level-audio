@@ -30,11 +30,12 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files (keep the documented template)
 .env*
+!.env.example
 
 # vercel
-.vercel
+.vercel/
 
 # product image cache (allow product-images.json for Vercel deployment)
 /data/*
@@ -44,8 +45,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-.vercel
 
 # BayReady (separate repo, lives here during development)
 /bayready/
@@ -59,10 +58,11 @@ dashboard.png
 nul
 context.md
 ROADMAP.md
+.claude/settings.json
+.claude/settings.local.json
 
 # Variant design exports for V2 revamp — deletable once V2 is live
 /variant-designs/
 
-.vercel
 # Supabase CLI local cache
 supabase/.temp/

@@ -41,6 +41,7 @@ const rajdhani = Rajdhani({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://nextlevelaudiopa.com"),
   title: "Next Level Audio - Car Audio Installation & Window Tinting | Stroudsburg, PA",
   description: "Professional car audio installation, window tinting, and auto accessories in Stroudsburg, PA. Quality craftsmanship at competitive prices.",
   alternates: {

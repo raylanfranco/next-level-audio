@@ -1,91 +1,111 @@
-# Next Level Audio - Website Redesign
+# Next Level Audio
 
-A modern, full-stack web application for Next Level Audio, featuring ecommerce capabilities, appointment booking, and admin management.
+Production website, ecommerce storefront, customer account area, and operations dashboard for Next Level Audio.
 
-## Tech Stack
+## What is in this repository
 
-- **Framework**: Next.js 16 (App Router)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **Ecommerce**: Shopify Storefront API (Headless)
-- **Database**: Supabase (PostgreSQL)
-- **Authentication**: NextAuth.js (for admin panel)
-- **Form Handling**: React Hook Form + Zod
+- Next.js 16 App Router frontend with English and Spanish routes
+- Clover-backed catalog, inventory administration, checkout, orders, and customer data
+- Supabase authentication, profiles, rewards, referrals, coupons, and admin authorization
+- Who's Next appointment booking integration
+- Stripe-powered Next Level VIP annual memberships
+- Resend email delivery and an optional OpenAI chat assistant
+- Automated product-image discovery and QA
 
-## Features
+Who's Next is a separate service. This repository embeds its public booking flow and uses a server-only service credential for appointment management.
 
-- 🛒 **Ecommerce**: Shopify-powered product catalog and checkout
-- 📅 **Appointment Booking**: Custom booking system with admin management
-- 🎨 **Modern Design**: Based on car wash template reference
-- 🔐 **Admin Panel**: Secure admin interface for managing bookings
-- 📱 **Responsive**: Mobile-first design
-- ⚡ **Performance**: Optimized with Next.js App Router
+## Stack
 
-## Getting Started
+- Node.js 22.19+
+- Next.js, React, TypeScript, Tailwind CSS
+- Supabase
+- Clover
+- Stripe
+- next-intl
 
-### Prerequisites
+## Local setup
 
-- Node.js 18+ and npm
-- Shopify store with Storefront API access
-- Supabase account (or PostgreSQL database)
+1. Install dependencies.
 
-### Installation
+   ```bash
+   npm ci
+   ```
 
-1. Clone the repository and install dependencies:
+2. Copy the environment template and replace the placeholders.
+
+   ```bash
+   cp .env.example .env.local
+   ```
+
+3. Apply the SQL in `supabase/schema.sql`, then the files in `supabase/migrations/` in chronological order. Review each migration before applying it to an existing project.
+
+4. Start the development server.
+
+   ```bash
+   npm run dev
+   ```
+
+The site is available at [http://localhost:3000](http://localhost:3000).
+
+## Verification
+
+Run all repository checks before opening a pull request:
+
 ```bash
-npm install
+npm test
+npm run typecheck
+npm run lint
+npm run build
 ```
 
-2. Copy environment variables:
+`npm run build` requires at least valid-looking `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` values because the Supabase clients are created while Next.js collects route data.
+
+## Important integrations
+
+### Who's Next bookings
+
+Server-side appointment management uses:
+
+- `WHOS_NEXT_API_URL`
+- `WHOS_NEXT_MERCHANT_ID`
+- `WHOS_NEXT_SERVICE_KEY`
+
+The same service key must be configured as `NLA_SERVICE_KEY` in Who's Next, and Who's Next must pin it to the corresponding merchant ID. Never expose the service key through a `NEXT_PUBLIC_` variable.
+
+### Next Level VIP
+
+VIP memberships are Stripe subscriptions synchronized into Supabase by `/api/stripe/webhook`. Configure Stripe to send at least:
+
+- `checkout.session.completed`
+- `customer.subscription.updated`
+- `customer.subscription.deleted`
+- `invoice.payment_failed`
+
+### Product image QA
+
+The `image-qa.yml` workflow refreshes `data/product-images.json`. It can also be run locally with:
+
 ```bash
-cp .env.local.example .env.local
+npm run fetch-images -- --dry-run
 ```
 
-3. Configure your environment variables in `.env.local`:
-   - Shopify Storefront API credentials
-   - Supabase database credentials
-   - NextAuth secret (generate with: `openssl rand -base64 32`)
+The standalone `fitment/` package is a data-maintenance tool for the Who's Next fitment API; it is not part of the Next.js runtime.
 
-4. Set up the database:
-   - Create a new Supabase project
-   - Run the SQL schema from `lib/supabase/schema.sql` in the SQL editor
+## Repository map
 
-5. Run the development server:
-```bash
-npm run dev
+```text
+app/          routes and server endpoints
+components/   storefront, account, booking, and admin UI
+lib/          integration clients and domain logic
+messages/     English and Spanish translations
+supabase/     schema and migrations
+tests/        contract, checkout, and RLS tests
+fitment/      standalone fitment-data scraper
+scripts/      product-image maintenance tools
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to see the application.
+## Deployment
 
-## Project Structure
+The web app is deployed on Vercel. Who's Next is deployed independently; coordinate changes to the appointment-management contract and service credentials across both applications.
 
-```
-├── app/                    # Next.js App Router pages
-│   ├── (admin)/           # Admin panel routes
-│   ├── api/               # API routes
-│   └── ...
-├── components/            # React components
-│   ├── ui/               # Reusable UI components
-│   ├── layout/           # Layout components
-│   └── ...
-├── lib/                  # Utility libraries
-│   ├── shopify/          # Shopify API client
-│   ├── supabase/         # Database client
-│   └── ...
-├── types/                # TypeScript type definitions
-└── public/               # Static assets
-```
-
-## Development Roadmap
-
-- [x] Project setup and architecture
-- [ ] Shopify integration
-- [ ] Booking system
-- [ ] Admin panel
-- [ ] Design implementation (car wash template)
-- [ ] AI Chatbot integration (future)
-- [ ] Quote calculator (future)
-
-## License
-
-Private - Next Level Audio
+This is a private application for Next Level Audio.

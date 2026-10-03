@@ -233,7 +233,7 @@ async function buildVehicleList() {
         if (models.length > 0) {
           yearCount += models.length;
         }
-      } catch (err) {
+      } catch {
         // Skip failed makes silently (NHTSA sometimes 404s on obscure makes)
       }
     }

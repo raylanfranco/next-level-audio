@@ -6,7 +6,7 @@ import { createMiddlewareClient } from '@/lib/supabase/middleware';
 
 const intlMiddleware = createMiddleware(routing);
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   // Skip i18n for API routes and admin routes
@@ -53,7 +53,7 @@ export async function middleware(request: NextRequest) {
 
   // Determine the actual pathname after locale prefix removal
   const localePrefix = routing.locales.find(
-    (l) => pathname.startsWith(`/${l}/`) || pathname === `/${l}`
+    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
   const strippedPathname = localePrefix
     ? pathname.replace(`/${localePrefix}`, '') || '/'

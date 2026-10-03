@@ -1,770 +1,126 @@
-# Next Level Audio + Who's Next — Complete Project Documentation
+# Next Level Audio contributor guide
 
-This document is the single source of truth for whitelabeling and extending both projects. It instructs Claude Code sessions on exactly how to recreate, modify, and deploy everything.
+This repository is the production Next Level Audio website. Treat the code,
+database migrations, and tests as the source of truth. `VR-PLATFORM.md` is a
+product/design reference, not a deployment runbook.
 
----
+## Runtime
 
-## Table of Contents
+- Node.js 20.9 or newer
+- Next.js 16 App Router, React 19, TypeScript, Tailwind CSS 4
+- English routes use the unprefixed URL; Spanish routes use `/es`
+- Vercel hosts this app
 
-1. [Architecture Overview](#architecture-overview)
-2. [NLA Website — Next.js Frontend](#nla-website)
-3. [Who's Next (formerly BayReady) — Booking Platform](#whos-next-formerly-bayready)
-4. [Who's Next Android — Clover Tablet App](#whos-next-android)
-5. [Clover POS Integration](#clover-pos-integration)
-6. [Design System](#design-system)
-7. [Environment Variables](#environment-variables)
-8. [Deployment](#deployment)
-9. [Whitelabel Guide](#whitelabel-guide)
-10. [Gotchas & Lessons Learned](#gotchas)
-
----
-
-## Architecture Overview
-
-Two interconnected projects, in **separate repos**:
-
-```
-next-level-audio/          ← NLA: Customer-facing website (Next.js on Vercel) — THIS repo
-├── app/                   ← Pages & API routes
-├── components/            ← React components
-├── lib/                   ← Clover client, Supabase, Resend email
-├── types/                 ← TypeScript interfaces
-├── hooks/                 ← Custom hooks
-├── data/                  ← Static JSON data
-└── fitment/               ← Fitment scraper (seeds the Who's Next fitment DB)
-
-whos-next/                 ← Who's Next (formerly BayReady): Booking platform — SEPARATE repo
-├── backend/               ← NestJS API (Railway: whos-next-production.up.railway.app)
-├── frontend/              ← React + Vite (Vercel: whos-next-frontend.vercel.app)
-└── android/               ← Native Android app for Clover tablets
-```
-
-**How they connect:** NLA embeds Who's Next's public booking page (`/book/:merchantId`) inside an iframe via `BookingWizardModal.tsx`, proxies its bookings API through `/api/bookings` (server-side), and queries its fitment API from the chat widget. Product purchases go through NLA's own Clover checkout. Appointment bookings go through Who's Next.
-
-**Naming note:** BayReady was renamed **Who's Next** and split out of this repo. Code uses `WHOS_NEXT_*` env vars with `BAYREADY_*` accepted as legacy fallbacks. The old `bayready-production.up.railway.app` Railway app is **dead** — never point anything at it; the production backend is `whos-next-production.up.railway.app`.
-
----
-
-## NLA Website
-
-### Tech Stack
-- **Framework:** Next.js 15 (App Router), React 19, TypeScript
-- **Styling:** Tailwind CSS v4 (PostCSS plugin, NOT tailwind.config.js — config via `@theme inline` in `app/globals.css`)
-- **Database:** Supabase (PostgreSQL) — for inquiries, bookings, contact submissions
-- **Email:** Resend — sends notifications to admin email
-- **Payments:** Clover Ecommerce Hosted iFrame SDK
-- **Deployment:** Vercel
-
-### Pages (app/ directory)
-
-| Route | File | Description |
-|-------|------|-------------|
-| `/` | `app/page.tsx` | Homepage — hero, stats counter, featured products, services, video |
-| `/products` | `app/products/page.tsx` | Product catalog from Clover inventory — filterable by category, search, stock |
-| `/services` | `app/services/page.tsx` | Service listings (car audio, tinting, remote start, etc.) |
-| `/gallery` | `app/gallery/page.tsx` | Photo gallery of completed work |
-| `/contact` | `app/contact/page.tsx` | Contact form (sends email via Resend) |
-| `/admin` | `app/admin/page.tsx` | Admin dashboard — inventory, orders, payments, customers, bookings, inquiries |
-
-### API Routes (app/api/)
-
-| Endpoint | Method | Purpose |
-|----------|--------|---------|
-| `/api/clover/inventory` | GET | Fetch items from Clover with category/search filters |
-| `/api/clover/categories` | GET | Fetch product categories from Clover |
-| `/api/clover/orders` | GET | Fetch orders from Clover |
-| `/api/clover/payments` | GET | Fetch payments from Clover |
-| `/api/clover/customers` | GET | Fetch customers from Clover |
-| `/api/clover/charge` | POST | Charge a tokenized card via Clover ecommerce |
-| `/api/clover/pakms` | GET | Fetch PAKMS API key for Clover SDK initialization |
-| `/api/products` | GET | Fetch products (wrapper for Clover inventory) |
-| `/api/products/[id]` | GET | Fetch single product detail |
-| `/api/product-image` | GET | Get product image from cache/mapping (approved/override images only) |
-| `/api/admin/image-queue` | GET/POST | List pending scraped images / approve or reject them (admin only) |
-| `/api/featured-products` | GET | Get featured products for homepage |
-| `/api/contact` | POST | Submit contact form (sends Resend email) |
-| `/api/inquiries` | GET/POST | List/create product inquiries |
-| `/api/inquiries/[id]` | PATCH | Update inquiry status |
-| `/api/bookings` | GET/POST | List/create bookings (proxied to the Who's Next backend) |
-| `/api/bookings/[id]` | PATCH/DELETE | Update/delete bookings |
-
-### Key Components
-
-| Component | File | Purpose |
-|-----------|------|---------|
-| `ClientLayout` | `components/ClientLayout.tsx` | Wraps app in CartProvider + BookingModalProvider |
-| `ConditionalLayout` | `components/ConditionalLayout.tsx` | Shows Header/Footer for non-admin routes, scanline effect |
-| `Header` | `components/layout/Header.tsx` | Navigation bar with cart icon, mobile menu |
-| `Footer` | `components/layout/Footer.tsx` | Footer with links, social, business info |
-| `AnimateOnScroll` | `components/AnimateOnScroll.tsx` | Scroll-triggered CSS animations (uses `useInView` hook) |
-| `HeroSection` | `components/HeroSection.tsx` | Homepage hero with staggered entrance |
-| `StatsCounter` | `components/StatsCounter.tsx` | Animated counter for business stats |
-| `ProductsSection` | `components/ProductsSection.tsx` | Featured products grid on homepage |
-| `VideoSection` | `components/VideoSection.tsx` | Embedded video section |
-| `VideoLightbox` | `components/VideoLightbox.tsx` | Lightbox for video playback |
-| `QuoteCalculator` | `components/QuoteCalculator.tsx` | Service price estimator |
-| `BookingWizardModal` | `components/BookingWizardModal.tsx` | iFrame wrapper for the Who's Next booking page |
-| `BookingModalContext` | `components/BookingModalContext.tsx` | React context for booking modal open/close state |
-| `CheckoutModal` | `components/CheckoutModal.tsx` | Full product checkout flow with Clover card iframe |
-| `CartContext` | `components/CartContext.tsx` | Shopping cart state with localStorage persistence (`nla-cart`) |
-| `InquiryModal` | `components/InquiryModal.tsx` | Product inquiry/backorder form |
-
-### Lib Files
-
-| File | Purpose |
-|------|---------|
-| `lib/clover/client.ts` | Clover API client — `cloverFetch()` function, `isCloverConfigured` check |
-| `lib/supabase/client.ts` | Supabase client (browser) + `createServerClient()` (admin) |
-| `lib/email/resend.ts` | Resend email functions: `sendInquiryNotification()`, `sendContactNotification()` |
-| `lib/mockProducts.ts` | Fallback mock products if Clover API is down |
-
-### Types
-
-| File | Key Types |
-|------|-----------|
-| `types/clover.ts` | `CloverItem`, `CloverOrder`, `CloverPayment`, `CloverCustomer`, `CloverCategory` |
-| `types/booking.ts` | `Booking`, `BookingStatus` |
-| `types/inquiry.ts` | `Inquiry`, `InquiryStatus`, `InquiryFormData` |
-| `types/product.ts` | Product type definitions |
-| `types/shopify.ts` | Legacy Shopify types (unused — migrated to Clover) |
-
-### Checkout Flow (Product Purchases)
-
-1. Customer browses `/products`, adds items to cart (stored in `CartContext` → localStorage `nla-cart`)
-2. Opens `CheckoutModal` from cart icon
-3. **Cart step:** Review items, quantities, total
-4. **Payment step:**
-   - Loads Clover SDK script (`checkout.clover.com/sdk.js`)
-   - Fetches PAKMS API key from `/api/clover/pakms`
-   - Initializes `new Clover(apiAccessKey, { merchantId })` — **NOT** `{ publishableKey }`
-   - Creates individual card elements: `CARD_NUMBER`, `CARD_DATE`, `CARD_CVV`, `CARD_POSTAL_CODE`
-   - **CRITICAL:** Do NOT listen for `ready` event — it throws an error. Only supported events: `blur`, `change`, `focus`, `paymentMethod`
-   - Customer enters card info directly into Clover iframe (PCI compliant)
-   - On submit: `clover.createToken()` returns `{ token?, errors? }` — NOT a plain string
-   - Token sent to `/api/clover/charge` → backend charges via Clover ecommerce API
-5. **Success/Error step:** Shows result with charge reference ID
-
----
-
-## Who's Next (formerly BayReady)
-
-> **Moved:** Who's Next lives in its own repo now (`whos-next`), split out of this one. Everything below is a snapshot kept for integration context — the whos-next repo's own docs are authoritative and this section may drift.
-
-### Tech Stack
-- **Backend:** NestJS + Prisma v7 + PostgreSQL (Railway)
-- **Frontend:** React 18 + Vite + TailwindCSS
-- **Auth:** Clover OAuth v2 (merchant onboarding)
-- **Payments:** Clover Ecommerce Hosted iFrame SDK
-
-### Backend Modules (NestJS)
-
-| Module | Path | Purpose |
-|--------|------|---------|
-| `PrismaModule` | `src/prisma/` | Database service with Prisma v7 adapter pattern |
-| `CloverModule` | `src/clover/` | OAuth flow, token management, charges, Clover API proxy |
-| `MerchantModule` | `src/merchant/` | Merchant CRUD, settings, onboarding |
-| `ServiceModule` | `src/service/` | Service definitions (name, category, price, duration, parts mappings) |
-| `CustomerModule` | `src/customer/` | Customer find-or-create, CRUD |
-| `VehicleModule` | `src/vehicle/` | Vehicle records linked to customers |
-| `BookingModule` | `src/booking/` | Booking CRUD, availability slots, overlap detection |
-| `PaymentModule` | `src/payment/` | Card charge endpoint (wraps CloverService.createCharge) |
-
-### Prisma Schema (Key Models)
-
-```
-Merchant → has many: Service, Customer, Booking, AvailabilityRule, BlockedDate
-  - cloverMerchantId (unique), OAuth tokens, timezone, settings (JSON)
-
-Service → belongs to Merchant, has many Booking
-  - name, category, durationMins, priceCents, partsMappings (JSON)
-
-Customer → belongs to Merchant, has many Vehicle, Booking
-  - name, email, phone, unique per [merchantId, email]
-
-Vehicle → belongs to Customer, has many Booking
-  - year, make, model, trim, photos (JSON)
-
-Booking → belongs to Merchant, Service, Customer, Vehicle?
-  - startsAt, endsAt, status (enum), intakeData (JSON)
-  - depositAmountCents, depositPaidAt, cloverChargeId
-
-AvailabilityRule → belongs to Merchant
-  - dayOfWeek (0-6), startTime, endTime, isBlocked
-  - unique per [merchantId, dayOfWeek]
-
-BlockedDate → belongs to Merchant
-  - date, reason — blocks specific days off
-```
-
-### Backend API Endpoints
-
-| Method | Path | Purpose |
-|--------|------|---------|
-| GET | `/clover/authorize` | Get Clover OAuth authorization URL |
-| GET | `/clover/oauth/callback` | Handle OAuth callback, exchange code for tokens |
-| GET | `/merchants` | List all merchants |
-| GET | `/merchants/:id` | Get merchant by ID (includes settings) |
-| PATCH | `/merchants/:id` | Update merchant (settings, hours, etc.) |
-| GET | `/merchants/:id/services` | List services for a merchant |
-| POST | `/merchants/:id/services` | Create a service |
-| PATCH | `/services/:id` | Update a service |
-| DELETE | `/services/:id` | Delete a service |
-| GET | `/merchants/:id/customers` | List customers for a merchant |
-| POST | `/merchants/:id/customers` | Create a customer |
-| GET | `/merchants/:id/vehicles` | List vehicles |
-| POST | `/vehicles` | Create a vehicle |
-| GET | `/merchants/:id/bookings` | List bookings (filterable by status, date range) |
-| POST | `/merchants/:id/bookings` | Create a booking (with overlap detection) |
-| PATCH | `/bookings/:id/status` | Update booking status |
-| GET | `/merchants/:id/bookings/slots` | Get available time slots for a date + service |
-| POST | `/payments/charge` | Charge a tokenized card via Clover |
-
-### Frontend Pages
-
-| Route | File | Purpose |
-|-------|------|---------|
-| `/` | `LandingPage.tsx` | BayReady marketing landing page |
-| `/book/:merchantId` | `BookingPage.tsx` | Public booking wizard (5 steps) |
-| `/dashboard` | — | Redirects to bookings |
-| `/dashboard/bookings` | `BookingsPage.tsx` | Calendar view + booking management |
-| `/dashboard/services` | `ServicesPage.tsx` | Service CRUD |
-| `/dashboard/customers` | `CustomersPage.tsx` | Customer list |
-| `/dashboard/settings` | `SettingsPage.tsx` | Business hours, availability rules, blocked dates |
-
-### Booking Wizard Flow (BookingPage.tsx)
-
-5 steps: **Service → Date & Time → Vehicle Intake → Your Info → Confirm**
-
-1. **Service:** Two-phase selection — first picks a category (if multiple exist), then picks a service within that category. If only one category exists, skips straight to service list. Shows price + duration.
-2. **Date & Time:** Calendar grid (CalendarGrid.tsx) → picks a date → fetches `/merchants/:id/bookings/slots?serviceId=X&date=Y` → shows available time slots
-3. **Vehicle Intake:** VehicleSelector (year/make/model/trim dropdowns) + IntakeQuestionnaire (dynamic questions based on service)
-4. **Your Info:** Name, email, phone
-5. **Confirm:** Summary of all selections → POST to `/merchants/:id/bookings`
-
-### Frontend Components
-
-| Component | File | Purpose |
-|-----------|------|---------|
-| `BookingBlock` | `BookingBlock.tsx` | Individual booking card in calendar view |
-| `CalendarGrid` | `CalendarGrid.tsx` | Month calendar with booking indicators |
-| `VehicleSelector` | `VehicleSelector.tsx` | Year/Make/Model/Trim cascading dropdowns (NHTSA API) |
-| `IntakeQuestionnaire` | `IntakeQuestionnaire.tsx` | Dynamic service-specific questions |
-| `CloverCardForm` | `CloverCardForm.tsx` | Clover hosted iframe card form for deposits |
-
----
-
-## Who's Next Android
-
-> **Moved:** lives in the separate whos-next repo (`android/`). Snapshot below; paths are relative to that repo.
-
-### Tech Stack
-- **Language:** Kotlin
-- **Architecture:** MVVM (ViewModel + LiveData + Repository pattern)
-- **DI:** Hilt (Dagger)
-- **Networking:** Retrofit + OkHttp + Gson
-- **UI:** ViewBinding, Material Design Components, Navigation Component
-- **Target:** Clover tablets (API 29+, landscape, 7"–14" screens)
-
-### Project Structure
-
-```
-android/app/src/main/java/com/bayready/app/   (in the whos-next repo)
-├── clover/                  ← Clover SDK integration (account, merchant resolution)
-├── data/
-│   ├── api/                 ← BayReadyApi (Retrofit), DTOs (BookingDto, ServiceDto, etc.)
-│   ├── local/               ← PreferencesManager (SharedPreferences)
-│   └── repository/          ← BookingRepository, ServiceRepository
-├── di/                      ← Hilt modules (NetworkModule, AppModule)
-├── printer/                 ← Clover Mini receipt printer (ReceiptPrinter, formatters)
-├── ui/
-│   ├── main/                ← MainActivity (sidebar navigation)
-│   ├── bookings/            ← BookingsFragment, CalendarGridView, BookingDetailPanel
-│   ├── customers/           ← CustomerLookupFragment
-│   ├── services/            ← ServicesFragment (placeholder)
-│   ├── settings/            ← SettingsFragment
-│   └── splash/              ← SplashActivity (merchant resolution)
-└── util/                    ← StatusUtils, DateUtils, CurrencyUtils
-```
-
-### Tablet Dashboard UI
-
-The Android UI mirrors BayReady's web dashboard (`DashboardLayout.tsx`, `BookingsPage.tsx`, etc.) for a consistent experience across web and tablet.
-
-**Completed (Phases 1-3):**
-
-| Phase | Feature | Key Files |
-|-------|---------|-----------|
-| 1 | **Left Sidebar Navigation** — 240dp permanent sidebar with BayReady branding, merchant avatar, 4 nav items (Bookings, Services, Customers, Settings) | `activity_main.xml`, `MainActivity.kt` |
-| 2 | **Calendar Grid** — Custom `CalendarGridView` with time-positioned booking blocks, week/day toggle, date navigation, status filter, "+ Walk-in" button | `CalendarGridView.kt`, `fragment_bookings.xml`, `BookingsViewModel.kt`, `BookingsFragment.kt` |
-| 3 | **Booking Detail Panel** — 400dp right slide-out panel with scrim overlay, animated entry/exit, service/customer/vehicle cards, status action buttons | `BookingDetailPanel.kt`, `view_booking_detail_panel.xml` |
-
-**Pending (Phases 4-7):**
-- Phase 4: Revenue sidebar (matching `RevenueSidebar.tsx`)
-- Phase 5: Services CRUD (matching `ServicesPage.tsx`)
-- Phase 6: Settings editor (matching `SettingsPage.tsx`)
-- Phase 7: Customer detail view
-
-### Building & Testing
+Run these checks before handing work off:
 
 ```bash
-# Build (no gradlew — use cached gradle)
-cd android   # (in the whos-next repo)
-~/.gradle/wrapper/dists/gradle-8.11.1-bin/.../gradle-8.11.1/bin/gradle.bat assembleDebug
-
-# Install on Clover Mini emulator
-adb -s emulator-5554 install -r app/build/outputs/apk/debug/app-debug.apk
-
-# Launch
-adb shell monkey -p com.bayready.app -c android.intent.category.LAUNCHER 1
-
-# Screenshot (Android 36)
-adb -s emulator-5554 exec-out screencap -p > screenshot.png
+npm test
+npm run typecheck
+npm run lint
+npm run build
 ```
 
-### Clover Emulator AVDs
-
-Custom AVDs created to match real Clover tablet specs:
-
-| AVD | Screen | Resolution | DPI | Orientation |
-|-----|--------|------------|-----|-------------|
-| `Clover_Mini_7in` | 7" | 1280x800 | 213 | Landscape |
-| `Clover_Station_14in` | 14" | 1920x1080 | 160 | Landscape |
-
-Both configured without phone hardware (no GPS, cameras, battery, gyroscope) to match real Clover devices. Config files at `~/.android/avd/`.
-
-### API Connection
-
-The Android app connects to the same Who's Next backend (`whos-next-production.up.railway.app`) via Retrofit. The base URL is configured in `build.gradle.kts`:
-- Debug: `https://whos-next-production.up.railway.app` (production backend for emulator testing)
-- Release: same production URL
-
-Merchant resolution: `CloverAccountManager` tries `CloverAccount.getAccount()` first, falls back to hardcoded `FALLBACK_CLOVER_MERCHANT_ID = "E7ZRTEB8B2EE1"` when Clover SDK is unavailable (emulator). This resolves the BayReady internal merchant ID via `GET /merchants/by-clover-id/{cloverMerchantId}`.
-
----
-
-## Clover POS Integration
-
-### Two Separate Clover Integrations
-
-**NLA (Next.js):** Direct integration using merchant API token + ecommerce keys.
-- Inventory reads: `CLOVER_API_TOKEN` (merchant API token) → `api.clover.com/v3/merchants/{id}/items`
-- Card charges: `CLOVER_ECOMM_PRIVATE_KEY` → `scl.clover.com/v1/charges`
-- Card tokenization: `CLOVER_ECOMM_PUBLIC_KEY` → Clover hosted iframe SDK
-
-**BayReady (NestJS):** OAuth-based integration for multi-merchant support.
-- OAuth onboarding: Merchant authorizes via Clover OAuth v2 → tokens stored in DB
-- API calls: Auto-refreshing OAuth access tokens → `api.clover.com/v3/merchants/{id}/...`
-- Card charges: `CLOVER_ECOMM_PRIVATE_KEY` env var (or falls back to OAuth token)
-
-### Clover SDK Initialization
-
-```typescript
-// Load script
-const script = document.createElement('script');
-script.src = 'https://checkout.clover.com/sdk.js';
-
-// Initialize
-const clover = new window.Clover(apiAccessKey, { merchantId });
-// NOT { publishableKey } — it's the second positional arg with { merchantId }
-
-// Create elements
-const elements = clover.elements();
-const cardNumber = elements.create('CARD_NUMBER', styles);
-const cardDate = elements.create('CARD_DATE', styles);
-const cardCvv = elements.create('CARD_CVV', styles);
-const cardPostalCode = elements.create('CARD_POSTAL_CODE', styles);
-
-// Mount (ensure DOM elements exist first — use setTimeout if needed)
-cardNumber.mount('#card-number');
-cardDate.mount('#card-date');
-cardCvv.mount('#card-cvv');
-cardPostalCode.mount('#card-postal-code');
-
-// CRITICAL: Do NOT listen for 'ready' event — it throws an error!
-// Supported events: blur, change, focus, paymentMethod
-
-// Tokenize
-const result = await clover.createToken();
-// result = { token?: string, errors?: Record<string, string> }
-// NOT a plain string — check result.token and result.errors
-```
-
-### Charge Flow
-
-```
-[Customer Card] → [Clover Iframe] → createToken() → { token }
-  → POST /api/clover/charge (NLA) or POST /payments/charge (BayReady)
-  → Bearer {CLOVER_ECOMM_PRIVATE_KEY}
-  → POST https://scl.clover.com/v1/charges (production)
-  → POST https://scl-sandbox.dev.clover.com/v1/charges (sandbox)
-  → { id, amount, status, paid }
-```
-
-### Sandbox vs Production URLs
-
-| Purpose | Sandbox | Production |
-|---------|---------|------------|
-| SDK script | `checkout.sandbox.dev.clover.com/sdk.js` | `checkout.clover.com/sdk.js` |
-| Charge endpoint | `scl-sandbox.dev.clover.com/v1/charges` | `scl.clover.com/v1/charges` |
-| REST API | `apisandbox.dev.clover.com/v3/merchants/` | `api.clover.com/v3/merchants/` |
-| OAuth (browser) | `sandbox.dev.clover.com/oauth/v2/authorize` | `www.clover.com/oauth/v2/authorize` |
-| Test card | `4242 4242 4242 4242` (any future exp, any CVV) | Real cards only |
-
-### Current Setup (Full Production)
-
-Both NLA and BayReady are running in **full production mode** — real inventory reads AND real charges:
-
-- `CLOVER_API_TOKEN` + `CLOVER_API_BASE_URL=https://api.clover.com` → production inventory reads
-- `CLOVER_ECOMM_PUBLIC_KEY` + `CLOVER_ECOMM_PRIVATE_KEY` → production ecomm keys for charges
-- `CLOVER_CHARGE_ENV=production` → routes charges to production endpoint
-- `NEXT_PUBLIC_CLOVER_MERCHANT_ID=5C5J719BX6571` → production merchant ID (for SDK initialization)
-- CheckoutModal SDK URL: `https://checkout.clover.com/sdk.js`
-
-**To revert to sandbox for testing:** Set `CLOVER_CHARGE_ENV=sandbox`, swap ecomm keys to sandbox values, set `NEXT_PUBLIC_CLOVER_MERCHANT_ID` to sandbox merchant ID, and change SDK URL in `CheckoutModal.tsx` to `https://checkout.sandbox.dev.clover.com/sdk.js`.
-
-### Token Types (Easy to Confuse!)
-
-| Token | Where to Get | Used For |
-|-------|-------------|----------|
-| Merchant API Token | Clover Dashboard > Setup > API Tokens | Inventory reads (`/v3/merchants/...`) |
-| Ecomm Public Key | Clover Dashboard > Setup > Ecommerce | SDK iframe initialization |
-| Ecomm Private Key | Clover Dashboard > Setup > Ecommerce | Charge endpoint Authorization header |
-| OAuth Access Token | From OAuth flow (stored in DB) | Multi-merchant API access (BayReady) |
-
-**Important:** Merchant API token and ecomm private key are DIFFERENT tokens. The merchant API token is for REST API reads. The ecomm private key is for `/v1/charges`. Don't mix them up.
-
----
-
-## Design System
-
-### NLA Theme (Cyberpunk)
-
-- **Primary color:** `#E01020` (red) — dark: `#B00D1A`, light: `#FF2A3A`
-- **Glitch accent:** `#FFD700` (gold)
-- **Note:** CSS variable names still say `--neon-blue` (internal only); values are red
-- **Background:** `#0a0a0a` (near-black)
-- **Fonts:**
-  - Headings: `Oxanium` (via `--font-oxanium`)
-  - Body/code: `Geist Mono` (via `--font-geist-mono`)
-  - Sans fallback: `Geist` (via `--font-geist-sans`)
-- **Global rule:** `* { border-radius: 0 !important; }` — NO rounded corners anywhere
-- **Config:** Tailwind v4 with `@theme inline` in `app/globals.css` — no `tailwind.config.js`
-
-### CSS Classes (globals.css)
-
-| Class | Effect |
-|-------|--------|
-| `neon-glow` | Cyan text shadow (strong) |
-| `neon-glow-soft` | Cyan text shadow (subtle) on white text |
-| `neon-border` | Cyan box shadow (strong, with inset) |
-| `neon-border-soft` | Cyan box shadow (medium) |
-| `pulse-glow` | Animated pulsing cyan box shadow |
-| `cyber-button` | Button with sweep highlight on hover |
-| `cyber-grid` | Background grid lines at 50px intervals |
-| `glitch-text` | Glitch animation with magenta/cyan |
-| `hover-glitch` | Skew glitch on hover (for headings) |
-| `scanline` | Fixed animated scanline across viewport |
-| `scrollbar-hide` | Hides scrollbar (cross-browser) |
-| `line-clamp-2` | Two-line text truncation |
-
-### Animation Classes
-
-| Class | Effect | Duration |
-|-------|--------|----------|
-| `animate-fade-up` | Fade in + slide up 30px | 0.7s |
-| `animate-fade-in` | Fade in only | 0.6s |
-| `animate-slide-left` | Fade in + slide from right 60px | 0.7s |
-| `animate-slide-right` | Fade in + slide from left 60px | 0.7s |
-| `animate-scale-up` | Fade in + scale from 0.92 | 0.6s |
-| `hero-stagger` | Hero-specific entrance (opacity 0 → 1, translateY) | 0.8s |
-
-Stagger delays: `stagger-1` (0.1s) through `stagger-6` (0.6s), `hero-stagger-1` through `hero-stagger-4`.
-
-### AnimateOnScroll Usage
-
-```tsx
-import AnimateOnScroll from '@/components/AnimateOnScroll';
-
-// In a server component — AnimateOnScroll is 'use client' but can be imported from server components
-<AnimateOnScroll animation="fade-up" delay={0.2}>
-  <div>Content appears on scroll</div>
-</AnimateOnScroll>
-```
-
-### Cart Pattern
-
-```tsx
-import { useCart } from '@/components/CartContext';
-
-const { items, addItem, removeItem, updateQuantity, clearCart, total, itemCount, openCheckout } = useCart();
-
-// Add item (price in cents)
-addItem({ id: 'clover-item-id', name: 'Product Name', price: 9999, imageUrl: '/img.jpg' });
-```
-
-Cart persists to `localStorage` key `nla-cart`.
-
----
-
-## Environment Variables
-
-### NLA (.env.local on Vercel)
-
-```bash
-# Clover (Production)
-CLOVER_API_TOKEN=              # Merchant API token — for /v3/merchants/... reads
-CLOVER_API_BASE_URL=           # https://api.clover.com (prod) or https://apisandbox.dev.clover.com (sandbox)
-CLOVER_MERCHANT_ID=            # Production merchant ID (server-side only)
-NEXT_PUBLIC_CLOVER_MERCHANT_ID= # Merchant ID for frontend SDK — must match charge environment
-CLOVER_ECOMM_PUBLIC_KEY=        # Ecomm public key for iframe SDK
-CLOVER_ECOMM_PRIVATE_KEY=       # Ecomm private key for /v1/charges
-CLOVER_CHARGE_ENV=              # "sandbox" or "production" — overrides URL derivation
-
-# Supabase
-NEXT_PUBLIC_SUPABASE_URL=       # Supabase project URL (also used as direct PostgreSQL connection string)
-NEXT_PUBLIC_SUPABASE_ANON_KEY=  # Supabase anon/public key
-SUPABASE_SERVICE_ROLE_KEY=      # Supabase service role key (for admin operations)
-
-# Email
-RESEND_API_KEY=                 # Resend API key for sending emails
-
-# Stripe — VIP membership subscriptions (Ben's own Stripe account, the same
-# one Who's Next booking deposits land in; plain API keys, NOT Connect)
-STRIPE_SECRET_KEY=              # sk_live_... from Ben's Stripe dashboard
-STRIPE_VIP_PRICE_ID=            # price_... for the $199/year VIP product
-STRIPE_WEBHOOK_SECRET=          # whsec_... for the /api/stripe/webhook endpoint
-
-# Who's Next booking backend (all optional — code defaults to production whos-next URLs;
-# BAYREADY_API_URL / BAYREADY_MERCHANT_ID / NEXT_PUBLIC_BAYREADY_API_URL are honored as legacy fallbacks)
-WHOS_NEXT_API_URL=              # https://whos-next-production.up.railway.app
-WHOS_NEXT_MERCHANT_ID=          # Who's Next internal merchant id (for /api/bookings proxy)
-NEXT_PUBLIC_WHOS_NEXT_API_URL=  # Same backend, client-side (chat-widget fitment lookups)
-```
-
-### Who's Next Backend (.env on Railway)
-
-```bash
-DATABASE_URL=                   # Railway internal PostgreSQL URL
-CLOVER_APP_ID=                  # Clover OAuth App ID
-CLOVER_APP_SECRET=              # Clover OAuth App Secret
-CLOVER_API_BASE_URL=            # https://www.clover.com (prod) or https://sandbox.dev.clover.com (sandbox)
-CLOVER_ECOMM_PRIVATE_KEY=       # Ecomm private key for charges
-FRONTEND_URL=                   # Comma-separated allowed origins for CORS
-PORT=                           # Railway assigns this (default 3001 locally)
-```
-
-### Who's Next Frontend (.env on Vercel)
-
-```bash
-VITE_API_URL=                   # Backend API URL (https://whos-next-production.up.railway.app)
-VITE_CLOVER_ECOMM_PUBLIC_KEY=   # Ecomm public key for iframe SDK
-VITE_CLOVER_MERCHANT_ID=        # Merchant ID for SDK initialization
-```
-
----
-
-## Deployment
-
-### NLA Website (Vercel)
-
-- **Repo:** `raylanfranco/next-level-audio` (or appropriate repo)
-- **Framework:** Next.js (auto-detected by Vercel)
-- **Build:** `next build`
-- **Root:** `/` (project root)
-- **Node version:** 18+ required
-
-### Who's Next Backend (Railway)
-
-- **Repo:** `raylanfranco/whos-next`, root: `/backend`
-- **Build:** `prisma generate && nest build`
-- **Start:** `node dist/src/main` (specified in `Procfile`)
-- **Must bind `0.0.0.0`** in `main.ts` for Railway
-- **Prisma v7 note:** Uses adapter pattern — `@prisma/adapter-pg` + `pg` pool. No `datasourceUrl` in Prisma client options.
-
-### Who's Next Frontend (Vercel)
-
-- **Repo:** `raylanfranco/whos-next`, root: `/frontend`
-- **Framework:** Vite (React)
-- **Build:** `npm run build`
-- **Requires `vercel.json`** with SPA rewrites:
-  ```json
-  { "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
-  ```
-
-### CORS Configuration
-
-Who's Next backend needs `FRONTEND_URL` env var with comma-separated origins:
-```
-https://whos-next-frontend.vercel.app,https://nextlevelaudiopa.com,http://localhost:5173
-```
-
-NLA embeds Who's Next in an iframe — the iframe's `sandbox` attribute must include:
-```
-allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox
-```
-
----
-
-## Whitelabel Guide
-
-### Step 1: Fork & Rename
-
-1. Fork both repos (or the monorepo)
-2. Search-and-replace business-specific strings:
-   - `Next Level Audio` → new business name
-   - `nextlevelaudio` → new business slug
-   - `NLA` / `nla` → new abbreviation
-   - Phone number `(570) 730-4433` → new phone
-   - Email `nextlevelauto@ymail.com` → new admin email (in `lib/email/resend.ts`)
-   - Address in Footer component → new address
-
-### Step 2: Clover Setup
-
-1. **Create Clover developer account** at [clover.com/developers](https://www.clover.com/developers)
-2. **Create an app** (for BayReady OAuth): Get App ID + App Secret
-3. **Generate ecommerce keys** from merchant dashboard:
-   - Dashboard > Setup > Ecommerce > "Create API Token"
-   - Select "Hosted iFrame + API/SDK" type
-   - Get public key + private key
-4. **Get merchant API token** for inventory reads:
-   - Dashboard > Setup > API Tokens
-5. Set all env vars per the Environment Variables section above
-
-### Step 3: Supabase Setup
-
-1. Create a Supabase project
-2. Get the project URL, anon key, and service role key
-3. Create required tables:
-   - `inquiries` — for product inquiries/backorders
-   - (bookings and other data are in BayReady's Railway PostgreSQL)
-
-### Step 4: Design Customization
-
-1. **Colors:** Edit CSS variables in `app/globals.css`:
-   ```css
-   :root {
-     --neon-blue: #YOUR_PRIMARY_COLOR;
-     --neon-blue-dark: #YOUR_DARKER_SHADE;
-     --neon-blue-light: #YOUR_LIGHTER_SHADE;
-   }
-   ```
-   Also search-and-replace `#E01020` across all component files (used as Tailwind arbitrary values like `text-[#E01020]`).
-
-2. **Fonts:** Edit `app/layout.tsx` to import different Google Fonts. Update `@theme inline` in `globals.css`.
-
-3. **Border radius:** Remove `* { border-radius: 0 !important; }` from `globals.css` if you want rounded corners.
-
-4. **Animations:** Modify keyframes in `globals.css` or remove the `scanline` div from `ConditionalLayout.tsx`.
-
-5. **Business content:** Update:
-   - `components/HeroSection.tsx` — hero text, images
-   - `app/services/page.tsx` — service descriptions
-   - `app/gallery/page.tsx` — gallery images
-   - `components/layout/Footer.tsx` — business info, links
-   - `data/product-images.json` — product image mappings
-
-### Step 5: BayReady Customization
-
-1. **Services:** Configured per-merchant in the BayReady dashboard (`/dashboard/services`)
-2. **Business hours:** Configured in dashboard settings (`/dashboard/settings`)
-3. **Booking page branding:** Edit `frontend/src/pages/BookingPage.tsx`
-4. **Embed URL:** Update `BOOKING_URL` in NLA's `components/BookingWizardModal.tsx` with new merchant ID
-
-### Step 6: Email Setup
-
-1. Set up Resend account at [resend.com](https://resend.com)
-2. Add your domain for custom `from` addresses (or use `onboarding@resend.dev` for testing)
-3. Update `FROM_EMAIL` and `ADMIN_EMAIL` in `lib/email/resend.ts`
-
-### Step 7: Deploy
-
-1. **NLA:** Connect repo to Vercel, set env vars, deploy
-2. **BayReady Backend:** Connect repo to Railway, set root to `/backend`, add Procfile, set env vars
-3. **BayReady Frontend:** Connect repo to Vercel, set root to `/frontend`, add `vercel.json`, set env vars
-4. **Clover onboarding:** Visit `{backend-url}/clover/authorize` to initiate OAuth for the merchant
-
----
-
-## Gotchas
-
-### Clover SDK
-- **`ready` event is NOT supported** on Clover elements. Listening for it throws `Uncaught Error`. Only use `blur`, `change`, `focus`, `paymentMethod` events.
-- **`createToken()` returns an object**, not a string: `{ token?: string, errors?: Record<string, string> }`.
-- **Constructor syntax:** `new Clover(apiKey, { merchantId })` — second argument is an options object with `merchantId`, NOT `publishableKey`.
-- **Mount timing:** Card elements need their DOM containers to exist before mounting. Use `setTimeout(() => { element.mount('#id') }, 100)` if mounting in a React effect.
-
-### Clover Charges
-- The charge endpoint uses the **ecomm private key** (NOT the merchant API token).
-- Include `accept: 'application/json'` and `x-forwarded-for` headers for best results.
-- Sandbox test card: `4242 4242 4242 4242` (any future exp, any 3-digit CVV, any ZIP).
-- **Sandbox and production charge URLs are completely different hosts** — you can't just swap the base URL. Production: `scl.clover.com`, Sandbox: `scl-sandbox.dev.clover.com`.
-
-### Prisma v7 (BayReady)
-- No `datasourceUrl` in PrismaClient options — use the adapter pattern (`@prisma/adapter-pg` + `pg.Pool`).
-- Schema `datasource db` block has `provider` only, no `url` — connection string comes from `prisma.config.ts` or adapter.
-- Must run `prisma generate` before `nest build` (client needs to be generated before TypeScript compilation).
-- NestJS doesn't auto-load `.env` — add `import 'dotenv/config'` at top of `main.ts`.
-
-### Tailwind CSS v4 (NLA)
-- No `tailwind.config.js` — all config is in `app/globals.css` using `@theme inline { }`.
-- Use `@import "tailwindcss"` at top of globals.css (not `@tailwind base; @tailwind components; @tailwind utilities`).
-- Custom theme values go inside the `@theme inline` block as CSS custom properties.
-
-### Next.js App Router
-- Server components CAN import client components — you don't need `'use client'` on a page just because it renders client components.
-- `page.tsx` (like the homepage) is a server component by default. It imports `AnimateOnScroll` (a client component) and that works fine.
-- API routes in `app/api/` use `NextRequest`/`NextResponse` (not the old `req`/`res` pattern).
-
-### Admin Page
-- Located at `/admin` — hidden from public navigation, protected by Supabase Auth.
-- `ConditionalLayout.tsx` detects `/admin` routes and hides Header/Footer/scanline.
-- Has its own theme system (`AdminThemeProvider`) with dark/light toggle.
-- **Authentication:** Supabase Auth with email/password via `middleware.ts`. Unauthenticated users are redirected to `/admin/login`. Login page at `app/admin/login/page.tsx`. Logout calls `supabase.auth.signOut()`.
-- Auth clients: `lib/supabase/browser.ts` (browser singleton), `lib/supabase/server.ts` (server-side with cookies), `lib/supabase/middleware.ts` (SSR client for middleware checks).
-
-### VIP Membership (Stripe)
-- **$199/year "Next Level VIP"** subscription via Stripe Checkout, on **Ben's own Stripe account** (same account Who's Next deposits land in — plain API keys, no Connect). Clover still handles all product charges; Stripe is only for the membership.
-- Tables: `vip_memberships` (one row per profile, stable `member_number`, status mirrors the Stripe subscription) and `vip_benefit_usage` (ledger for the 2 diagnostic visits + 2 checkups per membership year). Migration: `supabase/migrations/20260830_vip_memberships.sql`.
-- Flow: `/vip` marketing page → `/account/membership` (join CTA) → `POST /api/vip/checkout` (Stripe Checkout, subscription mode) → `POST /api/stripe/webhook` activates the row. `POST /api/vip/portal` opens the Stripe customer portal for card updates/cancels. `GET /api/vip/status` powers the account page and checkout discount.
-- **Checkout discount:** active VIPs get 10% off automatically in `CheckoutModal`; VIP and coupons do NOT stack (larger one wins). The charge route re-verifies the VIP portion server-side (`vip_discount_cents` must be ≤ 10% of subtotal, member must be active, no coupon_id) BEFORE charging.
-- Webhook events to configure in Stripe: `checkout.session.completed`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_failed`. Stripe API 2025+ moved `current_period_*` onto the subscription item — `syncMembershipFromSubscription` in `lib/vip.ts` handles both shapes.
-- Not built yet (deliberately): admin UI for marking benefit usage (table exists), birthday perk (needs a birthday field Ben hasn't approved), monthly price option.
-
-### Who's Next Integration
-- The admin bookings status dropdown (`app/admin/bookings/page.tsx`) has a `STATUS_TRANSITIONS` map that must mirror `VALID_TRANSITIONS` in the Who's Next backend's `booking.service.ts` — if transitions change there, update it here or the dropdown will offer moves the API rejects (the error is surfaced, but still).
-- Booking/fitment code defaults to `whos-next-production.up.railway.app`; `WHOS_NEXT_*` env vars override, `BAYREADY_*` are legacy fallbacks. `bayready-production.up.railway.app` is a dead Railway app.
-
-### Product Image Approval Queue
-- **Scraped images NEVER go live automatically.** The nightly image-qa workflow writes new finds to `data/product-images.json` with `status: 'pending'`; `lib/productImages.ts` only serves baseline entries with `status: 'approved'` (fail closed — no status = not served). This was added after the scraper once published an explicit image to the live site.
-- **Approval flow:** Admin > Image Queue (`/admin/images`) lists pending images. Approve = the URL is pinned into Supabase `product_image_overrides` (goes live immediately; scraper can't clobber it). Reject = recorded in `product_image_reviews` so the item leaves the queue and the URL is never shown. The QA email links to the queue.
-- **Grandfathering:** all entries that existed before the queue shipped were bulk-marked `approved` (already live at the time). New entries only go live via explicit approval.
-- **`--force` on `fetch-product-images.ts` rebuilds the whole cache as pending** — every baseline image drops off the site until re-approved. Don't use it casually.
-- `scripts/fill-missing-images.ts` also writes `status: 'pending'` on anything it finds — same rule, no unvetted image goes live.
-- Manual images set via Admin > Inventory (upload or URL) are overrides and bypass the queue — they're human-chosen by definition.
-
-### Environment Decoupling
-- NLA uses `CLOVER_CHARGE_ENV` to decouple charge routing from inventory API base URL. This allows switching between sandbox/production charges independently.
-- BayReady derives charge URL from `CLOVER_API_BASE_URL` — if it contains "sandbox", charges go to sandbox endpoint.
-- **Current state:** Both NLA and BayReady are fully on production.
-
-### BayReady Android
-- **No `gradlew` in repo** — use cached gradle binary at `~/.gradle/wrapper/dists/gradle-8.11.1-bin/.../gradle.bat`.
-- **`CloverAccount.getAccount()`** takes ~3 seconds retrying on non-Clover devices, always returns null. Code removed the `BuildConfig.DEBUG` gate and always falls back to hardcoded merchant ID.
-- **Activity launch on emulator** — use `adb shell monkey -p com.bayready.app -c android.intent.category.LAUNCHER 1` (not `am start -n` which fails due to export restriction).
-- **Android 36 screencap** — use `adb exec-out screencap -p > file.png` (the old `adb shell screencap /sdcard/file.png` syntax fails on API 36).
-- **Emulator disk space** — Google Play system images hardcode ~7.4GB userdata. C: drive space is tight; delete AVD snapshot dirs (e.g., `Medium_Phone.avd/snapshots`) to free ~2GB if needed.
-- **Safe Args removal** — `BookingDetailFragment` was updated to use bundle args instead of Safe Args after removing the `action_bookings_to_detail` from `nav_graph.xml` (replaced by slide-out panel). If you see `BookingDetailFragmentArgs` errors, the nav graph action was removed intentionally.
-- **Multiple emulators** — when more than one device/emulator is connected, target with `adb -s emulator-5554`.
-
-### Switching Production → Sandbox (For Testing)
-
-**NLA:**
-1. `CheckoutModal.tsx`: Change SDK URL to `https://checkout.sandbox.dev.clover.com/sdk.js`
-2. `.env.local`: Set sandbox ecomm keys, set `CLOVER_CHARGE_ENV=sandbox`, set `NEXT_PUBLIC_CLOVER_MERCHANT_ID` to sandbox merchant ID
-3. Vercel env vars: Update to match
-
-**BayReady:**
-1. `CloverCardForm.tsx`: Change SDK URL to `https://checkout.sandbox.dev.clover.com/sdk.js`
-2. `frontend/.env`: Set sandbox ecomm public key + merchant ID
-3. `backend/.env`: Set `CLOVER_API_BASE_URL=https://sandbox.dev.clover.com`, sandbox ecomm private key
-4. Railway + Vercel env vars: Update to match
+The build needs valid-looking `NEXT_PUBLIC_SUPABASE_URL` and
+`NEXT_PUBLIC_SUPABASE_ANON_KEY` values because Supabase clients are initialized
+while route data is collected. Never commit real credentials.
+
+## Architecture
+
+- `app/[locale]/` contains the public storefront and customer account pages.
+- `app/admin/` contains the protected operations dashboard.
+- `app/api/` contains server endpoints for Clover, Supabase, Stripe, Resend,
+  product images, and the Who's Next proxy.
+- `components/` contains shared storefront, account, booking, and admin UI.
+- `lib/` contains integration clients and domain logic.
+- `messages/` contains English and Spanish translations.
+- `supabase/` contains the base schema and chronological migrations.
+- `tests/` contains booking, checkout, and row-level-security contract tests.
+- `fitment/` is a standalone maintenance utility that seeds fitment data in
+  Who's Next; it is not part of the Next.js runtime.
+
+## External systems
+
+### Clover
+
+Clover is the source of truth for inventory, orders, payments, and Clover
+customers. Browser payment fields are hosted by Clover; the server performs the
+charge. Keep sandbox and production credentials aligned with
+`CLOVER_CHARGE_ENV`.
+
+Do not reintroduce the removed `/api/products` compatibility routes. Storefront
+and admin catalog access goes through `/api/clover/inventory` and
+`/api/clover/inventory/[id]`.
+
+### Supabase
+
+Supabase provides authentication and stores profiles, rewards, referrals,
+coupons, inquiries, image-review data, and VIP membership state. Public clients
+use the anon key. Service-role access is server-only and must remain behind
+authorization checks.
+
+Apply `supabase/schema.sql` only when creating a new project. For an existing
+project, review and apply missing files in `supabase/migrations/` in order.
+
+### Who's Next
+
+Who's Next is a separate repository and deployment:
+
+- Repository: `github.com/raylanfranco/whos-next`
+- API: `https://whos-next-production.up.railway.app`
+- NLA server integration: `lib/whos-next.ts` and `/api/bookings`
+- Public booking UI: embedded by `components/BookingWizardModal.tsx`
+- Fitment UI: `components/chat-widget/FitmentFlow.tsx`
+
+Use `WHOS_NEXT_API_URL`, `WHOS_NEXT_MERCHANT_ID`, and the server-only
+`WHOS_NEXT_SERVICE_KEY`. The corresponding Who's Next deployment must set the
+same secret as `NLA_SERVICE_KEY` and pin it to the intended merchant. The old
+`BAYREADY_*` names remain temporary compatibility fallbacks; do not add new uses.
+
+Booking timestamps cross a deployment boundary. Who's Next must interpret a
+submitted local date/time in the merchant's IANA timezone before persisting an
+instant. NLA formats the returned instant for the shop timezone. Never construct
+a persisted appointment from a bare `new Date("YYYY-MM-DDTHH:mm:ss")` on a UTC
+server; that creates the exact multi-hour shift customers have reported.
+
+### Stripe VIP
+
+Stripe Checkout creates the annual VIP subscription. `/api/stripe/webhook`
+synchronizes subscription state to `vip_memberships`, while
+`vip_benefit_usage` records benefit consumption. Stripe is the billing source of
+truth; Supabase is the application-facing projection.
+
+### Email and AI
+
+Resend delivers transactional email. The OpenAI chat path is optional and must
+remain disabled unless `NEXT_PUBLIC_AI_CHAT_ENABLED=true` and the server has an
+`OPENAI_API_KEY`.
+
+## Security rules
+
+- Never expose service-role, Clover private, Stripe secret, webhook, or Who's
+  Next service credentials through `NEXT_PUBLIC_*` variables.
+- Admin routes require both a valid Supabase session and `profiles.role = admin`.
+- Price, discount, reward, coupon, and VIP eligibility calculations are
+  server-authoritative. Do not trust totals supplied by the browser.
+- Preserve Supabase row-level security and extend `tests/rls.test.mjs` when
+  policies change.
+- Webhook handlers must verify signatures before mutating data.
+
+## Data and UI conventions
+
+- Keep customer-facing copy in both `messages/en.json` and `messages/es.json`.
+- Prefer Server Components unless browser state or APIs require a Client
+  Component.
+- Use `next/image` for stable local or allow-listed remote images. Direct `<img>`
+  elements are acceptable only when URLs are dynamic and the optimization tradeoff
+  is deliberate.
+- Product-image automation updates `data/product-images.json`; admin approval
+  controls what is shown publicly.
+- Avoid committing generated output, local transcripts, editor settings, or
+  secrets. The repository-level `.gitignore` covers the known local artifacts.
+
+## Deployment ownership
+
+NLA and Who's Next deploy independently. A change to the booking contract,
+authentication header, merchant identity, allowed origins, or timestamp behavior
+must be verified in both repositories before release.
