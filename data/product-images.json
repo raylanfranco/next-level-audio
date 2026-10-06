@@ -12198,5 +12198,29 @@
     "upc": "840127710242",
     "fetchedAt": "2026-09-26T12:02:17.221Z",
     "status": "pending"
+  },
+  "R5XHTJ9GXGTK4": {
+    "imageUrl": "https://s3.amazonaws.com/fathom_media/photos/Acre-Cabo-aerial-view.jpg.1200x800_q85_crop.jpg",
+    "source": "google_upc",
+    "name": "MWH858 2001-2016",
+    "upc": "012339808585",
+    "fetchedAt": "2026-10-06T13:53:14.511Z",
+    "status": "pending"
+  },
+  "1CBJSQPQJ2EN6": {
+    "imageUrl": "https://parade.com/.image/w_3840,q_auto:good,c_fill,ar_4:3/MjA0OTIxNjYyMTYyODcxOTAy/sophia-leone.jpg",
+    "source": "google_upc",
+    "name": "H06 Acura / Honda / Mazda Antenna Adaptor",
+    "upc": "012339830067",
+    "fetchedAt": "2026-10-06T13:53:18.737Z",
+    "status": "pending"
+  },
+  "RSX358S02K6KM": {
+    "imageUrl": "https://m.media-amazon.com/images/M/MV5BMTYwODE1MTc3NF5BMl5BanBnXkFtZTcwMjQxMzQyMQ@@._V1_FMjpg_UX1000_.jpg",
+    "source": "google_images",
+    "name": "Mazk855 Ai Pac Single Pocket Or Dbl Din",
+    "upc": "0",
+    "fetchedAt": "2026-10-06T13:53:22.970Z",
+    "status": "pending"
   }
 }
