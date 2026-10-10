@@ -12222,5 +12222,21 @@
     "upc": "0",
     "fetchedAt": "2026-10-06T13:53:22.970Z",
     "status": "pending"
+  },
+  "2BES94CCEXKQP": {
+    "imageUrl": "https://image.pitchbook.com/1ZmtPg2Wg7qZ26KcSnflx7jcMbV1753283662007_200x200",
+    "source": "google_upc",
+    "name": "Kicker KSC350 3.5 SPEAKER",
+    "upc": "713034058397",
+    "fetchedAt": "2026-10-10T13:16:18.473Z",
+    "status": "pending"
+  },
+  "V7VRBEJV1NSNJ": {
+    "imageUrl": "https://c8.alamy.com/comp/2BAP6BA/miami-beach-floridanorth-beachnorthshore-parkhispanic-heritage-festivalboy-boysmale-kid-kids-child-children-youngstergroupfriendspracticedanc-2BAP6BA.jpg",
+    "source": "google_upc",
+    "name": "51KSS269 KICKER 2 WAY COMPONENT SYSTEM",
+    "upc": "713034045373",
+    "fetchedAt": "2026-10-10T13:16:22.723Z",
+    "status": "pending"
   }
 }
