@@ -665,6 +665,21 @@
     "createOne": "Create one",
     "backToSite": "Back to site"
   },
+  "mobileInterlock": {
+    "comingSoon": "Coming soon",
+    "heading": "Mobile interlock service",
+    "description": "Intoxalock calibrations and inspections, brought to you by Next Level Audio.",
+    "serviceArea": "Planned service area: within 20 miles of our Stroudsburg shop.",
+    "paymentCta": "Mobile payments — coming soon",
+    "availability": "Mobile bookings and payments are not open yet. Pricing and launch details will be announced."
+  },
+  "vipAfterHours": {
+    "eyebrow": "Exclusively for VIP members",
+    "heading": "After-hours appointments",
+    "hours": "Fridays, 6:00–10:00 p.m. (Eastern)",
+    "details": "Active VIP members can schedule a Friday evening appointment with at least 48 hours’ advance notice. Call the shop to arrange your visit.",
+    "cta": "Call to schedule"
+  },
   "vip": {
     "accountTitle": "VIP MEMBERSHIP",
     "cardTagline": "More than a customer",
@@ -688,6 +703,7 @@
     "perkDiagnostics": "2 VIP diagnostic visits per year",
     "perkCheckups": "2 free VIP system checkups per year",
     "perkPriority": "Priority scheduling over non-members",
+    "perkAfterHours": "VIP-only after-hours appointments: Fridays, 6–10 p.m. (Eastern), scheduled at least 48 hours in advance",
     "perkDeals": "Members-only deals & early access to sales",
     "joinCta": "Join VIP — $199/year",
     "comingSoon": "VIP signup is coming soon. Check back shortly!"

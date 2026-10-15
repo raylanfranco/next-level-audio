@@ -665,6 +665,21 @@
     "createOne": "Crear una",
     "backToSite": "Volver al sitio"
   },
+  "mobileInterlock": {
+    "comingSoon": "Próximamente",
+    "heading": "Servicio móvil de interlock",
+    "description": "Calibraciones e inspecciones de Intoxalock a domicilio con Next Level Audio.",
+    "serviceArea": "Zona de servicio prevista: dentro de un radio de 20 millas de nuestro taller en Stroudsburg.",
+    "paymentCta": "Pagos del servicio móvil — próximamente",
+    "availability": "Las citas y los pagos del servicio móvil aún no están disponibles. Anunciaremos los precios y la fecha de lanzamiento."
+  },
+  "vipAfterHours": {
+    "eyebrow": "Exclusivo para miembros VIP",
+    "heading": "Citas fuera de horario",
+    "hours": "Viernes, de 6:00 a 10:00 p. m. (hora del Este)",
+    "details": "Los miembros con una membresía VIP activa pueden programar una cita para el viernes por la tarde con al menos 48 horas de anticipación. Llama al taller para coordinar tu visita.",
+    "cta": "Llama para programar tu cita"
+  },
   "vip": {
     "accountTitle": "MEMBRESÍA VIP",
     "cardTagline": "Más que un cliente",
@@ -688,6 +703,7 @@
     "perkDiagnostics": "2 visitas de diagnóstico VIP al año",
     "perkCheckups": "2 revisiones de sistema VIP gratis al año",
     "perkPriority": "Prioridad en citas sobre no miembros",
+    "perkAfterHours": "Citas fuera de horario solo para VIP: viernes de 6 a 10 p. m. (hora del Este), con al menos 48 horas de anticipación",
     "perkDeals": "Ofertas exclusivas para miembros y acceso anticipado a ventas",
     "joinCta": "Únete a VIP — $199/año",
     "comingSoon": "La inscripción VIP llegará pronto. ¡Vuelve en breve!"
