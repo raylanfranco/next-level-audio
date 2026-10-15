@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { useBookingModal } from '@/components/BookingModalContext';
 import QuoteCalculator from '@/components/QuoteCalculator';
+import MobileInterlockBanner from '@/components/MobileInterlockBanner';
 
 export default function ServicesPage() {
   const { openModal } = useBookingModal();
@@ -106,6 +107,8 @@ export default function ServicesPage() {
           </div>
         </div>
       </section>
+
+      <MobileInterlockBanner />
 
       {/* Services Grid */}
       <section className="py-20 md:py-32 bg-black relative overflow-hidden border-t-2 border-[#E01020]/30">

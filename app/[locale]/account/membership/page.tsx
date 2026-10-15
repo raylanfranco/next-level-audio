@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/components/AuthContext';
+import VipAfterHours from '@/components/VipAfterHours';
 
 interface VipStatus {
   membership: {
@@ -171,6 +172,12 @@ export default function MembershipPage() {
             </div>
           )}
 
+          {active && (
+            <div className="mb-8 max-w-xl">
+              <VipAfterHours />
+            </div>
+          )}
+
           <div className="flex flex-wrap gap-4">
             {!active && status?.joinable && (
               <button
@@ -203,7 +210,7 @@ export default function MembershipPage() {
           </div>
 
           <ul className="space-y-2 mb-8">
-            {(['perk10Products', 'perk10Install', 'perkDiagnostics', 'perkCheckups', 'perkPriority', 'perkDeals'] as const).map((key) => (
+            {(['perk10Products', 'perk10Install', 'perkDiagnostics', 'perkCheckups', 'perkPriority', 'perkAfterHours', 'perkDeals'] as const).map((key) => (
               <li key={key} className="flex items-start gap-3 text-white/80 font-mono text-sm">
                 <span className="text-[#E01020] mt-0.5">▸</span>
                 {t(key)}

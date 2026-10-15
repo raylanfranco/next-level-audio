@@ -4,6 +4,7 @@ import { Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/components/AuthContext';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
+import VipAfterHours from '@/components/VipAfterHours';
 
 const PERKS = [
   { key: 'products', icon: '◉' },
@@ -50,6 +51,10 @@ export default function VipPage() {
             </div>
           </div>
         </AnimateOnScroll>
+
+        <div className="mb-8">
+          <VipAfterHours />
+        </div>
 
         {/* Perks grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
