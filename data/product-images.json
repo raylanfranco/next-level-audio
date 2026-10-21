@@ -12238,5 +12238,13 @@
     "upc": "713034045373",
     "fetchedAt": "2026-10-10T13:16:22.723Z",
     "status": "pending"
+  },
+  "0QD8DAHXQMXZ0": {
+    "imageUrl": "https://nest-filler.com/upload/product/167532181605.44_uH1_N3_648-2M_50.jpg",
+    "source": "google_upc",
+    "name": "MET-GM8 DATA INTERFACE WITH SWC FITS S",
+    "upc": "086429515134",
+    "fetchedAt": "2026-10-21T12:41:03.045Z",
+    "status": "pending"
   }
 }
