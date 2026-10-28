@@ -12246,5 +12246,13 @@
     "upc": "086429515134",
     "fetchedAt": "2026-10-21T12:41:03.045Z",
     "status": "pending"
+  },
+  "16PWR716S9VF0": {
+    "imageUrl": "https://cdn-6459f062c1ac1878f846a1d4.closte.com/wp-content/uploads/2024/06/9005-9006.png",
+    "source": "google_images",
+    "name": "9005-9006 N26 Led Light",
+    "upc": null,
+    "fetchedAt": "2026-10-28T13:47:29.988Z",
+    "status": "pending"
   }
 }
