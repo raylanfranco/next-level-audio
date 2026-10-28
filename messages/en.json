@@ -33,7 +33,7 @@
     "pickupAddress": "Orders are available for in-store pickup at 944 N 9th St, Stroudsburg, PA."
   },
   "topBanner": {
-    "hours": "Mon-Fri 9AM-7PM | Sat 9AM-3PM"
+    "hours": "Mon-Fri 9AM-6PM | Sat 9AM-3PM"
   },
   "header": {
     "home": "HOME",
@@ -65,7 +65,7 @@
     "financing": "FINANCING/LEASING",
     "contactInfo": "CONTACT INFO",
     "hours": "HOURS",
-    "monFri": "Monday - Friday: 9AM - 7PM",
+    "monFri": "Monday - Friday: 9AM - 6PM",
     "saturday": "Saturday: 9AM - 3PM",
     "sunday": "Sunday: Closed",
     "copyright": "© {year} Next Level Audio. All rights reserved.",
@@ -170,7 +170,7 @@
     "phone": "PHONE",
     "businessHours": "BUSINESS HOURS",
     "monFri": "Monday - Friday:",
-    "monFriHours": "9AM - 7PM",
+    "monFriHours": "9AM - 6PM",
     "saturday": "Saturday:",
     "saturdayHours": "9AM - 3PM",
     "sunday": "Sunday:",

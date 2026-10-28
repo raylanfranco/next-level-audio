@@ -120,7 +120,7 @@ export default async function RootLayout({
                     "Friday",
                   ],
                   opens: "09:00",
-                  closes: "19:00",
+                  closes: "18:00",
                 },
                 {
                   "@type": "OpeningHoursSpecification",

@@ -6,7 +6,7 @@ export const chatbotConfig = {
     phone: '(570) 730-4433',
     email: 'nextlevelauto@ymail.com',
     hours: {
-      'Monday - Friday': '9AM - 7PM',
+      'Monday - Friday': '9AM - 6PM',
       'Saturday': '9AM - 3PM',
       'Sunday': 'Closed',
     } as Record<string, string>,
