@@ -1,7 +1,8 @@
 # Seasonal offers
 
-The Early Black Friday campaign appears on the homepage, in navigation, and at
-`/deals`, with a shareable `/deals/[slug]` detail page for each active offer.
+The Early Black Friday campaign replaces Closeout Deals in the homepage hero,
+beside the headline on desktop and below it on phones. It also appears in
+navigation and at `/deals`, with a shareable `/deals/[slug]` detail page for each active offer.
 English and Spanish use the same prices and product definitions.
 
 ## Update or end the campaign

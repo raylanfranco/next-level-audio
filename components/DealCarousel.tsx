@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 
-export default function DealCarousel({ children }: { children: ReactNode }) {
+export default function DealCarousel({ children, heading }: { children: ReactNode; heading?: ReactNode }) {
   const t = useTranslations('blackFriday');
   const railRef = useRef<HTMLUListElement>(null);
   const [edges, setEdges] = useState({ start: true, end: true });
@@ -38,7 +38,7 @@ export default function DealCarousel({ children }: { children: ReactNode }) {
   return (
     <div>
       <div className="mb-5 flex items-center justify-between gap-4">
-        <p id="deal-carousel-help" className="font-ui text-sm text-chrome-300">{t('browseHint')}</p>
+        {heading ?? <p id="deal-carousel-help" className="font-ui text-sm text-chrome-300">{t('browseHint')}</p>}
         <div className="flex shrink-0 gap-2">
           {([-1, 1] as const).map((direction) => (
             <button
@@ -55,6 +55,7 @@ export default function DealCarousel({ children }: { children: ReactNode }) {
           ))}
         </div>
       </div>
+      {heading && <p id="deal-carousel-help" className="sr-only">{t('browseHint')}</p>}
       <ul
         id="black-friday-deal-list"
         ref={railRef}

@@ -1,11 +1,10 @@
 'use client';
 
 import { Link } from '@/i18n/navigation';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, type ReactNode } from 'react';
 import { useTranslations } from 'next-intl';
 import { useBookingModal } from './BookingModalContext';
 import BrandMarquee from './BrandMarquee';
-import CloseoutCarousel from './CloseoutCarousel';
 import { getActiveDeals } from '@/lib/deals';
 
 const DEFAULT_VIDEO_URL = '/videos/hero-video.mp4';
@@ -13,9 +12,10 @@ const DEFAULT_VIDEO_URL = '/videos/hero-video.mp4';
 interface HeroSectionProps {
   videoSrc?: string;
   videoPoster?: string;
+  promotion?: ReactNode;
 }
 
-export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster }: HeroSectionProps) {
+export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster, promotion }: HeroSectionProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const { openModal } = useBookingModal();
   // Default to false (poster) so SSR + first paint match. The browser-only
@@ -69,7 +69,7 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
   }, []);
 
   return (
-    <header className="relative flex flex-col justify-center min-h-[640px] h-dvh bg-black overflow-hidden pt-20">
+    <header className="relative flex min-h-dvh flex-col justify-center overflow-hidden bg-black pt-32 lg:pt-36">
       {/* V1 hero video as the base layer (with mobile/reduced-motion/save-data guards + parallax) */}
       <div className="absolute inset-0 z-0">
         {videoSrc && showVideo ? (
@@ -138,9 +138,9 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
       </div>
 
       {/* Hero content */}
-      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-6 lg:px-16 flex flex-col lg:flex-row items-center gap-8 lg:gap-12 h-full justify-center pb-24">
+      <div className="relative z-10 w-full max-w-[1440px] mx-auto px-6 lg:px-16 flex flex-1 flex-col lg:flex-row items-center gap-10 lg:gap-12 justify-center pb-28">
         {/* Left: headline + copy + CTAs */}
-        <div className="flex-1 flex flex-col items-start justify-center">
+        <div className="min-w-0 flex-1 flex flex-col items-start justify-center">
           <div className="max-w-4xl hero-stagger hero-stagger-1">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-electric-red shadow-[0_0_10px_#e60012]"></div>
@@ -184,10 +184,12 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
           </div>
         </div>
 
-        {/* Right: closeout carousel (desktop) */}
-        <div className="hero-stagger hero-stagger-4 hidden lg:block flex-shrink-0 w-full max-w-md">
-          <CloseoutCarousel />
-        </div>
+        {/* Seasonal offers beside the headline on desktop, below it on mobile. */}
+        {promotion && (
+          <div className="hero-stagger hero-stagger-4 min-w-0 w-full max-w-md shrink-0 lg:w-[40%]">
+            {promotion}
+          </div>
+        )}
       </div>
 
       {/* Brand marquee — V1 brand logo imagery in the Variant bottom bar */}
