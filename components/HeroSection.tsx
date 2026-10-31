@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { useBookingModal } from './BookingModalContext';
 import BrandMarquee from './BrandMarquee';
 import CloseoutCarousel from './CloseoutCarousel';
+import { getActiveDeals } from '@/lib/deals';
 
 const DEFAULT_VIDEO_URL = '/videos/hero-video.mp4';
 
@@ -24,6 +25,7 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
   const [showVideo, setShowVideo] = useState(false);
   const t = useTranslations('hero');
   const tc = useTranslations('common');
+  const td = useTranslations('blackFriday');
 
   useEffect(() => {
     // On mobile / reduced-motion / data-saver, keep the poster (no video).
@@ -142,7 +144,13 @@ export default function HeroSection({ videoSrc = DEFAULT_VIDEO_URL, videoPoster 
           <div className="max-w-4xl hero-stagger hero-stagger-1">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-[2px] bg-electric-red shadow-[0_0_10px_#e60012]"></div>
-              <span className="font-ui text-chrome-300 font-bold tracking-[0.4em] uppercase text-sm">{t('welcome')}</span>
+              {getActiveDeals().length ? (
+                <Link href="/deals" className="font-ui text-amber-300 font-bold tracking-[0.15em] uppercase text-sm hover:text-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-300">
+                  {td('heroLink')} <span aria-hidden="true">↗</span>
+                </Link>
+              ) : (
+                <span className="font-ui text-chrome-300 font-bold tracking-[0.4em] uppercase text-sm">{t('welcome')}</span>
+              )}
             </div>
             {/* Headline fix: two clean clamped lines, no manual <br/> indent, no mid-gradient
                 black band slicing the text. "YOUR JOURNEY" picks up the electric-red accent. */}

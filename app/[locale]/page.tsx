@@ -5,6 +5,7 @@ import Image from 'next/image';
 import HeroSection from '@/components/HeroSection';
 import ServicesSection from '@/components/ServicesSection';
 import MobileInterlockBanner from '@/components/MobileInterlockBanner';
+import EarlyBlackFridayDeals from '@/components/EarlyBlackFridayDeals';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
 
 const ProductsSection = dynamic(() => import('@/components/ProductsSection'), {
@@ -26,6 +27,8 @@ export default async function Home() {
     <div className="w-full">
       {/* Hero Section with Video Background */}
       <HeroSection />
+
+      <EarlyBlackFridayDeals />
 
       <MobileInterlockBanner />
 

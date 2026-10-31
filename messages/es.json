@@ -50,7 +50,8 @@
     "shoppingCart": "Carrito de compras",
     "closeMenu": "Cerrar menú",
     "toggleMenu": "Abrir menú",
-    "vip": "VIP"
+    "vip": "VIP",
+    "deals": "OFERTAS"
   },
   "footer": {
     "brandName": "NEXT LEVEL AUDIO",
@@ -664,6 +665,50 @@
     "welcomeRedirect": "¡Bienvenido a Next Level Audio! Redirigiendo a tu cuenta...",
     "createOne": "Crear una",
     "backToSite": "Volver al sitio"
+  },
+  "blackFriday": {
+    "eyebrow": "Next Level Audio · Ofertas de temporada",
+    "early": "Adelántate al",
+    "blackFriday": "Black Friday",
+    "campaign": "Black Friday anticipado",
+    "intro": "Prepárate para el frío y aprovecha los descuentos en arranques remotos Compustar, instalados por Next Level Audio.",
+    "shopAll": "Ver todas las ofertas",
+    "heroLink": "Ofertas anticipadas de Black Friday",
+    "browseHint": "Desliza para explorar o usa las flechas.",
+    "listLabel": "Ofertas anticipadas de Black Friday",
+    "previous": "Oferta anterior",
+    "next": "Siguiente oferta",
+    "remoteStart": "Arranque remoto",
+    "percentOff": "{percent}% de descuento",
+    "specialPrice": "Precio de Black Friday",
+    "viewDeal": "Ver oferta",
+    "viewNamedDeal": "Ver la oferta de {name}",
+    "was": "Antes",
+    "saveAmount": "Ahorra {amount}",
+    "installed": "con instalación",
+    "productOnly": "solo producto",
+    "installationIncluded": "Instalación incluida en nuestro taller de Stroudsburg.",
+    "installationNotIncluded": "Esta oferta no incluye la instalación.",
+    "compatibility": "Llama al taller para confirmar la compatibilidad con tu vehículo y programar la instalación.",
+    "backToDeals": "Todas las ofertas de Black Friday",
+    "model": "Modelo: {model}",
+    "callToBook": "Llama para reservar esta oferta",
+    "mentionOffer": "Menciona la oferta anticipada de Black Friday del {name} cuando llames.",
+    "dronePlan": "Las funciones de DroneMobile para el teléfono requieren un plan de servicio por separado. Consulta las opciones de activación y los planes.",
+    "metaTitle": "Ofertas anticipadas de Black Friday | Next Level Audio",
+    "metaDescription": "Descubre las ofertas anticipadas de Black Friday en arranques remotos de Next Level Audio en Stroudsburg. Sistemas Compustar con instalación incluida.",
+    "products": {
+      "pro940s": {
+        "summary": "Arranque remoto de una vía. Dos controles. Empieza el día con tu auto listo.",
+        "description": "Enciende tu vehículo antes de salir con el Compustar PRO 940S. Este sistema de arranque remoto de una vía incluye dos controles e instalación profesional en Next Level Audio.",
+        "features": ["Dos controles de una vía incluidos", "Hasta 1,500 pies de alcance del control", "Arranque remoto y entrada sin llave"]
+      },
+      "csx5300s": {
+        "summary": "Confirmación de dos vías, mayor alcance del control y módulo LTE incluido.",
+        "description": "Recibe confirmación de tu vehículo con el Compustar CSX 5300S. Este paquete de arranque remoto de dos vías incluye un módulo LTE de DroneMobile e instalación profesional en Next Level Audio.",
+        "features": ["Confirmación LED de dos vías", "Hasta 3,000 pies de alcance del control", "Módulo LTE de DroneMobile incluido", "Control adicional de una vía incluido"]
+      }
+    }
   },
   "mobileInterlock": {
     "comingSoon": "Próximamente",
