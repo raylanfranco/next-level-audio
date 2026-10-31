@@ -1,4 +1,5 @@
 import type { MetadataRoute } from 'next';
+import { getActiveDeals } from '@/lib/deals';
 
 const SITE_URL = 'https://nextlevelaudiopa.com';
 const PUBLIC_ROUTES = [
@@ -16,7 +17,10 @@ const PUBLIC_ROUTES = [
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
 
-  return PUBLIC_ROUTES.flatMap((path) => {
+  const deals = getActiveDeals();
+  const routes = [...PUBLIC_ROUTES, ...(deals.length ? ['/deals', ...deals.map((deal) => `/deals/${deal.slug}`)] : [])];
+
+  return routes.flatMap((path) => {
     const englishUrl = `${SITE_URL}${path || '/'}`;
     const spanishUrl = `${SITE_URL}/es${path || ''}`;
     const alternates = {

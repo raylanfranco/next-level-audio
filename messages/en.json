@@ -50,7 +50,8 @@
     "shoppingCart": "Shopping cart",
     "closeMenu": "Close menu",
     "toggleMenu": "Toggle menu",
-    "vip": "VIP"
+    "vip": "VIP",
+    "deals": "DEALS"
   },
   "footer": {
     "brandName": "NEXT LEVEL AUDIO",
@@ -664,6 +665,50 @@
     "welcomeRedirect": "Welcome to Next Level Audio! Redirecting to your account...",
     "createOne": "Create one",
     "backToSite": "Back to site"
+  },
+  "blackFriday": {
+    "eyebrow": "Next Level Audio · Seasonal offers",
+    "early": "Early",
+    "blackFriday": "Black Friday",
+    "campaign": "Early Black Friday",
+    "intro": "Beat the cold. Get a head start on the savings with Compustar remote start deals, installed by Next Level Audio.",
+    "shopAll": "Shop all deals",
+    "heroLink": "Early Black Friday deals",
+    "browseHint": "Swipe to explore, or use the arrows.",
+    "listLabel": "Early Black Friday deals",
+    "previous": "Previous deal",
+    "next": "Next deal",
+    "remoteStart": "Remote start",
+    "percentOff": "{percent}% off",
+    "specialPrice": "Black Friday price",
+    "viewDeal": "View deal",
+    "viewNamedDeal": "View the {name} deal",
+    "was": "Was",
+    "saveAmount": "Save {amount}",
+    "installed": "installed",
+    "productOnly": "product only",
+    "installationIncluded": "Installation included at our Stroudsburg shop.",
+    "installationNotIncluded": "Installation is not included in this offer.",
+    "compatibility": "Call the shop to confirm compatibility with your vehicle and schedule your installation.",
+    "backToDeals": "All Black Friday deals",
+    "model": "Model: {model}",
+    "callToBook": "Call to book this deal",
+    "mentionOffer": "Mention the Early Black Friday offer for the {name} when you call.",
+    "dronePlan": "DroneMobile smartphone features require a separate service plan. Ask us about activation and plan options.",
+    "metaTitle": "Early Black Friday Deals | Next Level Audio",
+    "metaDescription": "Explore Early Black Friday remote start offers at Next Level Audio in Stroudsburg. View Compustar systems with installation included.",
+    "products": {
+      "pro940s": {
+        "summary": "1-way remote start. Two remotes. A warmer start to your day.",
+        "description": "Start your vehicle before you step outside with the Compustar PRO 940S. This 1-way remote start system includes two remotes and professional installation at Next Level Audio.",
+        "features": ["Two 1-way remotes included", "Up to 1,500 feet of remote range", "Remote start and keyless entry"]
+      },
+      "csx5300s": {
+        "summary": "2-way confirmation, longer remote range, and an LTE module included.",
+        "description": "Get confirmation back from your vehicle with the Compustar CSX 5300S. This 2-way remote start bundle includes a DroneMobile LTE module and professional installation at Next Level Audio.",
+        "features": ["2-way LED confirmation", "Up to 3,000 feet of remote range", "DroneMobile LTE module included", "Backup 1-way remote included"]
+      }
+    }
   },
   "mobileInterlock": {
     "comingSoon": "Coming soon",

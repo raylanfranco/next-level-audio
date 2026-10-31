@@ -5,6 +5,8 @@ import Image from 'next/image';
 import HeroSection from '@/components/HeroSection';
 import ServicesSection from '@/components/ServicesSection';
 import MobileInterlockBanner from '@/components/MobileInterlockBanner';
+import HeroBlackFridayDeals from '@/components/HeroBlackFridayDeals';
+import { getActiveDeals } from '@/lib/deals';
 import AnimateOnScroll from '@/components/AnimateOnScroll';
 
 const ProductsSection = dynamic(() => import('@/components/ProductsSection'), {
@@ -25,7 +27,7 @@ export default async function Home() {
   return (
     <div className="w-full">
       {/* Hero Section with Video Background */}
-      <HeroSection />
+      <HeroSection promotion={getActiveDeals().length ? <HeroBlackFridayDeals /> : undefined} />
 
       <MobileInterlockBanner />
 

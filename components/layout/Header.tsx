@@ -9,6 +9,7 @@ import { useCart } from '@/components/CartContext';
 import { useAuth } from '@/components/AuthContext';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import TopBanner from '@/components/layout/TopBanner';
+import { getActiveDeals } from '@/lib/deals';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -69,7 +70,7 @@ export default function Header() {
       <div className="px-6 lg:px-12">
         <div className="hidden lg:flex items-center h-20">
           {/* Logo — far left (flex-1 zone so nav can truly center) */}
-          <div className="flex-1 flex items-center">
+          <div className="min-w-[102px] flex-1 flex items-center">
             <Link href="/" className="flex items-center flex-shrink-0">
               <Image
                 src="/images/logo.webp"
@@ -84,7 +85,7 @@ export default function Header() {
           </div>
 
           {/* Navigation — centered */}
-          <nav className="flex items-center justify-center space-x-8">
+          <nav className="flex items-center justify-center space-x-3 xl:space-x-8">
             <Link
               href="/"
               className={navLinkClass}
@@ -144,6 +145,11 @@ export default function Header() {
             >
               {t('gallery')}
             </Link>
+            {getActiveDeals().length > 0 && (
+              <Link href="/deals" className={`${navLinkClass} !text-amber-300`}>
+                {t('deals')}
+              </Link>
+            )}
             <Link
               href="/vip"
               className={`${navLinkClass} text-electric-red`}
@@ -165,7 +171,7 @@ export default function Header() {
           </nav>
 
           {/* Account + Cart + Contact — right zone (flex-1 to balance the logo zone) */}
-          <div className="flex-1 flex items-center justify-end space-x-6">
+          <div className="flex-1 flex items-center justify-end space-x-3 xl:space-x-6">
             <Link
               href={user ? '/account' : '/account/login'}
               className="relative text-chrome-300 hover:text-electric-red transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric-red focus-visible:ring-offset-2 focus-visible:ring-offset-black"
@@ -191,7 +197,7 @@ export default function Header() {
             </button>
             <Link
               href="/contact"
-              className="btn-glow font-ui px-8 py-3 text-sm font-bold tracking-[0.2em] uppercase text-white flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+              className="btn-glow font-ui px-4 xl:px-8 py-3 text-sm font-bold tracking-[0.2em] uppercase text-white flex items-center gap-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
             >
               {t('contact')}
             </Link>
@@ -265,10 +271,11 @@ export default function Header() {
         </div>
 
         {/* Nav links — centered vertically */}
-        <nav className="flex-1 flex flex-col items-center justify-center space-y-6">
+        <nav className="min-h-0 flex-1 flex flex-col items-center overflow-y-auto py-6 space-y-5">
           {[
             { href: '/' as const, label: t('home') },
             { href: '/products' as const, label: t('products') },
+            ...(getActiveDeals().length ? [{ href: '/deals' as const, label: t('deals') }] : []),
             { href: '/gallery' as const, label: t('gallery') },
             { href: '/vip' as const, label: t('vip') },
             { href: '/careers' as const, label: t('careers') },
