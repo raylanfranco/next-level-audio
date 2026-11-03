@@ -12254,5 +12254,13 @@
     "upc": null,
     "fetchedAt": "2026-10-28T13:47:29.988Z",
     "status": "pending"
+  },
+  "PEF1828HA9KDY": {
+    "imageUrl": "https://i0.wp.com/jacksonupperco.com/wp-content/uploads/2021/05/barney-miller-danny-arnold.jpg?ssl=1",
+    "source": "google_upc",
+    "name": "Pioneer MVH-S322BT",
+    "upc": "884938434393",
+    "fetchedAt": "2026-11-03T14:50:46.065Z",
+    "status": "pending"
   }
 }
