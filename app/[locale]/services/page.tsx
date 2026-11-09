@@ -10,6 +10,7 @@ import MobileInterlockBanner from '@/components/MobileInterlockBanner';
 export default function ServicesPage() {
   const { openModal } = useBookingModal();
   const t = useTranslations('services');
+  const tr = useTranslations('remoteStartPage');
   const tc = useTranslations('common');
 
   const services = [
@@ -39,9 +40,10 @@ export default function ServicesPage() {
     },
     {
       id: 'remote-start',
+      href: '/services/remote-start',
       title: t('remoteStart'),
       description: t('remoteStartDesc'),
-      features: [t('twoWayRemote'), t('smartphoneIntegration'), t('extendedRange'), t('keylessEntry'), t('securityFeatures'), t('professionalInstall')],
+      features: [tr('package.systemValue'), tr('keyFobIncluded'), tr('warrantyIncluded'), tr('package.installationValue')],
       image: '/images/services/remote-start.webp',
       icon: (
         <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -118,7 +120,8 @@ export default function ServicesPage() {
             {services.map((service) => (
               <div
                 key={service.id}
-                className="bg-black border-2 border-[#E01020]/30 overflow-hidden hover:border-[#E01020] transition-all duration-300 transform hover:-translate-y-2 group neon-border-soft"
+                id={service.id}
+                className="scroll-mt-40 bg-black border-2 border-[#E01020]/30 overflow-hidden hover:border-[#E01020] transition-all duration-300 transform hover:-translate-y-2 group neon-border-soft"
               >
                 {/* Service Image */}
                 {service.image && (
@@ -163,6 +166,11 @@ export default function ServicesPage() {
                       </li>
                     ))}
                   </ul>
+                  {service.href && (
+                    <Link href={service.href} className="mt-6 inline-flex min-h-11 items-center gap-3 border-b border-electric-red py-2 font-ui font-bold text-white hover:text-electric-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric-red">
+                      {tr('learnMore')} <span aria-hidden="true">↗</span>
+                    </Link>
+                  )}
                 </div>
               </div>
             ))}

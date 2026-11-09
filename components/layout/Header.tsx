@@ -23,6 +23,7 @@ export default function Header() {
   const serviceSubLinks = [
     { href: '/services/window-tinting' as const, label: t('windowTinting') },
     { href: '/services/car-audio' as const, label: t('carAudio') },
+    { href: '/services/remote-start' as const, label: t('remoteStart') },
   ];
 
   useEffect(() => {

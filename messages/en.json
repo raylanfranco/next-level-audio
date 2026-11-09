@@ -41,6 +41,7 @@
     "allServices": "ALL SERVICES",
     "windowTinting": "WINDOW TINTING",
     "carAudio": "CAR AUDIO",
+    "remoteStart": "REMOTE START",
     "products": "PRODUCTS",
     "gallery": "GALLERY",
     "careers": "CAREERS",
@@ -281,6 +282,141 @@
     "watchFullVideo": "Watch the Full Video",
     "closeVideo": "Close video"
   },
+  "remoteStartPage": {
+    "eyebrow": "Next Level Audio · Stroudsburg, PA",
+    "title": "Remote Start Installation in Stroudsburg, PA",
+    "tagline": "Start your car from inside. Get in warm.",
+    "intro": "On a cold Poconos morning, there is no reason to scrape ice in the dark and sit in a freezing car. With a professionally installed remote starter from Next Level Audio, you start your vehicle from inside your home, let the heat and defroster do the work, and step into a warm car that is ready to go.",
+    "offerIntro": "Compustar remote starters from $349.99 — including a key fob, warranty, and professional installation. Call <phone>570-730-4433</phone> to book your install at 944 N 9th St, Stroudsburg.",
+    "imageAlt": "Remote start key fob inside a vehicle",
+    "allServices": "All services",
+    "callToBook": "Call to book",
+    "phone": "570-730-4433",
+    "directions": "Get directions",
+    "sendMessage": "Send us a message",
+    "learnMore": "Remote start installation",
+    "relatedLink": "Explore remote start installation",
+    "relatedIntro": "Start your car from inside with a Compustar remote starter. Packages from $349.99 include a key fob, warranty, and professional installation.",
+    "startingPrice": "From $349.99",
+    "keyFobIncluded": "Key fob included",
+    "warrantyIncluded": "Warranty included",
+    "package": {
+      "heading": "Remote start package",
+      "system": "System",
+      "systemValue": "Compustar remote starter",
+      "keyFob": "Key fob",
+      "warranty": "Warranty",
+      "included": "Included",
+      "warrantyValue": "Included",
+      "installation": "Installation",
+      "installationValue": "Professional installation included",
+      "where": "Where",
+      "whereValue": "Next Level Audio, 944 N 9th St, Stroudsburg, PA",
+      "book": "Book",
+      "bookValue": "Call <phone>570-730-4433</phone> or walk in during shop hours",
+      "priceNote": "Price shown is the starting price. Final pricing can vary by vehicle — call the shop for a quote for your car or truck."
+    },
+    "processTitle": "How it works",
+    "processIntro": "Getting a remote starter at Next Level Audio is straightforward:",
+    "steps": [
+      {
+        "title": "Call or stop in.",
+        "body": "Tell us your vehicle and we will confirm the right Compustar system and your exact price."
+      },
+      {
+        "title": "We install it professionally.",
+        "body": "Our installers fit and program the system in your vehicle at our Stroudsburg shop."
+      },
+      {
+        "title": "You leave with the fob in hand.",
+        "body": "Start the car from inside with your fob, let it warm up and clear the windows, then drive off warm."
+      }
+    ],
+    "processOutro": "That is it — no scraping, no idling in a cold seat while the windshield clears, and no standing outside in the wind.",
+    "winterTitle": "Built for Poconos winters",
+    "winterIntro": "Winter in the Poconos means frosted windshields, single-digit wind chills, and mornings that start before the sun is up. A remote starter changes the coldest part of your day:",
+    "benefits": [
+      {
+        "title": "A warm car waiting.",
+        "body": "Start the engine and heat from inside your house, office, or workplace."
+      },
+      {
+        "title": "Clearer windows.",
+        "body": "Heat and defrost start clearing frost and ice while you finish getting ready."
+      },
+      {
+        "title": "Useful all year.",
+        "body": "In summer, the same system lets you cool the car down before you get in."
+      }
+    ],
+    "whyTitle": "Why drivers choose Next Level Audio",
+    "reasons": [
+      {
+        "title": "Local Stroudsburg shop.",
+        "body": "We are at 944 N 9th St in Stroudsburg — easy to reach from across the Poconos."
+      },
+      {
+        "title": "Compustar systems.",
+        "body": "We install Compustar remote start systems, with a key fob and warranty included."
+      },
+      {
+        "title": "Professional installation.",
+        "body": "Your starter is fitted by the shop's installers, not sold as a do-it-yourself kit."
+      },
+      {
+        "title": "Rated by local customers.",
+        "body": "<reviews>Read what local customers say about Next Level Audio.</reviews>"
+      },
+      {
+        "title": "Open Saturdays.",
+        "body": "Open Monday to Friday 9am–6pm and Saturday 9am–3pm, closed Sunday."
+      }
+    ],
+    "areaTitle": "Serving Stroudsburg and the Poconos",
+    "areaIntro": "Next Level Audio installs remote starters for drivers in Stroudsburg and communities across the surrounding Poconos, including:",
+    "areas": [
+      "Stroudsburg and East Stroudsburg",
+      "Bartonsville and Tannersville",
+      "Mount Pocono and Pocono Summit",
+      "Saylorsburg and Brodheadsville",
+      "Tobyhanna"
+    ],
+    "areaOutro": "If you are within about 20 miles of Stroudsburg and your town is not listed, call <phone>570-730-4433</phone> — chances are we already look after drivers near you.",
+    "faqTitle": "Frequently asked questions",
+    "faqs": [
+      {
+        "question": "How much does a remote starter cost at Next Level Audio?",
+        "answer": "Remote starters start at $349.99, including a key fob, warranty, and professional installation. Final pricing can vary by vehicle, so call <phone>570-730-4433</phone> for a quote for your car or truck."
+      },
+      {
+        "question": "What is included with the installation?",
+        "answer": "Your package includes the Compustar remote starter, a key fob, warranty coverage, and professional installation at our shop in Stroudsburg."
+      },
+      {
+        "question": "Can I start my car from inside my house?",
+        "answer": "Yes. That is the point of the system — start your vehicle from inside, let it warm up and begin clearing the windows, and get into a warm car."
+      },
+      {
+        "question": "Which remote start systems do you install?",
+        "answer": "We install Compustar remote starters. Call the shop and we will confirm the right system for your vehicle."
+      },
+      {
+        "question": "Where are you located, and when are you open?",
+        "answer": "Next Level Audio is at 944 N 9th St, Stroudsburg, PA. We are open Monday to Friday 9am–6pm and Saturday 9am–3pm, and closed on Sunday."
+      },
+      {
+        "question": "How do I book an install?",
+        "answer": "Call <phone>570-730-4433</phone>, <message>send us a message</message>, or stop in during shop hours. Book ahead when cold weather is in the forecast — install slots fill up fast when temperatures drop."
+      }
+    ],
+    "bookingTitle": "Book your remote start install",
+    "bookingTagline": "Don't scrape ice tomorrow morning.",
+    "bookingOffer": "Remote starters from $349.99 — key fob, warranty, and professional installation included.",
+    "address": "944 N 9th St, Stroudsburg, PA",
+    "hours": "Mon–Fri 9am–6pm · Sat 9am–3pm · Closed Sun",
+    "metaTitle": "Remote Start Installation in Stroudsburg, PA | From $349.99 — Next Level Audio",
+    "metaDescription": "Compustar remote starters from $349.99 in Stroudsburg, PA — key fob, warranty & professional installation included at Next Level Audio. Serving the Poconos. Call 570-730-4433."
+  },
   "services": {
     "whatWeOffer": "WHAT WE OFFER",
     "title": "OUR SERVICES",
@@ -290,7 +426,7 @@
     "carAudio": "CAR AUDIO",
     "carAudioDesc": "High-quality car audio installations with our team of experienced technicians. From basic speaker upgrades to complete custom sound systems, we deliver premium audio experiences tailored to your needs and budget.",
     "remoteStart": "REMOTE START",
-    "remoteStartDesc": "Never step into a cold or hot car again. Our remote start systems let you start your vehicle from the comfort of your home or office, ensuring the perfect temperature when you're ready to drive.",
+    "remoteStartDesc": "Start your car from inside with a Compustar remote starter. Packages from $349.99 include a key fob, warranty, and professional installation.",
     "securitySystems": "SECURITY SYSTEMS",
     "securitySystemsDesc": "Protect your investment with our state-of-the-art vehicle security systems. From basic alarms to advanced GPS tracking, we offer comprehensive solutions to keep your vehicle safe.",
     "customLighting": "CUSTOM LIGHTING",
