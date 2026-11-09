@@ -41,6 +41,7 @@
     "allServices": "TODOS LOS SERVICIOS",
     "windowTinting": "POLARIZADO",
     "carAudio": "AUDIO PARA AUTOS",
+    "remoteStart": "ARRANQUE REMOTO",
     "products": "PRODUCTOS",
     "gallery": "GALERÍA",
     "careers": "EMPLEOS",
@@ -281,6 +282,141 @@
     "watchFullVideo": "Ver el Video Completo",
     "closeVideo": "Cerrar video"
   },
+  "remoteStartPage": {
+    "eyebrow": "Next Level Audio · Stroudsburg, PA",
+    "title": "Instalación de arranque remoto en Stroudsburg, PA",
+    "tagline": "Enciende tu auto desde adentro. Sube a un auto cálido.",
+    "intro": "En una mañana fría de los Poconos, no tienes por qué raspar hielo a oscuras y sentarte en un auto helado. Con un arranque remoto instalado profesionalmente por Next Level Audio, puedes encender tu vehículo desde tu casa, dejar que la calefacción y el desempañador hagan su trabajo y subir a un auto cálido, listo para salir.",
+    "offerIntro": "Arranques remotos Compustar desde $349.99 — con control remoto, garantía e instalación profesional incluidos. Llama al <phone>570-730-4433</phone> para reservar tu instalación en 944 N 9th St, Stroudsburg.",
+    "imageAlt": "Control de arranque remoto dentro de un vehículo",
+    "allServices": "Todos los servicios",
+    "callToBook": "Llama para reservar",
+    "phone": "570-730-4433",
+    "directions": "Cómo llegar",
+    "sendMessage": "Envíanos un mensaje",
+    "learnMore": "Instalación de arranque remoto",
+    "relatedLink": "Descubre la instalación de arranque remoto",
+    "relatedIntro": "Enciende tu auto desde adentro con un arranque remoto Compustar. Los paquetes desde $349.99 incluyen control remoto, garantía e instalación profesional.",
+    "startingPrice": "Desde $349.99",
+    "keyFobIncluded": "Control remoto incluido",
+    "warrantyIncluded": "Garantía incluida",
+    "package": {
+      "heading": "Paquete de arranque remoto",
+      "system": "Sistema",
+      "systemValue": "Arranque remoto Compustar",
+      "keyFob": "Control remoto",
+      "warranty": "Garantía",
+      "included": "Incluido",
+      "warrantyValue": "Incluida",
+      "installation": "Instalación",
+      "installationValue": "Instalación profesional incluida",
+      "where": "Dónde",
+      "whereValue": "Next Level Audio, 944 N 9th St, Stroudsburg, PA",
+      "book": "Reserva",
+      "bookValue": "Llama al <phone>570-730-4433</phone> o visítanos durante el horario del taller",
+      "priceNote": "El precio indicado es el precio inicial. El precio final puede variar según el vehículo — llama al taller para cotizar tu auto o camioneta."
+    },
+    "processTitle": "Cómo funciona",
+    "processIntro": "Instalar un arranque remoto en Next Level Audio es sencillo:",
+    "steps": [
+      {
+        "title": "Llama o visítanos.",
+        "body": "Dinos qué vehículo tienes y confirmaremos el sistema Compustar adecuado y el precio exacto."
+      },
+      {
+        "title": "Lo instalamos profesionalmente.",
+        "body": "Nuestros instaladores colocan y programan el sistema en tu vehículo en nuestro taller de Stroudsburg."
+      },
+      {
+        "title": "Te vas con el control en la mano.",
+        "body": "Enciende el auto desde adentro con tu control, deja que se caliente y se despejen los cristales, y sal a conducir con comodidad."
+      }
+    ],
+    "processOutro": "Así de fácil — sin raspar hielo, sin esperar en un asiento frío mientras se despeja el parabrisas y sin quedarte afuera bajo el viento.",
+    "winterTitle": "Preparado para los inviernos de los Poconos",
+    "winterIntro": "El invierno en los Poconos trae parabrisas cubiertos de escarcha, sensaciones térmicas de un solo dígito en Fahrenheit y mañanas que empiezan antes del amanecer. Un arranque remoto transforma la parte más fría de tu día:",
+    "benefits": [
+      {
+        "title": "Un auto cálido te espera.",
+        "body": "Enciende el motor y la calefacción desde tu casa, oficina o lugar de trabajo."
+      },
+      {
+        "title": "Cristales más despejados.",
+        "body": "La calefacción y el desempañador empiezan a quitar la escarcha y el hielo mientras terminas de prepararte."
+      },
+      {
+        "title": "Útil todo el año.",
+        "body": "En verano, el mismo sistema te permite enfriar el auto antes de subir."
+      }
+    ],
+    "whyTitle": "Por qué los conductores eligen Next Level Audio",
+    "reasons": [
+      {
+        "title": "Un taller local en Stroudsburg.",
+        "body": "Estamos en 944 N 9th St, Stroudsburg — con fácil acceso desde los Poconos."
+      },
+      {
+        "title": "Sistemas Compustar.",
+        "body": "Instalamos sistemas de arranque remoto Compustar, con control remoto y garantía incluidos."
+      },
+      {
+        "title": "Instalación profesional.",
+        "body": "Los instaladores del taller colocan tu arranque remoto; no se vende como un kit para instalar por tu cuenta."
+      },
+      {
+        "title": "Reseñas de clientes locales.",
+        "body": "<reviews>Lee lo que dicen los clientes locales sobre Next Level Audio.</reviews>"
+      },
+      {
+        "title": "Abierto los sábados.",
+        "body": "Abrimos de lunes a viernes de 9am a 6pm y los sábados de 9am a 3pm. Cerramos los domingos."
+      }
+    ],
+    "areaTitle": "Al servicio de Stroudsburg y los Poconos",
+    "areaIntro": "Next Level Audio instala arranques remotos para conductores de Stroudsburg y las comunidades cercanas de los Poconos, entre ellas:",
+    "areas": [
+      "Stroudsburg y East Stroudsburg",
+      "Bartonsville y Tannersville",
+      "Mount Pocono y Pocono Summit",
+      "Saylorsburg y Brodheadsville",
+      "Tobyhanna"
+    ],
+    "areaOutro": "Si estás a unas 20 millas de Stroudsburg y tu localidad no aparece en la lista, llama al <phone>570-730-4433</phone> — es muy probable que ya atendamos a conductores cerca de ti.",
+    "faqTitle": "Preguntas frecuentes",
+    "faqs": [
+      {
+        "question": "¿Cuánto cuesta un arranque remoto en Next Level Audio?",
+        "answer": "Los arranques remotos cuestan desde $349.99, con control remoto, garantía e instalación profesional incluidos. El precio final puede variar según el vehículo; llama al <phone>570-730-4433</phone> para cotizar tu auto o camioneta."
+      },
+      {
+        "question": "¿Qué incluye la instalación?",
+        "answer": "Tu paquete incluye el arranque remoto Compustar, un control remoto, cobertura de garantía e instalación profesional en nuestro taller de Stroudsburg."
+      },
+      {
+        "question": "¿Puedo encender mi auto desde mi casa?",
+        "answer": "Sí. Ese es el propósito del sistema: enciende tu vehículo desde adentro, deja que se caliente y empiece a despejar los cristales, y sube a un auto cálido."
+      },
+      {
+        "question": "¿Qué sistemas de arranque remoto instalan?",
+        "answer": "Instalamos arranques remotos Compustar. Llama al taller y confirmaremos el sistema adecuado para tu vehículo."
+      },
+      {
+        "question": "¿Dónde están y cuál es su horario?",
+        "answer": "Next Level Audio está en 944 N 9th St, Stroudsburg, PA. Abrimos de lunes a viernes de 9am a 6pm y los sábados de 9am a 3pm. Cerramos los domingos."
+      },
+      {
+        "question": "¿Cómo reservo una instalación?",
+        "answer": "Llama al <phone>570-730-4433</phone>, <message>envíanos un mensaje</message> o visítanos durante el horario del taller. Reserva con anticipación cuando se pronostique frío: las citas de instalación se llenan rápido cuando bajan las temperaturas."
+      }
+    ],
+    "bookingTitle": "Reserva tu instalación de arranque remoto",
+    "bookingTagline": "Mañana no tendrás que raspar hielo.",
+    "bookingOffer": "Arranques remotos desde $349.99 — con control remoto, garantía e instalación profesional incluidos.",
+    "address": "944 N 9th St, Stroudsburg, PA",
+    "hours": "Lun–vie 9am–6pm · Sáb 9am–3pm · Dom cerrado",
+    "metaTitle": "Instalación de arranque remoto en Stroudsburg, PA | Desde $349.99 — Next Level Audio",
+    "metaDescription": "Arranques remotos Compustar desde $349.99 en Stroudsburg, PA, con control, garantía e instalación profesional incluidos en Next Level Audio. Servimos a los Poconos. Llama al 570-730-4433."
+  },
   "services": {
     "whatWeOffer": "LO QUE OFRECEMOS",
     "title": "NUESTROS SERVICIOS",
@@ -290,7 +426,7 @@
     "carAudio": "AUDIO PARA AUTOS",
     "carAudioDesc": "Instalaciones de audio para autos de alta calidad con nuestro equipo de técnicos experimentados. Desde mejoras básicas de bocinas hasta sistemas de sonido personalizados completos, ofrecemos experiencias de audio premium adaptadas a tus necesidades y presupuesto.",
     "remoteStart": "ARRANQUE REMOTO",
-    "remoteStartDesc": "Nunca más entres a un auto frío o caliente. Nuestros sistemas de arranque remoto te permiten encender tu vehículo desde la comodidad de tu hogar u oficina, asegurando la temperatura perfecta cuando estés listo para conducir.",
+    "remoteStartDesc": "Enciende tu auto desde adentro con un arranque remoto Compustar. Los paquetes desde $349.99 incluyen control remoto, garantía e instalación profesional.",
     "securitySystems": "SISTEMAS DE SEGURIDAD",
     "securitySystemsDesc": "Protege tu inversión con nuestros sistemas de seguridad vehicular de última generación. Desde alarmas básicas hasta rastreo GPS avanzado, ofrecemos soluciones integrales para mantener tu vehículo seguro.",
     "customLighting": "ILUMINACIÓN PERSONALIZADA",

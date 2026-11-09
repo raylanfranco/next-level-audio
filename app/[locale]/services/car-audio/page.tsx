@@ -19,6 +19,7 @@ const brands = [
 
 export default function CarAudioPage() {
   const t = useTranslations('carAudioPage');
+  const tr = useTranslations('remoteStartPage');
 
   const services = [
     {
@@ -445,6 +446,11 @@ export default function CarAudioPage() {
           </AnimateOnScroll>
         </div>
       </section>
+      <div className="border-t border-white/10 bg-black px-6 py-10 text-center">
+        <Link href="/services/remote-start" className="inline-flex min-h-11 items-center gap-3 border-b border-electric-red py-2 font-ui font-bold text-white hover:text-electric-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric-red">
+          {tr('relatedLink')} <span aria-hidden="true">↗</span>
+        </Link>
+      </div>
     </div>
   );
 }

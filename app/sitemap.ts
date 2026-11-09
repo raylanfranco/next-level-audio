@@ -10,6 +10,7 @@ const PUBLIC_ROUTES = [
   '/products',
   '/services',
   '/services/car-audio',
+  '/services/remote-start',
   '/services/window-tinting',
   '/vip',
 ] as const;

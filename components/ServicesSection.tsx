@@ -31,6 +31,7 @@ const Screws = () => (
 export default function ServicesSection() {
   const t = useTranslations('home');
   const tc = useTranslations('common');
+  const tr = useTranslations('remoteStartPage');
   const [active, setActive] = useState<ServiceKey | null>(null);
   const triggerRef = useRef<HTMLButtonElement | null>(null);
   const panelRef = useRef<HTMLDivElement | null>(null);
@@ -195,6 +196,13 @@ export default function ServicesSection() {
             </div>
           </AnimateOnScroll>
         </div>
+      </div>
+
+      <div className="relative mx-auto mt-8 flex w-full max-w-[1400px] flex-col items-start gap-3 px-6 lg:px-12">
+        <p className="max-w-3xl font-ui text-lg leading-relaxed text-chrome-300">{tr('relatedIntro')}</p>
+        <Link href="/services/remote-start" className="inline-flex min-h-11 items-center gap-3 border-b border-electric-red py-2 font-ui font-bold text-white hover:text-electric-red focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-electric-red">
+          {tr('relatedLink')} <span aria-hidden="true">↗</span>
+        </Link>
       </div>
 
       {/* Detail modal — Variant beveled panel, accessible (focus trap + Escape) */}

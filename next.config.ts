@@ -8,11 +8,19 @@ const nextConfig: NextConfig = {
   turbopack: { root: process.cwd() },
   async redirects() {
     // Keep existing booking links working until the native NLA flow is ready.
-    return ['/book-appointment', '/en/book-appointment', '/es/book-appointment'].map((source) => ({
+    const bookingRedirects = ['/book-appointment', '/en/book-appointment', '/es/book-appointment'].map((source) => ({
       source,
       destination: 'https://whos-next-frontend.vercel.app/book/cmn7rxnc6000001ofxq4dea0q',
       permanent: false,
     }));
+    return [
+      ...bookingRedirects,
+      ...['', '/en', '/es'].map((prefix) => ({
+        source: `${prefix}/remote-start-installation-stroudsburg-pa`,
+        destination: `${prefix === '/es' ? '/es' : ''}/services/remote-start`,
+        permanent: true,
+      })),
+    ];
   },
   images: {
     formats: ['image/avif', 'image/webp'],
