@@ -12270,5 +12270,21 @@
     "upc": "840127740003",
     "fetchedAt": "2026-11-07T13:44:39.491Z",
     "status": "pending"
+  },
+  "MDW609N523KFA": {
+    "imageUrl": "https://images.albertsons-media.com/is/image/ABS/960495428-ECOM?$ng-ecom-pdp-desktop$&defaultImage=Not_Available",
+    "source": "google_upc",
+    "name": "Raptor 0 Gauge Amp Kit",
+    "upc": "086429317547",
+    "fetchedAt": "2026-11-13T15:04:42.232Z",
+    "status": "pending"
+  },
+  "WCYG3DF4APF32": {
+    "imageUrl": "https://cdn.consolevariations.com/5403/game-gear-rechargeable-battery-pack-front-1562776703-24-transparent.webp?class=databaseresultlist",
+    "source": "google_upc",
+    "name": "RAPTOR AMP KIT 4 AWG",
+    "upc": "086429317554",
+    "fetchedAt": "2026-11-13T15:04:46.706Z",
+    "status": "pending"
   }
 }
