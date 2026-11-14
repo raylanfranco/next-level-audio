@@ -12286,5 +12286,29 @@
     "upc": "086429317554",
     "fetchedAt": "2026-11-13T15:04:46.706Z",
     "status": "pending"
+  },
+  "A3HM0GJGCT1VP": {
+    "imageUrl": "https://www.bankenya.com/assets/images/rNsw4987107673527-3.jpg",
+    "source": "google_upc",
+    "name": "Scent Bomb Hanging Air Freshner",
+    "upc": "857427007309",
+    "fetchedAt": "2026-11-14T13:56:23.606Z",
+    "status": "pending"
+  },
+  "M35P0ZDWHQPTM": {
+    "imageUrl": "https://outputlag.com/wp-content/uploads/2026/09/world-of-warcraft-forever-blizzcon-2026-6.jpg",
+    "source": "google_upc",
+    "name": "Scent Bomb Clip On Air Freshner",
+    "upc": "857427007897",
+    "fetchedAt": "2026-11-14T13:56:28.023Z",
+    "status": "pending"
+  },
+  "APHY62VMEQRVT": {
+    "imageUrl": "https://i.pinimg.com/736x/98/4e/0d/984e0dcbd150c5acdbf68731a3541039.jpg",
+    "source": "google_upc",
+    "name": "Scent Bomb Air Freshner 1 Fl Oz",
+    "upc": "855765001850",
+    "fetchedAt": "2026-11-14T13:56:32.540Z",
+    "status": "pending"
   }
 }
