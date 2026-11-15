@@ -12310,5 +12310,13 @@
     "upc": "855765001850",
     "fetchedAt": "2026-11-14T13:56:32.540Z",
     "status": "pending"
+  },
+  "JMTN4B9PAQY6P": {
+    "imageUrl": "https://img.yu.ink/wp-content/uploads/2019/05/612600083421-2.jpg-medium",
+    "source": "google_upc",
+    "name": "Ds18 Ofckit",
+    "upc": "810005183628",
+    "fetchedAt": "2026-11-15T14:30:15.826Z",
+    "status": "pending"
   }
 }
