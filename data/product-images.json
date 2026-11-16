@@ -12318,5 +12318,13 @@
     "upc": "810005183628",
     "fetchedAt": "2026-11-15T14:30:15.826Z",
     "status": "pending"
+  },
+  "6W2SB1TDZFQ2C": {
+    "imageUrl": "https://cdn.shopify.com/s/files/1/0600/1062/7239/files/Screenshot2024-09-25at2.39.41PM.png?v=1727289620",
+    "source": "google_upc",
+    "name": "Voxx Carlink7 TELEMATIC VEHICLE CONTROL MODULE",
+    "upc": "044476158643",
+    "fetchedAt": "2026-11-16T16:43:36.978Z",
+    "status": "pending"
   }
 }
