@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 import { useAuth } from '@/components/AuthContext';
 import VipAfterHours from '@/components/VipAfterHours';
 
@@ -27,6 +27,7 @@ function formatDate(dateStr: string | null) {
 
 export default function MembershipPage() {
   const t = useTranslations('vip');
+  const locale = useLocale();
   const { profile } = useAuth();
   const [status, setStatus] = useState<VipStatus | null>(null);
   const [loading, setLoading] = useState(true);
@@ -55,7 +56,8 @@ export default function MembershipPage() {
     setBusy(true);
     setError('');
     try {
-      const res = await fetch(endpoint, { method: 'POST' });
+      const url = endpoint === '/api/vip/checkout' ? `${endpoint}?locale=${locale}` : endpoint;
+      const res = await fetch(url, { method: 'POST' });
       const data = await res.json();
       if (!res.ok || !data.url) throw new Error(data.error || 'Something went wrong');
       window.location.href = data.url;
@@ -218,13 +220,16 @@ export default function MembershipPage() {
             ))}
           </ul>
 
+          <h2 className="font-oxanium font-bold text-lg text-white mb-2">{t('paymentStep')}</h2>
+          <p className="text-white/60 font-mono text-sm mb-6">{t('paymentDetails')}</p>
+
           {status?.joinable ? (
             <button
               onClick={() => redirectTo('/api/vip/checkout')}
               disabled={busy}
               className="cyber-button bg-[#E01020] text-white font-oxanium font-bold uppercase tracking-widest text-sm px-10 py-4 cursor-pointer disabled:opacity-50"
             >
-              {busy ? '…' : t('joinCta')}
+              {busy ? '…' : t('payCta')}
             </button>
           ) : (
             <p className="text-white/40 font-mono text-sm">{t('comingSoon')}</p>

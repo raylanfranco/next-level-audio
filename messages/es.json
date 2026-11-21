@@ -779,6 +779,15 @@
     "readyToTintDesc": "Contáctanos hoy para una cotización gratis de polarizado profesional de ventanas en Stroudsburg, PA."
   },
   "auth": {
+    "phoneOptional": "Número de teléfono (opcional)",
+    "phoneHelp": "Para que el taller pueda contactarte sobre tus citas.",
+    "vipCreateAccount": "Paso 1: Crea tu cuenta VIP",
+    "vipContinue": "Crear cuenta y continuar al pago",
+    "vipSignIn": "Inicia sesión para continuar al pago VIP",
+    "confirmEmailTitle": "Confirma tu correo",
+    "confirmNext": "Después de confirmar tu correo, vuelve aquí para iniciar sesión.",
+    "vipConfirmNext": "Después de confirmar tu correo, vuelve aquí para iniciar sesión y pagar $199/año de forma segura con Stripe. Tu membresía VIP comienza solo después del pago; crear una cuenta no genera ningún cargo.",
+    "signupError": "No pudimos crear tu cuenta. Inténtalo de nuevo.",
     "signIn": "INICIAR SESIÓN",
     "signUp": "CREAR CUENTA",
     "email": "Correo Electrónico",
@@ -862,6 +871,12 @@
     "cta": "Llama para programar tu cita"
   },
   "vip": {
+    "signupTitle": "Membresía VIP de $199/año",
+    "signupStep": "1. Crea una cuenta o inicia sesión",
+    "paymentStep": "2. Paga $199/año de forma segura con Stripe",
+    "signupPaymentNext": "Después de iniciar sesión, selecciona Continuar al pago seguro en la página de membresía para ingresar tus datos de pago en Stripe.",
+    "paymentDetails": "La membresía comienza después del pago y se renueva anualmente por $199 hasta que la canceles. Crear una cuenta no genera ningún cargo.",
+    "payCta": "Continuar al pago seguro — $199/año",
     "accountTitle": "MEMBRESÍA VIP",
     "cardTagline": "Más que un cliente",
     "cardMembership": "Membresía",
