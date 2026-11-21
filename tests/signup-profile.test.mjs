@@ -42,7 +42,7 @@ test('signup persists optional phone before confirmation without changing profil
       UPDATE public.profiles SET phone = 'existing contact';
     `);
 
-    const migration = readFileSync(new URL('../supabase/migrations/20261121233117_persist_signup_phone.sql', import.meta.url), 'utf8');
+    const migration = readFileSync(new URL('../supabase/migrations/20261121233955_persist_signup_phone.sql', import.meta.url), 'utf8');
     await db.exec(migration);
     await db.exec(migration);
 
