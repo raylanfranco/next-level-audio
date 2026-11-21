@@ -779,6 +779,15 @@
     "readyToTintDesc": "Contact us today for a free quote on professional window tinting in Stroudsburg, PA."
   },
   "auth": {
+    "phoneOptional": "Phone number (optional)",
+    "phoneHelp": "So the shop can contact you about appointments.",
+    "vipCreateAccount": "Step 1: Create your VIP account",
+    "vipContinue": "Create account & continue to payment",
+    "vipSignIn": "Sign in to continue to VIP payment",
+    "confirmEmailTitle": "Confirm your email",
+    "confirmNext": "After confirming your email, return here to sign in.",
+    "vipConfirmNext": "After confirming your email, return here to sign in and pay $199/year securely through Stripe. Your VIP membership starts only after payment; creating an account does not charge you.",
+    "signupError": "We couldn't create your account. Please try again.",
     "signIn": "SIGN IN",
     "signUp": "SIGN UP",
     "email": "Email",
@@ -862,6 +871,12 @@
     "cta": "Call to schedule"
   },
   "vip": {
+    "signupTitle": "$199/year VIP Membership",
+    "signupStep": "1. Create an account or sign in",
+    "paymentStep": "2. Pay $199/year securely with Stripe",
+    "signupPaymentNext": "After signing in, select Continue to secure payment on the membership page to enter your payment details in Stripe.",
+    "paymentDetails": "Membership starts after payment and renews annually at $199 until canceled. Creating an account does not charge you.",
+    "payCta": "Continue to secure payment — $199/year",
     "accountTitle": "VIP MEMBERSHIP",
     "cardTagline": "More than a customer",
     "cardMembership": "Membership",

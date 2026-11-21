@@ -1,14 +1,29 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Link } from '@/i18n/navigation';
+import { Suspense, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { useAuth } from '@/components/AuthContext';
+import VipSignupSummary from '@/components/VipSignupSummary';
 
 export default function AccountLoginPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="inline-block w-10 h-10 border-4 border-[#E01020]/30 border-t-[#E01020] animate-spin" />
+      </div>
+    }>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
   const t = useTranslations('auth');
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const isVipSignup = searchParams.get('vip') === '1';
   const { signIn } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -27,12 +42,12 @@ export default function AccountLoginPage() {
       return;
     }
 
-    router.push('/account');
+    router.push(isVipSignup ? '/account/membership' : '/account');
     router.refresh();
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-4">
+    <div className="min-h-screen bg-black flex items-center justify-center px-4 pt-32 pb-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-10">
           <h1
@@ -40,8 +55,10 @@ export default function AccountLoginPage() {
           >
             NEXT LEVEL AUDIO
           </h1>
-          <p className="text-white/50 font-mono text-sm">{t('signInToAccount')}</p>
+          <p className="text-white/50 font-mono text-sm">{isVipSignup ? t('vipSignIn') : t('signInToAccount')}</p>
         </div>
+
+        {isVipSignup && <VipSignupSummary />}
 
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
@@ -94,7 +111,7 @@ export default function AccountLoginPage() {
         <div className="mt-8 text-center space-y-3">
           <p className="text-white/40 font-mono text-sm">
             {t('noAccount')}{' '}
-            <Link href="/account/signup" className="text-[#E01020] hover:text-[#FF2A3A] transition-colors">
+            <Link href={isVipSignup ? '/account/signup?vip=1' : '/account/signup'} className="text-[#E01020] hover:text-[#FF2A3A] transition-colors">
               {t('createOne')}
             </Link>
           </p>

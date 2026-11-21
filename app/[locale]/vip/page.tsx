@@ -25,7 +25,7 @@ export default function VipPage() {
   // guests are sent through signup first so the membership lands on an account.
   const ctaHref = user
     ? ('/account/membership' as const)
-    : ('/account/signup' as const);
+    : ('/account/signup?vip=1' as const);
 
   return (
     <div className="min-h-screen bg-black pt-32 pb-24">

@@ -62,8 +62,9 @@ export async function proxy(request: NextRequest) {
   // Account route protection — single session check for all account routes
   if (strippedPathname.startsWith('/account')) {
     const isAuthPage = strippedPathname.startsWith('/account/login') || strippedPathname.startsWith('/account/signup');
+    const isVipSignup = request.nextUrl.searchParams.get('vip') === '1';
 
-    if (!isAuthPage || strippedPathname === '/account/login') {
+    if (!isAuthPage || strippedPathname === '/account/login' || isVipSignup) {
       const { supabase } = createMiddlewareClient(request);
       const { data: { session } } = await supabase.auth.getSession();
 
@@ -72,11 +73,13 @@ export async function proxy(request: NextRequest) {
           localePrefix ? `/${localePrefix}/account/login` : '/account/login',
           request.url
         );
+        if (strippedPathname === '/account/membership') loginUrl.searchParams.set('vip', '1');
         return NextResponse.redirect(loginUrl);
       }
-      if (strippedPathname === '/account/login' && session) {
+      if (isAuthPage && session) {
+        const destination = isVipSignup ? '/account/membership' : '/account';
         const accountUrl = new URL(
-          localePrefix ? `/${localePrefix}/account` : '/account',
+          localePrefix ? `/${localePrefix}${destination}` : destination,
           request.url
         );
         return NextResponse.redirect(accountUrl);

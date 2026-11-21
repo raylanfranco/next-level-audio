@@ -22,7 +22,7 @@ interface AuthContextType {
   profile: Profile | null;
   isLoading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
-  signUp: (email: string, password: string, fullName: string, referralCode?: string) => Promise<{ error: string | null }>;
+  signUp: (email: string, password: string, fullName: string, referralCode?: string, phone?: string) => Promise<{ error: string | null; needsEmailConfirmation: boolean }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -95,16 +95,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: error?.message ?? null };
   };
 
-  const signUp = async (email: string, password: string, fullName: string, referralCode?: string) => {
+  const signUp = async (email: string, password: string, fullName: string, referralCode?: string, phone?: string) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
       options: {
-        data: { full_name: fullName },
+        data: { full_name: fullName, phone: phone?.trim() || null },
       },
     });
 
-    if (error) return { error: error.message };
+    if (error) return { error: error.message, needsEmailConfirmation: false };
 
     // If a referral code was provided, link the referral after signup
     if (referralCode && data.user) {
@@ -119,7 +119,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     }
 
-    return { error: null };
+    return { error: null, needsEmailConfirmation: !data.session };
   };
 
   const signOut = async () => {

@@ -224,14 +224,17 @@ CREATE POLICY "Service role manages coupons" ON coupons
   USING (true) WITH CHECK (true);
 
 -- Auto-create profile on signup
-CREATE OR REPLACE FUNCTION handle_new_user()
-RETURNS TRIGGER AS $$
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER
+SET search_path = ''
+AS $$
 BEGIN
-  INSERT INTO profiles (id, email, full_name, referral_code)
+  INSERT INTO public.profiles (id, email, full_name, phone, referral_code)
   VALUES (
     NEW.id,
     NEW.email,
     COALESCE(NEW.raw_user_meta_data->>'full_name', ''),
+    NULLIF(BTRIM(NEW.raw_user_meta_data->>'phone'), ''),
     UPPER(SUBSTRING(MD5(NEW.id::text) FROM 1 FOR 8))
   );
   RETURN NEW;
