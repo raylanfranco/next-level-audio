@@ -12326,5 +12326,13 @@
     "upc": "044476158643",
     "fetchedAt": "2026-11-16T16:43:36.978Z",
     "status": "pending"
+  },
+  "YBHN4PSSG1NWE": {
+    "imageUrl": "https://cdn.powered-by-nitrosell.com/product_images/29/7026/51kss6504.jpg",
+    "source": "google_upc",
+    "name": "Kicker 51KSS6504",
+    "upc": "713034045335",
+    "fetchedAt": "2026-11-26T17:31:10.096Z",
+    "status": "pending"
   }
 }
